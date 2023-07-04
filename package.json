@@ -3,7 +3,9 @@
   "scripts": {
     "dev": "solid-start dev",
     "build": "solid-start build",
-    "start": "solid-start start"
+    "start": "solid-start start",
+    "type-check": "tsc --pretty --noEmit",
+    "prettier": "prettier --write ."
   },
   "type": "module",
   "devDependencies": {

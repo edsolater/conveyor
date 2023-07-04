@@ -1,26 +1,14 @@
 // @refresh reload
-import { Suspense } from "solid-js";
-import { useAssets } from "solid-js/web";
-import {
-  A,
-  Body,
-  ErrorBoundary,
-  FileRoutes,
-  Head,
-  Html,
-  Meta,
-  Routes,
-  Scripts,
-  Title,
-} from "solid-start";
-import { css, renderSheets, StyleRegistry, type StyleData } from "solid-styled";
+import { Suspense } from 'solid-js'
+import { useAssets } from 'solid-js/web'
+import { A, Body, ErrorBoundary, FileRoutes, Head, Html, Meta, Routes, Scripts, Title } from 'solid-start'
+import { css, renderSheets, StyleRegistry, type StyleData } from 'solid-styled'
 
 function GlobalStyles() {
   css`
     @global {
       body {
-        font-family: Gordita, Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
-          sans-serif;
+        font-family: Gordita, Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
       }
 
       a {
@@ -59,13 +47,13 @@ function GlobalStyles() {
         }
       }
     }
-  `;
-  return null;
+  `
+  return null
 }
 
 export default function Root() {
-  const sheets: StyleData[] = [];
-  useAssets(() => renderSheets(sheets));
+  const sheets: StyleData[] = []
+  useAssets(() => renderSheets(sheets))
 
   return (
     <StyleRegistry styles={sheets}>
@@ -90,5 +78,5 @@ export default function Root() {
         </Body>
       </Html>
     </StyleRegistry>
-  );
+  )
 }
