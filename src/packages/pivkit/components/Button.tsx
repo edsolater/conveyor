@@ -109,22 +109,22 @@ export function Button(kitProps: KitProps<ButtonProps, { controller: ButtonContr
     xs: '2px 6px',
   }[size]
   const cssFontSize = {
-    lg: 16,
-    md: 16,
-    sm: 14,
-    xs: 12,
+    lg: '16px',
+    md: '16px',
+    sm: '14px',
+    xs: '12px',
   }[size]
   const cssBorderRadius = {
-    lg: 12,
-    md: 8,
-    sm: 8,
-    xs: 4,
+    lg: '12px',
+    md: '8px',
+    sm: '8px',
+    xs: '4px',
   }[size]
   const cssOutlineWidth = {
-    lg: 2,
-    md: 2,
-    sm: 1,
-    xs: 0.5,
+    lg: '2px',
+    md: '2px',
+    sm: '1px',
+    xs: '0.5px',
   }[size]
 
   const mergedController =
@@ -159,7 +159,7 @@ export function Button(kitProps: KitProps<ButtonProps, { controller: ButtonContr
           padding: cssPadding,
           fontSize: cssFontSize,
           borderRadius: cssBorderRadius,
-          fontWeight: 500,
+          fontWeight: '500px',
         },
         (!props.variant || props.variant === 'solid') && {
           backgroundColor: shrinkFn(mainBgColor, [mergedProps]),

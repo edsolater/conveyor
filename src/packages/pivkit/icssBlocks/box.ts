@@ -20,8 +20,8 @@ export const icss_card = (options?: { gap?: CSSObject['gap']; items?: CSSObject[
   ({
     display: 'grid',
     border: 'solid',
-    padding: 24,
-    borderRadius: 16,
+    padding: '24px',
+    borderRadius: '16px',
   } satisfies ICSSObject)
 
 export const icss_clickable = (options?: {}) =>
@@ -37,7 +37,7 @@ export const icss_label = (options?: { w: CSSObject['minWidth']; h: CSSObject['m
     textAlign: 'center',
     paddingBlock: '.25em',
     paddingInline: '.5em',
-    borderRadius: 4,
+    borderRadius: '4px',
     background: cssColors.component_label_bg_default,
   } satisfies ICSSObject)
 
@@ -46,7 +46,7 @@ export const icss_inputType = (options?: { w: CSSObject['minWidth']; h: CSSObjec
     minWidth: '12em',
     paddingBlock: '.25em',
     paddingInline: '.5em',
-    // borderRadius: 4,
+    // borderRadius: '4px',
     // background: cssColors.component_input_bg_default,
     // outlineColor: cssColors.dodgerBlue,
     borderBottom: 'solid',

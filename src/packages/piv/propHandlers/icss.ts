@@ -1,9 +1,14 @@
 import { filter, flap, flapDeep, isObject, MayArray, mergeObjectsWithConfigs, shrinkFn } from '@edsolater/fnkit'
-import { css, CSSObject as _CSSObject } from '@emotion/css'
+import * as csstype from 'csstype'
+import { css, CSSAttribute } from 'solid-styled-components'
 import { LoadController, ValidController } from '../types/tools'
 
 export type ICSSObject<Controller extends ValidController | unknown = unknown> = LoadController<CSSObject, Controller> // rename  for ICSSObject may be a superset of CSSObject
-export type CSSObject = _CSSObject
+// export type CSSObject = JSX.CSSProperties & {
+//   ':hover'?: JSX.CSSProperties
+//   //TODO
+// }
+export type CSSObject = CSSAttribute
 
 export type ICSS<Controller extends ValidController | unknown = unknown> = MayArray<
   LoadController<boolean | string | number | null | undefined, Controller> | ICSSObject<Controller>
@@ -11,7 +16,7 @@ export type ICSS<Controller extends ValidController | unknown = unknown> = MayAr
 
 export function parseCSSToString<Controller extends ValidController | unknown = unknown>(
   cssProp: ICSS<Controller>,
-  controller: Controller = {} as Controller,
+  controller: Controller = {} as Controller
 ) {
   const cssObjList = flapDeep(cssProp)
     .map((i) => shrinkFn(i, [controller]))
@@ -26,12 +31,12 @@ export function parseCSSToString<Controller extends ValidController | unknown = 
 // }
 
 export function compressICSSToObj<Controller extends ValidController | unknown = unknown>(
-  icss: ICSS<Controller>,
+  icss: ICSS<Controller>
 ): ICSSObject<Controller> {
   return (controller: Controller) => {
     const cssObjList = filter(
       flap(icss).map((i) => shrinkFn(i, [controller])),
-      isObject,
+      isObject
     ) as ICSSObject<Controller>[]
     const l = cssObjList.reduce((acc, cur) => mergeICSSObject<Controller>(acc, cur), {} as ICSSObject<Controller>)
     return shrinkFn(l, [controller])
@@ -44,7 +49,7 @@ export function mergeICSSObject<Controller extends ValidController | unknown = u
   return (controller: Controller) =>
     mergeObjectsWithConfigs(
       icsses.map((ic) => shrinkFn(ic, [controller])),
-      ({ valueA: v1, valueB: v2 }) => v2 ?? v1,
+      ({ valueA: v1, valueB: v2 }) => v2 ?? v1
     )
 }
 export function mergeCSSObject(...icsses: CSSObject[]): CSSObject {

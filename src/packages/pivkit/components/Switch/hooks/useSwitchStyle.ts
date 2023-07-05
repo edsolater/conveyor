@@ -8,7 +8,7 @@ import { SwitchProps } from '../Switch'
  */
 export function useSwitchStyle(params: { props: DeKitProps<SwitchProps> }) {
   const wrapperLabelStyleProps = {
-    icss: { width: '4em', height: '2em', background: '#cbd5e0', borderRadius: '999em', padding: 4 },
+    icss: { width: '4em', height: '2em', background: '#cbd5e0', borderRadius: '999em', padding: '4px' }
   } satisfies Partial<LabelProps>
 
   const htmlCheckboxStyleProps = {
@@ -20,8 +20,8 @@ export function useSwitchStyle(params: { props: DeKitProps<SwitchProps> }) {
       width: '1px',
       height: '1px',
       margin: '-1px',
-      overflow: 'hidden',
-    },
+      overflow: 'hidden'
+    }
   } satisfies Partial<HTMLCheckboxProps>
 
   // FIXME: why not a createMemo is ok ?
@@ -33,8 +33,8 @@ export function useSwitchStyle(params: { props: DeKitProps<SwitchProps> }) {
       background: 'currentColor',
       // translate: params.isChecked() ? '100%' : '0',
       marginLeft: isChecked() ? 'auto' : '0',
-      transition: '300ms',
-    }),
+      transition: '300ms'
+    })
   } satisfies Partial<SwitchProps>
 
   return { wrapperLabelStyleProps, htmlCheckboxStyleProps, switchThumbStyleProps }

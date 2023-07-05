@@ -24,15 +24,15 @@ export function TopMenuBar(props: TopMenuBarProps) {
       ]}
       render:self={(selfProps) => <nav {...parsePivProps(selfProps)} />}
     >
-      <Box icss={icss_row({ gap: 32 })}>
+      <Box icss={icss_row({ gap: '32px' })}>
         <Link href="/" innerRoute>
           <Icon src="/logo-with-text.svg" icss={{ height: '32px' }} />
         </Link>
-        {/* <Text icss={{ fontSize: 36, fontWeight: 800 }}>{props.title}</Text> */}
+        {/* <Text icss={{ fontSize: '36px', fontWeight: '800px' }}>{props.title}</Text> */}
       </Box>
 
       {/* tabs */}
-      <Box icss={{ display: 'flex', gap: 16 }}>
+      <Box icss={{ display: 'flex', gap: '16px' }}>
         <Link href="/" innerRoute>
           Home
         </Link>

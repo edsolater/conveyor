@@ -72,7 +72,7 @@ export function Input(rawProps: InputProps) {
       icss={[
         { flex: 1, background: 'transparent', minWidth: props.isFluid ? undefined : '14em' },
         /* initialize */
-        { border: 'none', padding: 8 },
+        { border: 'none', padding: '8px' },
       ]}
     />
   )

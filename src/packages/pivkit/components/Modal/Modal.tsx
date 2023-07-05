@@ -93,7 +93,9 @@ export function Modal(rawProps: KitProps<ModalProps>) {
       <Piv
         render:self={(selfProps) => <dialog {...parsePivProps(selfProps)} open={props.open && !props.isModal} />}
         shadowProps={props}
-        icss={[props.backdropICSS && { '&::backdrop': props.backdropICSS }]}
+        // TODO fix this
+        //@ts-expect-error no-check
+        icss={{ '&::backdrop': props.backdropICSS }}
         domRef={setDialogRef}
       >
         <Piv domRef={setDialogContentRef} icss={{ display: 'contents' }}>

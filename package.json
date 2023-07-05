@@ -4,7 +4,7 @@
     "dev": "solid-start dev",
     "build": "solid-start build",
     "start": "solid-start start",
-    "type-check": "tsc --pretty --noEmit",
+    "type-check": "tsc --skipLibCheck --pretty --noEmit",
     "prettier": "prettier --write ."
   },
   "type": "module",
@@ -20,9 +20,11 @@
     "@edsolater/fnkit": "^0.1.31",
     "@solidjs/meta": "^0.28.5",
     "@solidjs/router": "^0.8.2",
+    "csstype": "^3.1.2",
     "solid-js": "^1.7.7",
     "solid-start": "^0.2.26",
     "solid-styled": "^0.9.0",
+    "solid-styled-components": "^0.28.5",
     "undici": "^5.22.1"
   },
   "engines": {

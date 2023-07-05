@@ -1,4 +1,4 @@
-import { createEffect, createSignal, } from 'solid-js'
+import { createEffect, createSignal } from 'solid-js'
 import { CircularProgress } from '~/components/CircularProgress'
 import { ExamplePanel } from '~/components/ExamplePanel'
 import { NavBar } from '~/components/NavBar'
@@ -40,7 +40,7 @@ function PlaygoundList() {
         display: 'grid',
         gridTemplateColumns: 'repeat(auto-fill, minmax(400px, 1fr))',
         padding: '16px 32px 0',
-        gap: 16
+        gap: '16px'
       }}
     >
       <ExamplePanel name="IntervalCircle">
@@ -151,7 +151,7 @@ function CSSTransitionExample() {
       <Piv
         domRef={refSetter}
         shadowProps={transitionProps()}
-        icss={{ backgroundColor: 'dodgerblue', height: 200, display: 'grid', placeItems: 'center' }}
+        icss={{ backgroundColor: 'dodgerblue', height: '200', display: 'grid', placeItems: 'center' }}
       >
         <Box>hello</Box>
       </Piv>
@@ -275,11 +275,11 @@ function ListExample() {
     }, 100)
   })
   return (
-    <List items={data} initRenderCount={10} icss={[icss_col({ gap: 16 }), { height: '30dvh' }]}>
+    <List items={data} initRenderCount={10} icss={[icss_col({ gap: '16px' }), { height: '30dvh' }]}>
       {(d, idx) => {
         console.count(`render item from <Playground>, ${d.name}, ${d.count}`)
         return (
-          <Box icss={[icss_row({ gap: 8 }), { background: '#0001', width: '100%' }]}>
+          <Box icss={[icss_row({ gap: '8px' }), { background: '#0001', width: '100%' }]}>
             <Text>{d.name}</Text>
             <Text>{d.count + increaseCount()}</Text>
           </Box>
