@@ -32,7 +32,7 @@ export function createToggle(
 ): CreateToggleReturn {
   const opts = addDefaultProps(options, { delay: 800 })
   const [isOn, _setIsOn] = createSignal(shrinkFn(initValue))
-  const [delayActionId, setDelayActionId] = createSignal<number>(0)
+  const [delayActionId, setDelayActionId] = createSignal<number | NodeJS.Timeout>(0)
   const setIsOn = (...params: any[]) => {
     if (options.locked) return
     //@ts-expect-error temp

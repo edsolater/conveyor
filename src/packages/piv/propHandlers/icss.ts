@@ -1,5 +1,4 @@
 import { filter, flap, flapDeep, isObject, MayArray, mergeObjectsWithConfigs, shrinkFn } from '@edsolater/fnkit'
-import * as csstype from 'csstype'
 import { css, CSSAttribute } from 'solid-styled-components'
 import { LoadController, ValidController } from '../types/tools'
 

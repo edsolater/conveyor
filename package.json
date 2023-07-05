@@ -11,6 +11,7 @@
   "devDependencies": {
     "@types/babel__core": "^7.20.1",
     "@types/debug": "^4.1.8",
+    "@types/node": "^20.3.3",
     "solid-start-node": "^0.2.26",
     "typescript": "^5.1.6",
     "vite": "^4.3.9",
@@ -20,7 +21,6 @@
     "@edsolater/fnkit": "^0.1.31",
     "@solidjs/meta": "^0.28.5",
     "@solidjs/router": "^0.8.2",
-    "csstype": "^3.1.2",
     "solid-js": "^1.7.7",
     "solid-start": "^0.2.26",
     "solid-styled": "^0.9.0",
