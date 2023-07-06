@@ -163,10 +163,10 @@ export function Button(kitProps: KitProps<ButtonProps, { controller: ButtonContr
         },
         (!props.variant || props.variant === 'solid') && {
           backgroundColor: shrinkFn(mainBgColor, [mergedProps]),
-          ':hover': {
+          '&:hover': {
             filter: 'brightness(95%)',
           },
-          ':active': {
+          '&:active': {
             transform: 'scale(0.98)',
             filter: 'brightness(90%)',
           },
@@ -177,7 +177,7 @@ export function Button(kitProps: KitProps<ButtonProps, { controller: ButtonContr
           outlineOffset: `-${cssOutlineWidth}`,
         },
         props.variant === 'text' && {
-          ':hover': {
+          '&:hover': {
             backgroundColor: opacityCSSColor(shrinkFn(mainBgColor, [mergedProps]), 0.15),
           },
         },

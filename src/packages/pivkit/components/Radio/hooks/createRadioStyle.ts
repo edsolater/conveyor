@@ -15,10 +15,10 @@ export function createRadioStyle(params: { props: DeKitProps<RadioProps> }) {
       display: 'flex',
       gap: '.25em',
       alignItems: 'center',
-      ':hover': {
+      '&:hover': {
         filter: 'brightness(1.1)',
       },
-      ':active': {
+      '&:active': {
         filter: 'brightness(1.2)',
       },
       transition: '300ms',
@@ -44,14 +44,14 @@ export function createRadioStyle(params: { props: DeKitProps<RadioProps> }) {
       position: 'relative',
       display: 'grid',
       placeItems: 'center',
-      height: '100%',
+      height: '60%',
       aspectRatio: '1',
       borderRadius: '999em',
       borderStyle: 'solid',
 
       borderColor: isChecked() ? 'dodgerblue' : '#e3e8ef',
       background: isChecked() ? 'dodgerblue' : 'white',
-      '::before': {
+      '&::before': {
         content: '""',
         display: 'block',
         position: 'absolute',
