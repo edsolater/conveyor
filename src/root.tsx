@@ -1,8 +1,8 @@
 // @refresh reload
 import { Suspense } from 'solid-js'
 import { useAssets } from 'solid-js/web'
-import { A, Body, ErrorBoundary, FileRoutes, Head, Html, Meta, Routes, Scripts, Title } from 'solid-start'
-import { css, renderSheets, StyleRegistry, type StyleData } from 'solid-styled'
+import { Body, ErrorBoundary, FileRoutes, Head, Html, Link, Meta, Routes, Scripts, Title } from 'solid-start'
+import { StyleRegistry, css, renderSheets, type StyleData } from 'solid-styled'
 
 function GlobalStyles() {
   css`
@@ -62,13 +62,12 @@ export default function Root() {
           <Title>SolidStart - Bare</Title>
           <Meta charset="utf-8" />
           <Meta name="viewport" content="width=device-width, initial-scale=1" />
+          <Link rel="shortcut icon" type="image/svg" href="favicon.svg" />
         </Head>
         <Body>
           <GlobalStyles />
           <Suspense>
             <ErrorBoundary>
-              <A href="/">Index</A>
-              <A href="/about">About</A>
               <Routes>
                 <FileRoutes />
               </Routes>
