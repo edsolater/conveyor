@@ -43,7 +43,7 @@ export function getPivPropsValue(objs: AnyObj[], key: keyof any) {
     case 'children':
       for (let i = 0; i < objs.length; i++) {
         const obj = objs[i]
-        const v = obj[key]
+        const v = obj?.[key]
         if (v != null) return v
       }
 
@@ -76,7 +76,7 @@ export function getPivPropsValue(objs: AnyObj[], key: keyof any) {
       // -------- very normal props --------
       for (let i = objs.length - 1; i >= 0; i--) {
         const obj = objs[i]
-        const v = obj[key]
+        const v = obj?.[key]
         if (v != null) return v
       }
       // }
@@ -119,7 +119,7 @@ function getObjValue<T extends AnyObj>(
   } else {
     for (let i = objs.length - 1; i >= 0; i--) {
       const obj = objs[i]
-      const v = obj[key]
+      const v = obj?.[key]
       if (v != null) return v
     }
   }

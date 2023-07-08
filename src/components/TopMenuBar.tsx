@@ -14,7 +14,6 @@ export interface TopMenuBarProps {
  */
 
 export function TopMenuBar(props: TopMenuBarProps) {
-  useHTMLDocumentMetaTitle(() => props.title)
   return (
     <Piv<'nav'>
       icss={[
@@ -44,8 +43,3 @@ export function TopMenuBar(props: TopMenuBarProps) {
   )
 }
 
-function useHTMLDocumentMetaTitle(title?: () => string | undefined) {
-  createEffect(() => {
-    if (globalThis.document && title?.()) Reflect.set(globalThis.document, 'title', `${title()} - shears`)
-  })
-}
