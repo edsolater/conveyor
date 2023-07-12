@@ -28,6 +28,7 @@ export const bilibiliLinkCardItem: BilibiliLinkCardItem = {
   headerLogo: '/protal-icons/bilibili/header-logo.svg',
   favicon: '/protal-icons/bilibili/favicon.svg',
   howToDo: 'search the text',
+  screenshots: ['/screenshots/bilibili_home_page_screenshot.png'],
   // TODO: not elegant!!!
   searchUrl: {
     breif: 'https://search.bilibili.com/all',

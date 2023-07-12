@@ -1,6 +1,8 @@
 import { Tuples } from '../../packages/fnkit'
 import { bilibiliLinkCardItem } from './bilibili'
 
+type Href = string
+
 export type LinkCardItem = {
   name: string
   /** youtube need vpn  */
@@ -10,9 +12,10 @@ export type LinkCardItem = {
   category?: 'video' | 'game' | 'music' | 'shopping' | 'news' | 'social' | 'other'
   description: string
   keywords: string[]
-  headerLogo?: string
-  favicon: string
+  headerLogo?: Href
+  favicon: Href
   howToDo?: string | string[]
+  screenshots?: Href[]
   searchUrl?: {
     breif: string
     regex: RegExp
@@ -30,6 +33,6 @@ export type SubLinkCard = {
   search?: {
     url: string
   }
-}
+} & Omit<LinkCardItem, 'name'>
 
 export const linkCards = [bilibiliLinkCardItem] satisfies Tuples
