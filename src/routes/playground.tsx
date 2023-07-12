@@ -1,9 +1,9 @@
 import { createEffect, createSignal } from 'solid-js'
-import { CircularProgress } from '~/components/CircularProgress'
-import { ExamplePanel } from '~/components/ExamplePanel'
-import { NavBar } from '~/components/NavBar'
-import { useLoopPercent } from '~/hooks/useLoopPercent'
-import { Piv, useComponentController } from '~/packages/piv'
+import { CircularProgress } from '../components/CircularProgress'
+import { ExamplePanel } from '../components/ExamplePanel'
+import { NavBar } from '../components/NavBar'
+import { useLoopPercent } from '../hooks/useLoopPercent'
+import { Piv, useComponentController } from '../packages/piv'
 import {
   Box,
   Button,
@@ -22,7 +22,7 @@ import {
   icss_row,
   renderSwitchThumb,
   useCSSTransition
-} from '~/packages/pivkit'
+} from '../packages/pivkit'
 
 export default function PlaygroundPage() {
   return (

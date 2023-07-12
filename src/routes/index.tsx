@@ -1,10 +1,10 @@
 import { createSignal } from 'solid-js'
-import server$, { createServerAction$ } from 'solid-start/server'
-import { NavBar } from '~/components/NavBar'
-import { linkCards } from '~/configs/linkCards'
-import { useSearch } from '~/packages/features/search'
-import { Piv } from '~/packages/piv'
-import { Box, Card, Input, List, Section, icss_card, icss_row, Text } from '~/packages/pivkit'
+import server$ from 'solid-start/server'
+import { NavBar } from '../components/NavBar'
+import { linkCards } from '../configs/linkCards'
+import { useSearch } from '../packages/features/searchItems'
+import { Piv } from '../packages/piv'
+import { Box, Card, Input, List, Section, Text, icss_card, icss_row } from '../packages/pivkit'
 
 export function routeData() {
   const students = server$(async () => {

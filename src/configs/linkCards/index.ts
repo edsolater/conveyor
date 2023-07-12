@@ -1,4 +1,4 @@
-import { Tuples } from '~/packages/fnkit'
+import { Tuples } from '../../packages/fnkit'
 import { bilibiliLinkCardItem } from './bilibili'
 
 export type LinkCardItem = {

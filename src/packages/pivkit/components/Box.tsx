@@ -1,4 +1,4 @@
-import { Piv, PivProps } from '~/packages/piv'
+import { Piv, PivProps } from '../../../packages/piv'
 
 export interface BoxProps extends PivProps {}
 
