@@ -8,10 +8,9 @@ import {
   map,
   omit,
   shakeNil,
-  shrinkFn,
-  shrinkToValue,
+  shrinkFn
 } from '@edsolater/fnkit'
-import { isStringInsensitivelyEqual, isStringInsensitivelyContain } from './isStringEqual'
+import { isStringInsensitivelyContain, isStringInsensitivelyEqual } from './isStringEqual'
 
 type SearchConfigItemObj = {
   text: string | undefined
