@@ -1,4 +1,4 @@
-import { isArray } from '@edsolater/fnkit'
+import { MayFn, flap, isArray, shrinkFn } from '@edsolater/fnkit'
 import {
   Accessor,
   createContext,
@@ -9,7 +9,7 @@ import {
   JSXElement,
   on,
   onCleanup,
-  Show,
+  Show
 } from 'solid-js'
 import { KitProps, Piv, PivProps, useKitProps } from '../../../piv'
 import { createRef } from '../../hooks/createRef'
@@ -22,7 +22,7 @@ export interface ListController {}
 
 export type ListProps<T> = KitProps<
   {
-    items?: Iterable<T>
+    items?: MayFn<Iterable<T>>
     children(item: T, index: () => number): JSXElement
 
     /** @default 30 */
@@ -54,17 +54,17 @@ export function List<T>(rawProps: ListProps<T>) {
   const { props } = useKitProps(rawProps, {
     noNeedDeAccessifyChildren: true,
     defaultProps: {
-      reachBottomMargin: 50,
-    },
+      reachBottomMargin: 50
+    }
   })
 
   // [configs]
-  const allItems = createMemo(() => (isArray(props.items) ? props.items : [...(props.items ?? [])]))
+  const allItems = createMemo(() => flap([...shrinkFn(props.items)]))
   const increaseRenderCount = createMemo(
-    () => props.increaseRenderCount ?? Math.min(Math.floor(allItems().length / 10), 30),
+    () => props.increaseRenderCount ?? Math.min(Math.floor(allItems().length / 10), 30)
   )
   const initRenderCount = createMemo(
-    () => props.initRenderCount ?? (allItems().length / 5 > 50 ? 50 : allItems().length),
+    () => props.initRenderCount ?? (allItems().length / 5 > 50 ? 50 : allItems().length)
   )
 
   // [list ref]
@@ -82,7 +82,7 @@ export function List<T>(rawProps: ListProps<T>) {
     onReachBottom: () => {
       setRenderItemLength((n) => n + increaseRenderCount())
     },
-    reachBottomMargin: props.reachBottomMargin,
+    reachBottomMargin: props.reachBottomMargin
   })
 
   // reset when items.length changed
@@ -92,8 +92,8 @@ export function List<T>(rawProps: ListProps<T>) {
       () => {
         setRenderItemLength(initRenderCount())
         forceCalculate()
-      },
-    ),
+      }
+    )
   )
   const renderListItems = (item: T, idx: () => number) => {
     // console.count('render item children in <For>')

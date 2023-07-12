@@ -27,9 +27,12 @@ export function routeData() {
 
 export default function Home() {
   const [searchText, setSearchText] = createSignal<string>()
-  const links = useSearch(() => linkCards, searchText, { matchConfigs: [(i) => i.name, (i) => i.keywords] })
   const logHello = server$(async (message: string) => {
     console.log('message from server22: ', message)
+  })
+
+  const { searchedItems: links } = useSearch(linkCards, searchText, {
+    matchConfigs: [(i) => i.name, (i) => i.keywords]
   })
 
   logHello('Hello')
