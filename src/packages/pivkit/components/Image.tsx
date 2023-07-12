@@ -11,6 +11,9 @@ export interface ImageProps extends UIKit<{ controller: ImageController }> {
    *  for readability
    */
   alt?: Accessify<string | undefined, ImageController>
+
+  // TODO: imply it!!!
+  resizeable?: boolean
 }
 
 export interface ImageController {}
@@ -30,7 +33,7 @@ export function Image(rawProps: ImageProps) {
       render:self={(selfProps) => <img {...parsePivProps(selfProps)} />}
       htmlProps={{ src: String(props.src), alt: props.alt }}
       icss={{
-        display: 'block',
+        display: 'block'
       }}
       shadowProps={props}
       class={Image.name}
