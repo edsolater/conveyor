@@ -1,4 +1,4 @@
-import { createSignal } from 'solid-js'
+import { Show, createSignal } from 'solid-js'
 import server$ from 'solid-start/server'
 import { NavBar } from '../components/NavBar'
 import { linkCards } from '../configs/linkCards'
@@ -48,15 +48,20 @@ export default function Home() {
           <List items={links}>
             {(item) => (
               <Card icss={[icss_card]}>
-                <Box icss={[icss_row({ gap: '.5em', items: 'center' })]}>
+                <Box grid>
+                  
+                  <Show when={item.headerLogo}>
+                    <Image src={item.headerLogo}></Image>
+                  </Show>
+
                   <Text icss={{ fontSize: '2em', fontWeight: 'bold' }}>{item.name}</Text>
                   <List icss={icss_row({ gap: '.5em' })} items={item.keywords}>
                     {(keyword) => <Text icss={{ fontSize: '1em' }}>{keyword}</Text>}
                   </List>
+                  <List items={item.screenshots}>
+                    {(screenshotsHref) => <Image icss={{ width: '400px' }} src={screenshotsHref} />}
+                  </List>
                 </Box>
-                <List items={item.screenshots}>
-                  {(screenshotsHref) => <Image icss={{ width: '400px' }} src={screenshotsHref} />}
-                </List>
               </Card>
             )}
           </List>

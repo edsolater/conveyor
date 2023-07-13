@@ -1,33 +1,61 @@
 import { CSSObject, ICSSObject } from '../../piv'
 import { cssColors } from '../styles/cssColors'
 
-export const icss_row = (options?: { gap?: CSSObject['gap']; items?: CSSObject['alignItems'] }) =>
+export type ICSSRowOption = {
+  gap?: CSSObject['gap']
+  items?: CSSObject['alignItems']
+}
+
+export const icss_row = (options?: ICSSRowOption) =>
   ({
     display: 'flex',
     alignItems: options?.items ?? 'center',
-    gap: options?.gap,
+    gap: options?.gap
   } satisfies ICSSObject)
 
-export const icss_col = (options?: { gap?: CSSObject['gap']; items?: CSSObject['alignItems'] }) =>
+export type ICSSColOption = {
+  gap?: CSSObject['gap']
+  items?: CSSObject['alignItems']
+}
+
+export const icss_col = (options?: ICSSColOption) =>
   ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: options?.items ?? 'center',
-    gap: options?.gap,
+    gap: options?.gap
   } satisfies ICSSObject)
 
-export const icss_card = (options?: { gap?: CSSObject['gap']; items?: CSSObject['alignItems'] }) =>
+export type ICSSGridOption = {
+  gap?: CSSObject['gap']
+  items?: CSSObject['placeItems']
+}
+
+export const icss_grid = (options?: ICSSGridOption) =>
+  ({
+    display: 'grid',
+    placeItems: options?.items ?? 'center',
+    gap: options?.gap
+  } satisfies ICSSObject)
+
+export type ICSSCardOption = {
+  gap?: CSSObject['gap']
+  items?: CSSObject['alignItems']
+}
+
+export const icss_card = (options?: ICSSCardOption) =>
   ({
     display: 'grid',
     border: 'solid',
     padding: '24px',
-    borderRadius: '16px',
+    borderRadius: '16px'
   } satisfies ICSSObject)
 
-export const icss_clickable = (options?: {}) =>
+export type ICSSClickableOption = {}
+export const icss_clickable = (options?: ICSSClickableOption) =>
   ({
     cursor: 'pointer',
-    ':is(:hover,:active)': { backdropFilter: 'brightness(0.9)', filter: 'brightness(0.9)' },
+    ':is(:hover,:active)': { backdropFilter: 'brightness(0.9)', filter: 'brightness(0.9)' }
   } satisfies ICSSObject)
 
 export const icss_label = (options?: { w: CSSObject['minWidth']; h: CSSObject['minHeight'] }) =>
@@ -38,7 +66,7 @@ export const icss_label = (options?: { w: CSSObject['minWidth']; h: CSSObject['m
     paddingBlock: '.25em',
     paddingInline: '.5em',
     borderRadius: '4px',
-    background: cssColors.component_label_bg_default,
+    background: cssColors.component_label_bg_default
   } satisfies ICSSObject)
 
 export const icss_inputType = (options?: { w: CSSObject['minWidth']; h: CSSObject['minHeight'] }) =>
@@ -49,5 +77,5 @@ export const icss_inputType = (options?: { w: CSSObject['minWidth']; h: CSSObjec
     // borderRadius: '4px',
     // background: cssColors.component_input_bg_default,
     // outlineColor: cssColors.dodgerBlue,
-    borderBottom: 'solid',
+    borderBottom: 'solid'
   } satisfies ICSSObject)
