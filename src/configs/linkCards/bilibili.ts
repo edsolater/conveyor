@@ -27,7 +27,7 @@ export const bilibiliLinkCardItem: BilibiliLinkCardItem = {
   keywords: ['video', 'anime', 'game'],
   headerLogo: '/websites/bilibili/header-logo.svg',
   favicon: '/websites/bilibili/favicon.svg',
-  howToDo: 'search the text',
+  howToPlay: 'search the text',
   screenshots: ['/websites/bilibili/screenshots/bilibili_home_page_screenshot.png'],
   // TODO: not elegant!!!
   searchUrl: {

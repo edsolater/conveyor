@@ -14,7 +14,7 @@ export type LinkCardItem = {
   keywords: string[]
   headerLogo?: Href
   favicon: Href
-  howToDo?: string | string[]
+  howToPlay?: string | string[]
   screenshots?: Href[]
   searchUrl?: {
     breif: string
