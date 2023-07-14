@@ -5,6 +5,7 @@ import { linkCards } from '../configs/linkCards'
 import { useSearch } from '../packages/features/searchItems'
 import { Piv } from '../packages/piv'
 import { Box, Card, Image, Input, List, Section, Text, icss_card, icss_row } from '../packages/pivkit'
+import { GridBox } from '../packages/pivkit/components/Boxs/GridBox'
 
 export function routeData() {
   const students = server$(async () => {
@@ -48,8 +49,7 @@ export default function Home() {
           <List items={links}>
             {(item) => (
               <Card icss={[icss_card]}>
-                <Box grid>
-                  
+                <GridBox icss:grid={{}}>
                   <Show when={item.headerLogo}>
                     <Image src={item.headerLogo}></Image>
                   </Show>
@@ -61,7 +61,7 @@ export default function Home() {
                   <List items={item.screenshots}>
                     {(screenshotsHref) => <Image icss={{ width: '400px' }} src={screenshotsHref} />}
                   </List>
-                </Box>
+                </GridBox>
               </Card>
             )}
           </List>

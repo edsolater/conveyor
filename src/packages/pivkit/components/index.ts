@@ -1,4 +1,4 @@
-export * from './Box'
+export * from './Boxs/Box'
 export * from './Button'
 export * from './Card'
 export * from './Collapse'
