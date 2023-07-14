@@ -1,5 +1,10 @@
+import { shakeNil, shakeUndefinedItem } from '@edsolater/fnkit'
 import { Piv, UIKit, parsePivProps, useKitProps } from '../../piv'
 import { Accessify } from '../utils/accessifyProps'
+import { Box } from './Box'
+import { createEffect, createSignal } from 'solid-js'
+import { createRef } from '../hooks'
+import { onEvent as addEventListener } from '../../domkit'
 
 export interface ImageProps extends UIKit<{ controller: ImageController }> {
   /**
@@ -14,6 +19,11 @@ export interface ImageProps extends UIKit<{ controller: ImageController }> {
 
   // TODO: imply it!!!
   resizeable?: boolean
+  /** @default 'lazy' */
+  loading?: 'lazy' | 'eager'
+
+  'css:width'?: string
+  'css:height'?: string
 }
 
 export interface ImageController {}
@@ -26,17 +36,30 @@ export type DefaultImageProps = typeof defaultProps
  * @todo add fallbackSrc
  */
 export function Image(rawProps: ImageProps) {
-  const { props } = useKitProps(rawProps, { defaultProps })
+  // TODO is load
+  const [isLoaded, setIsLoaded] = createSignal(false)
+  const [dom, setDom] = createRef<HTMLImageElement>()
+  const { props, shadowProps } = useKitProps(rawProps, { defaultProps })
+
+  createEffect(() => {
+    addEventListener(dom(), 'load', () => {
+      setIsLoaded(true)
+    })
+  })
   /* ---------------------------------- props --------------------------------- */
   return (
-    <Piv<'img'>
-      render:self={(selfProps) => <img {...parsePivProps(selfProps)} />}
-      htmlProps={{ src: String(props.src), alt: props.alt }}
-      icss={{
-        display: 'block'
-      }}
-      shadowProps={props}
-      class={Image.name}
-    />
+    <Box class="Image container" style={shakeNil({ width: props['css:width'], height: props['css:height'] })}>
+      <Piv<'img'>
+        domRef={setDom}
+        render:self={(selfProps) => <img {...parsePivProps(selfProps)} />}
+        htmlProps={{ src: String(props.src), alt: props.alt, loading: props.loading ?? 'lazy' }}
+        icss={{
+          display: 'block',
+          opacity: isLoaded() ? undefined : '0'
+        }}
+        shadowProps={shadowProps}
+        class="Image"
+      />
+    </Box>
   )
 }

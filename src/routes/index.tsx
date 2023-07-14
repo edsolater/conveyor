@@ -50,10 +50,7 @@ export default function Home() {
             {(item) => (
               <Card icss={[icss_card]}>
                 <GridBox icss:grid={{}}>
-                  <Show when={item.headerLogo}>
-                    <Image src={item.headerLogo}></Image>
-                  </Show>
-
+                  <Image src={item.headerLogo}></Image>
                   <Text icss={{ fontSize: '2em', fontWeight: 'bold' }}>{item.name}</Text>
                   <List icss={icss_row({ gap: '.5em' })} items={item.keywords}>
                     {(keyword) => <Text icss={{ fontSize: '1em' }}>{keyword}</Text>}
