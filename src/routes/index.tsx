@@ -1,11 +1,11 @@
-import { Show, createSignal } from 'solid-js'
+import { createSignal } from 'solid-js'
 import server$ from 'solid-start/server'
 import { NavBar } from '../components/NavBar'
 import { linkCards } from '../configs/linkCards'
 import { useSearch } from '../packages/features/searchItems'
 import { Piv } from '../packages/piv'
 import { Box, Card, Image, Input, List, Section, Text, icss_card, icss_row } from '../packages/pivkit'
-import { GridBox } from '../packages/pivkit/components/Boxs/GridBox'
+import { GridBox } from '../packages/pivkit/components/Boxes/GridBox'
 
 export function routeData() {
   const students = server$(async () => {

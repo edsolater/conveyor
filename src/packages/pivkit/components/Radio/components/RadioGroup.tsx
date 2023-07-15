@@ -5,7 +5,7 @@ import { ValidController } from '../../../../piv/types'
 import { createSyncSignal } from '../../../hooks'
 import { Label } from '../../Label'
 import { LabelBox } from '../../LabelBox'
-import { Box } from '../../Boxs/Box'
+import { Box } from '../../Boxes/Box'
 import { icss_col, icss_row } from '../../../icssBlocks'
 
 export interface RadioGroupController {

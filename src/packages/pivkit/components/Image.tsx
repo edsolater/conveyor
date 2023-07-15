@@ -1,7 +1,7 @@
 import { shakeNil, shakeUndefinedItem } from '@edsolater/fnkit'
 import { Piv, UIKit, parsePivProps, useKitProps } from '../../piv'
 import { Accessify } from '../utils/accessifyProps'
-import { Box } from './Box'
+import { Box } from './Boxes'
 import { createEffect, createSignal } from 'solid-js'
 import { createRef } from '../hooks'
 import { onEvent as addEventListener } from '../../domkit'

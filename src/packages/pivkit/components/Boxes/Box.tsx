@@ -1,5 +1,4 @@
-import { KitProps, Piv, PivProps, useKitProps } from '../../../piv'
-import { ICSSColOption, ICSSGridOption, ICSSRowOption } from '../../icssBlocks'
+import { KitProps, Piv, useKitProps } from '../../../piv'
 
 export type BoxProps = KitProps<{
 
