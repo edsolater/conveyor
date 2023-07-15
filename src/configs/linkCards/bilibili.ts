@@ -22,19 +22,29 @@ interface BilibiliLinkCardItem extends LinkCardItem {
 
 export const bilibiliLinkCardItem: BilibiliLinkCardItem = {
   name: 'bilibili',
+  site: 'https://www.bilibili.com/',
   category: 'video',
   description: 'bilibili web site',
   keywords: ['video', 'anime', 'game'],
   headerLogo: '/websites/bilibili/header-logo.svg',
   favicon: '/websites/bilibili/favicon.svg',
   howToPlay: 'search the text',
-  screenshots: ['/websites/bilibili/screenshots/bilibili_home_page_screenshot.png'],
+  screenshot: {
+    src: '/websites/bilibili/screenshots/bilibili_home_page_screenshot.png',
+    linkAddress: 'https://www.bilibili.com/'
+  },
   // TODO: not elegant!!!
   searchUrl: {
     breif: 'https://search.bilibili.com/all',
     regex: /https:\/\/search\.bilibili\.com\/(<?category>all|video|bangui|pgc|live|article|upuser)/,
     vars: {
-      keyword: 'hello+world',
-    },
+      keyword: 'hello+world'
+    }
   },
+  subreddits: [
+    {
+      url: 'https://www.bilibili.com/movie',
+      screenshot: '/websites/bilibili/screenshots/bilibili_movie.png'
+    }
+  ]
 }

@@ -1,11 +1,13 @@
 import { createSignal } from 'solid-js'
 import server$ from 'solid-start/server'
 import { NavBar } from '../components/NavBar'
-import { linkCards } from '../configs/linkCards'
+import { LinkCardItem, linkCards } from '../configs/linkCards'
 import { useSearch } from '../packages/features/searchItems'
 import { Piv } from '../packages/piv'
 import { Box, Card, Image, Input, List, Section, Text, icss_card, icss_row } from '../packages/pivkit'
 import { GridBox } from '../packages/pivkit/components/Boxes/GridBox'
+import { DeMayArray, flap, isString } from '@edsolater/fnkit'
+import { Link } from '../components/Link'
 
 export function routeData() {
   const students = server$(async () => {
@@ -41,7 +43,7 @@ export default function Home() {
     <Piv>
       <NavBar title="Home" />
       <Section icss={{ display: 'grid', justifyContent: 'center' }}>
-        <Box icss={[icss_row({ gap: '4px' }), { marginBottom: '8px' }]}>
+        <Box icss={[icss_row({ gap: '4px' }), { marginBottom: '8px', fontSize: '2em' }]}>
           <Text>search tags:</Text>
           <Input icss={{ border: 'solid' }} onUserInput={({ text }) => setSearchText(text)} />
         </Box>
@@ -50,14 +52,16 @@ export default function Home() {
             {(item) => (
               <Card icss={[icss_card]}>
                 <GridBox icss:grid={{}}>
-                  <Image src={item.headerLogo}></Image>
-                  <Text icss={{ fontSize: '2em', fontWeight: 'bold' }}>{item.name}</Text>
+                  <Link href={item.site}>
+                    <Image src={item.headerLogo}></Image>
+                  </Link>
+                  <Link href={item.site}>
+                    <Text icss={{ fontSize: '2em', fontWeight: 'bold' }}>{item.name}</Text>
+                  </Link>
                   <List icss={icss_row({ gap: '.5em' })} items={item.keywords}>
                     {(keyword) => <Text icss={{ fontSize: '1em' }}>{keyword}</Text>}
                   </List>
-                  <List items={item.screenshots}>
-                    {(screenshotsHref) => <Image icss={{ width: '400px' }} src={screenshotsHref} />}
-                  </List>
+                  <List items={flap(item.screenshot)}>{(screenshotItem) => <Screenshot item={screenshotItem} />}</List>
                 </GridBox>
               </Card>
             )}
@@ -65,5 +69,22 @@ export default function Home() {
         </Piv>
       </Section>
     </Piv>
+  )
+}
+function Screenshot(props: { item?: DeMayArray<LinkCardItem['screenshot']> }) {
+  const src = () => (isString(props.item) ? props.item : props.item?.src)
+  const linkAddress = () => (isString(props.item) ? props.item : props.item?.linkAddress)
+  const hasLink = () => !!linkAddress()
+  return (
+    <>
+      {hasLink() ? (
+        // TODO: create <Wrap> component , so can write simplier
+        <Link href={linkAddress()}>
+          <Image icss={{ width: '400px' }} src={src} />
+        </Link>
+      ) : (
+        <Image icss={{ width: '400px' }} src={src} />
+      )}
+    </>
   )
 }

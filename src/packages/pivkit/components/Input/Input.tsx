@@ -58,8 +58,8 @@ export function Input(rawProps: InputProps) {
         get text() {
           return innerText()
         },
-        setText: updateText,
-      } as InputController),
+        setText: updateText
+      } as InputController)
   })
 
   const [additionalProps, { innerText, updateText }] = useInputInnerValue(props)
@@ -72,7 +72,7 @@ export function Input(rawProps: InputProps) {
       icss={[
         { flex: 1, background: 'transparent', minWidth: props.isFluid ? undefined : '14em' },
         /* initialize */
-        { border: 'none', padding: '8px' },
+        { border: 'none', padding: '8px', fontSize: '0.8333em' }
       ]}
     />
   )
@@ -144,8 +144,8 @@ function useInputInnerValue(props: DeAccessifyProps<InputProps>) {
       () => props.value,
       (newValue) => {
         updateTextDOM(newValue)
-      },
-    ),
+      }
+    )
   )
 
   // update when lose focus
@@ -154,8 +154,8 @@ function useInputInnerValue(props: DeAccessifyProps<InputProps>) {
       () => isFocused() === false,
       () => {
         setCachedOutsideValue(props.value)
-      },
-    ),
+      }
+    )
   )
 
   const additionalProps = createMemo(
@@ -177,9 +177,9 @@ function useInputInnerValue(props: DeAccessifyProps<InputProps>) {
             props.onUserInput?.({ text })
           },
           onFocus: focusInput,
-          onBlur: unfocusInput,
-        },
-      } as PivProps<'input'>),
+          onBlur: unfocusInput
+        }
+      } as PivProps<'input'>)
   )
   return [
     additionalProps,
@@ -190,7 +190,7 @@ function useInputInnerValue(props: DeAccessifyProps<InputProps>) {
       isFocused,
       focusInput,
       unfocusInput,
-      setCachedOutsideValue,
-    },
+      setCachedOutsideValue
+    }
   ] as const
 }
