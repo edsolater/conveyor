@@ -1,13 +1,12 @@
+import { DeMayArray, flap, isObject, isString } from '@edsolater/fnkit'
 import { Show, createSignal } from 'solid-js'
-import server$ from 'solid-start/server'
+import { Link } from '../components/Link'
 import { NavBar } from '../components/NavBar'
 import { SiteCardItem, linkCards } from '../configs/linkCards'
 import { useSearch } from '../packages/features/searchItems'
 import { Piv } from '../packages/piv'
 import { Box, Card, Image, Input, List, Section, Text, icss_card, icss_row } from '../packages/pivkit'
 import { GridBox } from '../packages/pivkit/components/Boxes/GridBox'
-import { DeMayArray, flap, isObject, isString } from '@edsolater/fnkit'
-import { Link } from '../components/Link'
 
 // export function routeData() {
 //   const students = server$(async () => {
@@ -77,21 +76,15 @@ export default function Home() {
     </Piv>
   )
 }
+
 function Screenshot(props: { item?: DeMayArray<SiteCardItem['screenshot']>; siteUrl: SiteCardItem['url'] }) {
   const src = () => (isString(props.item) ? props.item : props.item?.src)
   const detectedLinkAddress = () => (isObject(props.item) ? props.item?.linkAddress : undefined)
   const href = () => detectedLinkAddress() ?? props.siteUrl
   const hasLink = () => !!href()
   return (
-    <>
-      {hasLink() ? (
-        // TODO: create <Wrap> component , so can write simplier
-        <Link href={href()}>
-          <Image icss={{ width: '400px' }} src={src} />
-        </Link>
-      ) : (
-        <Image icss={{ width: '400px' }} src={src} />
-      )}
-    </>
+    <Link href={href()} show={hasLink()}>
+      <Image icss={{ width: '400px' }} src={src} />
+    </Link>
   )
 }

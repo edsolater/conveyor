@@ -3,9 +3,13 @@ import { JSXElement, createComponent } from 'solid-js'
 import { parsePivProps } from './propHandlers/parsePivProps'
 import { PivProps } from './types/piv'
 import { HTMLTag, ValidController } from './types/tools'
+import { makePipline } from '../fnkit/makePipline'
 
 export const pivPropsNames = [
   'id',
+  'show',
+  'hidden',
+
   'domRef',
   'class',
   'htmlProps',
@@ -24,11 +28,11 @@ export const pivPropsNames = [
   'render:self',
   'render:outWrapper',
   'render:firstChild',
-  'render:lastChild',
+  'render:lastChild'
 ] satisfies (keyof PivProps<any>)[]
 
 export const Piv = <TagName extends HTMLTag = HTMLTag, Controller extends ValidController | unknown = unknown>(
-  props: PivProps<TagName, Controller>,
+  props: PivProps<TagName, Controller>
 ) => {
   // const props = pipe(rawProps as Partial<PivProps>, handleShadowProps, handlePluginProps)
   // if (!props) return null // just for type, logicly it will never happen
@@ -36,10 +40,19 @@ export const Piv = <TagName extends HTMLTag = HTMLTag, Controller extends ValidC
   // handle have return null
   return 'dangerousRenderWrapperNode' in props
     ? handleDangerousWrapperPluginsWithChildren(props)
-    : handleNormalPivProps(props)
+    : makePipline(props) //TODO: 🤔 not reactive
+        .pipe(handleNormalPivShowOrHidden)
+        .pipe(handleNormalPivProps)
+        .calcValue()
 }
 
-function handleNormalPivProps(props: Omit<PivProps<any, any>, 'plugin' | 'shadowProps'>) {
+function handleNormalPivShowOrHidden(props?: Omit<PivProps<any, any>, 'plugin' | 'shadowProps'>) {
+  if (!props) return
+  const needRender = Boolean('show' in props ? props.show : 'hidden' in props ? !props.hidden : true)
+  return needRender ? props : undefined
+}
+function handleNormalPivProps(props?: Omit<PivProps<any, any>, 'plugin' | 'shadowProps'>) {
+  if (!props) return
   const parsedPivProps = parsePivProps(props)
   return 'render:self' in props ? props['render:self']?.(props) : <div {...parsedPivProps} />
 }
@@ -47,6 +60,6 @@ function handleNormalPivProps(props: Omit<PivProps<any, any>, 'plugin' | 'shadow
 function handleDangerousWrapperPluginsWithChildren(props: PivProps<any, any>): JSXElement {
   return flap(props['render:outWrapper']).reduce(
     (prevNode, getWrappedNode) => (getWrappedNode ? getWrappedNode(prevNode) : prevNode),
-    createComponent(Piv, omit(props, 'render:outWrapper')),
+    createComponent(Piv, omit(props, 'render:outWrapper'))
   )
 }

@@ -7,11 +7,19 @@ import { IStyle } from '../propHandlers/istyle'
 import { Plugin } from '../propHandlers/plugin'
 import { HTMLTag, PivChild, ValidController } from './tools'
 
+type Boollike = any
+
 export interface PivProps<TagName extends HTMLTag = HTMLTag, Controller extends ValidController | unknown = unknown> {
   /** @example
    * const Button = () => <Piv as={(parsedPivProps) => <button {...parsedPivProps} />} />
    */
   'render:self'?: (selfProps: PivProps<any, any>) => JSX.Element // assume a function return ReactNode is a Component
+
+  /** if falsy, it won't shown. priority is higher than `hidden` */
+  show?: Boollike
+
+  /** if truthy, it won't shown */
+  hidden?: Boollike
 
   debugLog?: (keyof PivProps)[]
 
@@ -39,7 +47,7 @@ export interface PivProps<TagName extends HTMLTag = HTMLTag, Controller extends 
         target: Element
       }
       el: HTMLElementTagNameMap[TagName]
-    } & Controller,
+    } & Controller
   ) => void // for accessifyProps, onClick can't be array
 
   /**
