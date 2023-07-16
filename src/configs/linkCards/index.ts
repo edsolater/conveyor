@@ -4,18 +4,22 @@ import { bilibiliLinkCardItem } from './bilibili'
 
 type Href = string
 
-export type LinkCardItem = {
-  name: string
-  site: Href
+type AvailableTag =
   /** youtube need vpn  */
-  needVPN?: boolean
-  /* default is other */
-  category?: 'video' | 'game' | 'music' | 'shopping' | 'news' | 'social' | 'other'
-  description: string
-  keywords: string[]
+  'vpn' | 'video' | 'game' | 'music' | 'shopping' | 'news' | 'social' | 'other'
+
+type RatingNumber = number /* 1 ~ 5 */
+
+export type SiteCardItem = {
+  name: string
+  url?: Href
+  rating?: RatingNumber
+  tags?: AvailableTag[]
+  description?: string
+  keywords?: string[]
   headerLogo?: Href
-  favicon: Href
-  howToPlay?: MayArray<string>
+  favicon?: Href
+  howToUse?: MayArray<string>
   screenshot?: MayArray<
     | Href
     | {
@@ -30,21 +34,7 @@ export type LinkCardItem = {
       [key: string]: unknown
     }
   }
-  subreddits?: {
-    category?: string
-    screenshot?: MayArray<Href>
-    url: Href
-  }[]
+  subreddits?: SiteCardItem[]
 }
-
-/**
- * big Card may have sub cards
- */
-export type SubLinkCard = {
-  subName: string
-  search?: {
-    url: string
-  }
-} & Omit<LinkCardItem, 'name' | 'subCards'>
 
 export const linkCards = [bilibiliLinkCardItem] satisfies Tuples

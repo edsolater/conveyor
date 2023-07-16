@@ -59,7 +59,7 @@ export function List<T>(rawProps: ListProps<T>) {
   })
 
   // [configs]
-  const allItems = createMemo(() => flap([...shrinkFn(props.items)]))
+  const allItems = createMemo(() => flap([...(shrinkFn(props.items) ?? [])]))
   const increaseRenderCount = createMemo(
     () => props.increaseRenderCount ?? Math.min(Math.floor(allItems().length / 10), 30)
   )

@@ -1,6 +1,6 @@
-import { LinkCardItem } from '.'
+import { SiteCardItem } from '.'
 
-interface BilibiliLinkCardItem extends LinkCardItem {
+interface BilibiliLinkCardItem extends SiteCardItem {
   searchUrl: {
     breif: 'https://search.bilibili.com/all'
     regex: RegExp
@@ -22,17 +22,14 @@ interface BilibiliLinkCardItem extends LinkCardItem {
 
 export const bilibiliLinkCardItem: BilibiliLinkCardItem = {
   name: 'bilibili',
-  site: 'https://www.bilibili.com/',
-  category: 'video',
+  url: 'https://www.bilibili.com/',
+  tags: ['video'],
   description: 'bilibili web site',
   keywords: ['video', 'anime', 'game'],
   headerLogo: '/websites/bilibili/header-logo.svg',
   favicon: '/websites/bilibili/favicon.svg',
-  howToPlay: 'search the text',
-  screenshot: {
-    src: '/websites/bilibili/screenshots/bilibili_home_page_screenshot.png',
-    linkAddress: 'https://www.bilibili.com/'
-  },
+  howToUse: 'search the text',
+  screenshot: '/websites/bilibili/screenshots/bilibili_home_page_screenshot.png',
   // TODO: not elegant!!!
   searchUrl: {
     breif: 'https://search.bilibili.com/all',
@@ -43,8 +40,20 @@ export const bilibiliLinkCardItem: BilibiliLinkCardItem = {
   },
   subreddits: [
     {
+      name: 'movie',
       url: 'https://www.bilibili.com/movie',
       screenshot: '/websites/bilibili/screenshots/bilibili_movie.png'
-    }
+    },
+    {
+      name: 'anime',
+      url: 'https://www.bilibili.com/anime',
+      screenshot: '/websites/bilibili/screenshots/bilibili_anime.png'
+    },
+    {
+      name: 'documentary',
+      url: 'https://www.bilibili.com/documentary',
+      screenshot: '/websites/bilibili/screenshots/bilibili_documentary.png'
+    },
+
   ]
 }
