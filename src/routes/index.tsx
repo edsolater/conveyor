@@ -1,10 +1,10 @@
-import { DeMayArray, flap, isObject, isString } from '@edsolater/fnkit'
+import { DeMayArray, MayFn, flap, isObject, isString, shrinkFn } from '@edsolater/fnkit'
 import { Show, createSignal } from 'solid-js'
 import { Link } from '../components/Link'
 import { NavBar } from '../components/NavBar'
 import { SiteCardItem, linkCards } from '../configs/linkCards'
 import { useSearch } from '../packages/features/searchItems'
-import { Piv } from '../packages/piv'
+import { ICSS, Piv } from '../packages/piv'
 import { Box, Card, Image, Input, List, Section, Text, icss_card, icss_row } from '../packages/pivkit'
 import { GridBox } from '../packages/pivkit/components/Boxes/GridBox'
 
@@ -83,8 +83,14 @@ function Screenshot(props: { item?: DeMayArray<SiteCardItem['screenshot']>; site
   const href = () => detectedLinkAddress() ?? props.siteUrl
   const hasLink = () => !!href()
   return (
-    <Link href={href()} show={hasLink()}>
+    <Link href={href()} icss={icss_onlyContent({ nodeShown: hasLink })}>
       <Image icss={{ width: '400px' }} src={src} />
     </Link>
   )
+}
+
+//TODO: should be a plugin
+function icss_onlyContent(opt?: { nodeShown?: MayFn<boolean> }): ICSS {
+  const nodeShown = !!shrinkFn(opt?.nodeShown)
+  return { all: nodeShown ? undefined : 'inherit', display: nodeShown ? undefined : 'contents' }
 }

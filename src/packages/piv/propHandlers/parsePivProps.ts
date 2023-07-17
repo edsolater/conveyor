@@ -19,55 +19,6 @@ import { handleShadowProps } from './shadowProps'
  */
 // TODO: props should be lazy load, props.htmlProps should also be lazy load
 export function parsePivProps(rawProps: PivProps<any>) {
-  // let calcedProps: Partial<PivProps>
-  // let calcedController: ValidController
-  // let calcedHTMLProps: AnyObj | undefined
-  // return new Proxy(
-  //   createEmptyObject(getHTMLPropsKeys(rawProps.htmlProps).concat(['class', 'ref', 'style', 'onClick', 'children'])),
-  //   {
-  //     get(target, p, receiver) {
-  //       if (!calcedProps || !calcedController) {
-  //         calcedProps = pipe(
-  //           rawProps as Partial<PivProps>,
-  //           handleShadowProps,
-  //           handlePluginProps,
-  //           parsePivRenderPrependChildren,
-  //           parsePivRenderAppendChildren,
-  //         )
-  //         calcedController = (calcedProps.innerController ?? {}) as ValidController
-  //       }
-
-  //       switch (p) {
-  //         case 'class': {
-  //           return (
-  //             shakeFalsy([
-  //               classname(calcedProps.class, calcedController),
-  //               parseCSSToString(calcedProps.icss, calcedController),
-  //             ]).join(' ') || undefined
-  //           )
-  //         }
-  //         case 'ref': {
-  //           return (el: HTMLElement) => el && mergeRefs(...flap(calcedProps.domRef))(el)
-  //         }
-  //         case 'style': {
-  //           return parseIStyles(calcedProps.style, calcedController)
-  //         }
-  //         case 'onClick': {
-  //           return 'onClick' in calcedProps ? parseOnClick(calcedProps.onClick!, calcedController) : undefined
-  //         }
-  //         case 'children': {
-  //           return parsePivChildren(calcedProps.children, calcedController)
-  //         }
-  //         default: {
-  //           if (!calcedHTMLProps) {
-  //             calcedHTMLProps = parseHTMLProps(calcedProps.htmlProps)
-  //           }
-  //           return calcedHTMLProps && Reflect.get(calcedHTMLProps, p)
-  //         }
-  //       }
-  //     },
-  //   },
-  // )
   function getProps(rawProps: Partial<PivProps>) {
     const props = pipe(
       rawProps as Partial<PivProps>,

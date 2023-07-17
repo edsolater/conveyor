@@ -7,8 +7,6 @@ import { makePipline } from '../fnkit/makePipline'
 
 export const pivPropsNames = [
   'id',
-  'show',
-  'hidden',
 
   'domRef',
   'class',
@@ -41,16 +39,10 @@ export const Piv = <TagName extends HTMLTag = HTMLTag, Controller extends ValidC
   return 'dangerousRenderWrapperNode' in props
     ? handleDangerousWrapperPluginsWithChildren(props)
     : makePipline(props) //TODO: 🤔 not reactive
-        .pipe(handleNormalPivShowOrHidden)
         .pipe(handleNormalPivProps)
         .calcValue()
 }
 
-function handleNormalPivShowOrHidden(props?: Omit<PivProps<any, any>, 'plugin' | 'shadowProps'>) {
-  if (!props) return
-  const needRender = Boolean('show' in props ? props.show : 'hidden' in props ? !props.hidden : true)
-  return needRender ? props : undefined
-}
 function handleNormalPivProps(props?: Omit<PivProps<any, any>, 'plugin' | 'shadowProps'>) {
   if (!props) return
   const parsedPivProps = parsePivProps(props)

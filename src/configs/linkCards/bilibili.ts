@@ -41,7 +41,6 @@ export const bilibiliLinkCardItem: BilibiliLinkCardItem = {
   subreddits: [
     {
       name: 'movie',
-      url: 'https://www.bilibili.com/movie',
       screenshot: '/websites/bilibili/screenshots/bilibili_movie.png'
     },
     {

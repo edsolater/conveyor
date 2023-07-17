@@ -15,12 +15,6 @@ export interface PivProps<TagName extends HTMLTag = HTMLTag, Controller extends 
    */
   'render:self'?: (selfProps: PivProps<any, any>) => JSX.Element // assume a function return ReactNode is a Component
 
-  /** if falsy, it won't shown. priority is higher than `hidden` */
-  show?: Boollike
-
-  /** if truthy, it won't shown */
-  hidden?: Boollike
-
   debugLog?: (keyof PivProps)[]
 
   /**
