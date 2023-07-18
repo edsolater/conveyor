@@ -1,3 +1,4 @@
+import { renderHTMLDOM } from '../../../components/Link'
 import { KitProps, Piv, PivProps, UIKit, useKitProps } from '../../piv'
 import { parsePivProps } from '../../piv'
 
@@ -11,7 +12,7 @@ export function LabelBox(rawProps: LabelBoxProps) {
   const { props, shadowProps } = useKitProps(rawProps)
   return (
     <Piv
-      render:self={(selfProps) => <label {...parsePivProps(selfProps)} />} // why set as will render twice
+      render:self={(selfProps) => renderHTMLDOM('label', selfProps)} // why set as will render twice
       shadowProps={shadowProps}
     />
   )

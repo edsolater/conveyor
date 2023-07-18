@@ -4,6 +4,7 @@ import { createRef } from '../../hooks/createRef'
 import { useClickOutside } from '../../hooks/useClickOutside'
 import { useDOMEventListener } from '../../hooks/useDOMEventListener'
 import { parsePivProps } from '../../../piv'
+import { renderHTMLDOM } from '../../../../components/Link'
 
 export interface ModalController {
   isOpen: boolean
@@ -91,7 +92,7 @@ export function Modal(rawProps: KitProps<ModalProps>) {
   return (
     <Show when={shouldRenderDOM()}>
       <Piv
-        render:self={(selfProps) => <dialog {...parsePivProps(selfProps)} open={props.open && !props.isModal} />}
+        render:self={(selfProps) => renderHTMLDOM('dialog', selfProps, { open: props.open && !props.isModal })}
         shadowProps={props}
         // TODO fix this
         //@ts-expect-error no-check

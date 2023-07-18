@@ -4,6 +4,7 @@ import { createRef } from '../../hooks/createRef'
 import { createToggle } from '../../hooks/createToggle'
 import { Accessify, DeAccessifyProps } from '../../utils/accessifyProps'
 import { parsePivProps } from '../../../piv'
+import { renderHTMLDOM } from '../../../../components/Link'
 
 export interface InputController {
   text: string
@@ -66,7 +67,7 @@ export function Input(rawProps: InputProps) {
 
   return (
     <Piv<'input'>
-      render:self={(selfProps) => <input {...parsePivProps(selfProps)} />}
+      render:self={(selfProps) => renderHTMLDOM('input', selfProps)}
       shadowProps={[props, additionalProps()]}
       class={Input.name}
       icss={[

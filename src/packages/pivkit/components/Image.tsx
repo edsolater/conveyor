@@ -1,10 +1,11 @@
-import { shakeNil, shakeUndefinedItem } from '@edsolater/fnkit'
-import { Piv, UIKit, parsePivProps, useKitProps } from '../../piv'
+import { shakeNil } from '@edsolater/fnkit'
+import { createEffect, createSignal, onCleanup } from 'solid-js'
+import { renderHTMLDOM } from '../../../components/Link'
+import { onEvent as addEventListener } from '../../domkit'
+import { Piv, UIKit, useKitProps } from '../../piv'
+import { createRef } from '../hooks'
 import { Accessify } from '../utils/accessifyProps'
 import { Box } from './Boxes'
-import { createEffect, createSignal } from 'solid-js'
-import { createRef } from '../hooks'
-import { onEvent as addEventListener } from '../../domkit'
 
 export interface ImageProps extends UIKit<{ controller: ImageController }> {
   /**
@@ -42,23 +43,24 @@ export function Image(rawProps: ImageProps) {
   const { props, shadowProps } = useKitProps(rawProps, { defaultProps })
 
   createEffect(() => {
-    addEventListener(dom(), 'load', () => {
+    const { abort } = addEventListener(dom(), 'load', () => {
       setIsLoaded(true)
     })
+    onCleanup(abort)
   })
   /* ---------------------------------- props --------------------------------- */
   return (
     <Box class="Image container" style={shakeNil({ width: props['css:width'], height: props['css:height'] })}>
       <Piv<'img'>
         domRef={setDom}
-        render:self={(selfProps) => <img {...parsePivProps(selfProps)} />}
+        class="Image"
+        render:self={(selfProps) => renderHTMLDOM('img', selfProps)}
         htmlProps={{ src: String(props.src), alt: props.alt, loading: props.loading ?? 'lazy' }}
         icss={{
           display: 'block',
           opacity: isLoaded() ? undefined : '0'
         }}
         shadowProps={shadowProps}
-        class="Image"
       />
     </Box>
   )

@@ -12,6 +12,7 @@ import { useGlobalKitTheme } from '../hooks/useGlobalKitTheme'
 import { cssColors } from '../styles/cssColors'
 import { CSSColorString, CSSStyle } from '../styles/type'
 import { parsePivProps } from '../../piv'
+import { renderHTMLDOM } from '../../../components/Link'
 type BooleanLike = unknown
 
 export interface ButtonController {
@@ -132,7 +133,7 @@ export function Button(kitProps: KitProps<ButtonProps, { controller: ButtonContr
   return (
     <Piv<'button'>
       class={Button.name}
-      render:self={(selfProps) => <button {...parsePivProps(selfProps)} />}
+      render:self={(selfProps) => renderHTMLDOM('button', selfProps)}
       shadowProps={omit(props, 'onClick')} // omit onClick for need to invoke the function manually, see below 👇
       onClick={(...args) => isActive() && props.onClick?.(...args)}
       htmlProps={{ type: 'button' }}

@@ -11,6 +11,7 @@ import { parseIStyles } from './istyle'
 import { parseOnClick } from './onClick'
 import { handlePluginProps } from './plugin'
 import { handleShadowProps } from './shadowProps'
+import { omit } from '../utils'
 
 /**
  * Parses the PivProps object and returns an object with the parsed properties.
@@ -25,14 +26,17 @@ export function parsePivProps(rawProps: PivProps<any>) {
       handleShadowProps,
       handlePluginProps,
       parsePivRenderPrependChildren,
-      parsePivRenderAppendChildren,
+      parsePivRenderAppendChildren
     )
     const controller = (props.innerController ?? {}) as ValidController
-    return { props, controller }
+    const ifNeedRenderChildren = 'if' in props ? Boolean(props.if) : undefined
+    const ifNeedRenderSelf = ('ifCanWrap' as keyof PivProps) in props ? Boolean(props.ifCanWrap) : undefined
+    const renderSelf = 'render:self' in props ? props['render:self']?.(omit(props, ['render:self'])) : undefined
+    return { props, controller, ifNeedRenderChildren, renderSelf, ifNeedRenderSelf }
   }
-  const { props, controller } = getProps(rawProps)
+  const { props, controller, ifNeedRenderChildren, renderSelf, ifNeedRenderSelf } = getProps(rawProps)
   debugLog(rawProps, props, controller)
-  return {
+  const nativeProps = {
     ...parseHTMLProps(props.htmlProps),
     get class() {
       const { props, controller } = getProps(rawProps)
@@ -43,7 +47,7 @@ export function parsePivProps(rawProps: PivProps<any>) {
       ) /* don't render if empty string */
     },
     get ref() {
-      const { props, controller } = getProps(rawProps)
+      const { props } = getProps(rawProps)
       return (el: HTMLElement) => el && mergeRefs(...flap(props.domRef))(el)
     },
     get style() {
@@ -57,8 +61,9 @@ export function parsePivProps(rawProps: PivProps<any>) {
     get children() {
       const { props, controller } = getProps(rawProps) // 🤔: is children depend on shadow props, shadow props has createMemo, so solidjs engine will re-run this function evey time inner subscribiton changed?
       return parsePivChildren(props.children, controller)
-    },
+    }
   }
+  return { props: nativeProps, ifNeedRenderChildren, renderSelf, ifNeedRenderSelf }
 }
 
 /**
@@ -83,7 +88,7 @@ function parsePivRenderPrependChildren<T extends Partial<PivProps<any, any>>>(pr
   return 'render:firstChild' in props
     ? mutateByAdditionalObjectDescriptors(props, {
         newGetters: { children: (props) => flap(props['render:firstChild']).concat(props.children) },
-        deletePropertyNames: ['render:firstChild'],
+        deletePropertyNames: ['render:firstChild']
       })
     : props
 }
@@ -98,9 +103,9 @@ function parsePivRenderAppendChildren<T extends Partial<PivProps<any, any>>>(pro
   return 'render:lastChild' in props
     ? mutateByAdditionalObjectDescriptors(props, {
         newGetters: {
-          children: (props) => flap(props.children).concat(flap(props['render:lastChild'])),
+          children: (props) => flap(props.children).concat(flap(props['render:lastChild']))
         },
-        deletePropertyNames: ['render:lastChild'],
+        deletePropertyNames: ['render:lastChild']
       })
     : props
 }
@@ -136,7 +141,7 @@ function debugLog(rawProps: PivProps<any>, props: PivProps<any>, controller: Val
       console.debug(
         'onClick (raw → parsed): ',
         props.onClick,
-        'onClick' in props && parseOnClick(props.onClick!, controller),
+        'onClick' in props && parseOnClick(props.onClick!, controller)
       )
     }
     if (props.debugLog.includes('children')) {

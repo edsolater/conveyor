@@ -2,7 +2,7 @@ import { createEffect } from 'solid-js'
 import { Piv } from '../packages/piv'
 import { Box, Icon, Text, icss_row } from '../packages/pivkit'
 import { threeGridSlotBoxICSS } from '../icssBlocks/threeGridSlotBoxICSS'
-import { Link } from './Link'
+import { Link, renderHTMLDOM } from './Link'
 import { parsePivProps } from '../packages/piv'
 
 export interface TopMenuBarProps {
@@ -21,7 +21,7 @@ export function TopMenuBar(props: TopMenuBarProps) {
         { userSelect: 'none', padding: '16px 32px', transition: '150ms' },
         threeGridSlotBoxICSS
       ]}
-      render:self={(selfProps) => <nav {...parsePivProps(selfProps)} />}
+      render:self={(selfProps) => renderHTMLDOM('nav', selfProps)}
     >
       <Box icss={icss_row({ gap: '32px' })}>
         <Link href="/" innerRoute>
@@ -42,4 +42,3 @@ export function TopMenuBar(props: TopMenuBarProps) {
     </Piv>
   )
 }
-

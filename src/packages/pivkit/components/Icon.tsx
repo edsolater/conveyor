@@ -1,3 +1,4 @@
+import { renderHTMLDOM } from '../../../components/Link'
 import { KitProps, Piv, useKitProps } from '../../piv'
 import { parsePivProps } from '../../piv'
 
@@ -17,7 +18,7 @@ export function Icon(rawProps: KitProps<IconProps>) {
   /* ---------------------------------- props --------------------------------- */
   return (
     <Piv<'img'>
-      render:self={(selfProps) => <img {...parsePivProps(selfProps)} />}
+      render:self={(selfProps) => renderHTMLDOM('img', selfProps)}
       htmlProps={{ alt: props.name, src: props.src }}
       icss={{ display: 'block' }}
       shadowProps={props}

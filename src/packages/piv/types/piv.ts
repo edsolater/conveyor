@@ -15,6 +15,11 @@ export interface PivProps<TagName extends HTMLTag = HTMLTag, Controller extends 
    */
   'render:self'?: (selfProps: PivProps<any, any>) => JSX.Element // assume a function return ReactNode is a Component
 
+  /** if is settled and is flase , only it's children will render */
+  if?: Boollike
+  /** if is settled and is flase , only it's children will render */
+  ifCanWrap?: Boollike
+
   debugLog?: (keyof PivProps)[]
 
   /**

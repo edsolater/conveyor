@@ -1,12 +1,14 @@
 import { flap, omit } from '@edsolater/fnkit'
-import { JSXElement, createComponent } from 'solid-js'
+import { JSXElement, Show, createComponent } from 'solid-js'
+import { makePipline } from '../fnkit/makePipline'
 import { parsePivProps } from './propHandlers/parsePivProps'
 import { PivProps } from './types/piv'
 import { HTMLTag, ValidController } from './types/tools'
-import { makePipline } from '../fnkit/makePipline'
 
 export const pivPropsNames = [
   'id',
+  'if',
+  'ifCanWrap',
 
   'domRef',
   'class',
@@ -31,22 +33,49 @@ export const pivPropsNames = [
 
 export const Piv = <TagName extends HTMLTag = HTMLTag, Controller extends ValidController | unknown = unknown>(
   props: PivProps<TagName, Controller>
-) => {
-  // const props = pipe(rawProps as Partial<PivProps>, handleShadowProps, handlePluginProps)
-  // if (!props) return null // just for type, logicly it will never happen
-
-  // handle have return null
-  return 'dangerousRenderWrapperNode' in props
+) =>
+  'dangerousRenderWrapperNode' in props
     ? handleDangerousWrapperPluginsWithChildren(props)
-    : makePipline(props) //TODO: 🤔 not reactive
-        .pipe(handleNormalPivProps)
-        .calcValue()
-}
+    : makePipline(props).pipe(handleNormalPivProps).calcValue()
 
 function handleNormalPivProps(props?: Omit<PivProps<any, any>, 'plugin' | 'shadowProps'>) {
   if (!props) return
-  const parsedPivProps = parsePivProps(props)
-  return 'render:self' in props ? props['render:self']?.(props) : <div {...parsedPivProps} />
+  const { props: parsedProps, ifNeedRenderChildren, renderSelf, ifNeedRenderSelf } = parsePivProps(props)
+  return renderSelf ? renderSelf : renderHTMLDiv(parsedProps, ifNeedRenderChildren, ifNeedRenderSelf)
+}
+
+function renderHTMLDiv(
+  parsedProps: any,
+  ifNeedRenderChildren: boolean | undefined,
+  ifNeedRenderSelf: boolean | undefined
+) {
+  if (ifNeedRenderChildren === undefined && ifNeedRenderSelf === undefined) {
+    return <div {...parsedProps} />
+  } else if (ifNeedRenderSelf === undefined) {
+    return (
+      <Show when={ifNeedRenderChildren}>
+        <div {...parsedProps} />
+      </Show>
+    )
+  } else if (ifNeedRenderChildren === undefined) {
+    return (
+      <>
+        <Show when={ifNeedRenderSelf}>
+          <div {...parsedProps} />
+        </Show>
+        <Show when={!ifNeedRenderSelf}>{parsedProps.children}</Show>
+      </>
+    )
+  } else {
+    return (
+      <Show when={ifNeedRenderChildren}>
+        <Show when={ifNeedRenderSelf}>
+          <div {...parsedProps} />
+        </Show>
+        <Show when={!ifNeedRenderSelf}>{parsedProps.children}</Show>
+      </Show>
+    )
+  }
 }
 
 function handleDangerousWrapperPluginsWithChildren(props: PivProps<any, any>): JSXElement {
