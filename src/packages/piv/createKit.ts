@@ -1,5 +1,4 @@
 import { hasProperty, MayArray, MayDeepArray, pipe } from '@edsolater/fnkit'
-import { mergeProps } from 'solid-js'
 import { Faker } from '../fnkit'
 import { AccessifyProps, DeAccessifyProps, useAccessifiedProps } from '../pivkit'
 import { registerControllerInCreateKit } from './hooks/useComponentController'
@@ -16,6 +15,7 @@ import { CRef, PivProps } from './types/piv'
 import { HTMLTag, ValidController, ValidProps } from './types/tools'
 import { AddDefaultPivProps, addDefaultPivProps } from './utils/addDefaultProps'
 import { omit } from './utils/omit'
+import { mergeProps } from './utils'
 
 /**
  * - auto add `plugin` `shadowProps` `_promisePropsConfig` `controller` props

@@ -15,6 +15,7 @@ export function Link(rawProps: KitProps<LinkProps>) {
   const navigate = useNavigate()
   return (
     <Piv<'a'>
+      class='Link'
       icss={{ textDecoration: 'none', transition: '150ms', cursor: 'pointer' }}
       render:self={(selfProps) =>
         props.innerRoute

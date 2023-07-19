@@ -50,7 +50,7 @@ export function Image(rawProps: ImageProps) {
   })
   /* ---------------------------------- props --------------------------------- */
   return (
-    <Box class="Image container" style={shakeNil({ width: props['css:width'], height: props['css:height'] })}>
+    <Box class="Image Container" style={shakeNil({ width: props['css:width'], height: props['css:height'] })}>
       <Piv<'img'>
         domRef={setDom}
         class="Image"

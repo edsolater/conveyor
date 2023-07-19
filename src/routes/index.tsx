@@ -8,25 +8,6 @@ import { ICSS, Piv } from '../packages/piv'
 import { Box, Card, Image, Input, List, Section, Text, icss_card, icss_row } from '../packages/pivkit'
 import { GridBox } from '../packages/pivkit/components/Boxes/GridBox'
 
-// export function routeData() {
-//   const students = server$(async () => {
-//     const response = await fetch('https://api.bilibili.com/x/web-interface/popular')
-//     return response
-//     const responseJson = await response.json()
-//     console.log('responseJson: ', responseJson)
-//     return responseJson
-//   })
-
-//   students().then((i) => {
-//     console.log('i: ', i)
-//   })
-//   const logHello = server$(async (message: string) => {
-//     console.log('message from server: ', message)
-//   })
-
-//   logHello('Hello')
-// }
-
 function SiteItem(props: { item: SiteCardItem; level?: /* zero or undefined is the top */ number }) {
   return (
     <Card icss={[icss_card]}>

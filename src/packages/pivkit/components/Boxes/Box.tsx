@@ -1,8 +1,6 @@
 import { KitProps, Piv, useKitProps } from '../../../piv'
 
-export type BoxProps = KitProps<{
-
-}>
+export type BoxProps = KitProps<{}>
 
 /**
  * if for layout , don't render important content in Box
@@ -10,5 +8,5 @@ export type BoxProps = KitProps<{
 export function Box(rawProps: BoxProps) {
   const { shadowProps } = useKitProps(rawProps, { name: 'Box' })
   /* ---------------------------------- props --------------------------------- */
-  return <Piv class={'Box'} shadowProps={shadowProps} />
+  return <Piv shadowProps={shadowProps} />
 }

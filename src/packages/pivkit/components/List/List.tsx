@@ -105,7 +105,7 @@ export function List<T>(rawProps: ListProps<T>) {
   }
   return (
     <ListContext.Provider value={{ observeFunction: observe, renderItemLength }}>
-      <Piv domRef={setRef} shadowProps={props} icss={{ overflow: 'auto', contain: 'paint' }}>
+      <Piv class='List' domRef={setRef} shadowProps={props} icss={{ overflow: 'auto', contain: 'paint' }}>
         <For each={allItems()}>{renderListItems}</For>
       </Piv>
     </ListContext.Provider>

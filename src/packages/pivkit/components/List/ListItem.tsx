@@ -48,7 +48,7 @@ export function ListItem(originalProps: ListItemProps) {
   const childContent = createMemo(() => children())
   return (
     <Piv
-      debugLog={[]}
+      class='ListItem'
       domRef={[setRef, setSizeDetectorTarget]} // FIXME: why ref not setted🤔?
       shadowProps={omit(props, 'children')} // FIXME: should not use tedius omit
       style={{
