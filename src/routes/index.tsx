@@ -5,8 +5,7 @@ import { NavBar } from '../components/NavBar'
 import { SiteCardItem, linkCards } from '../configs/linkCards'
 import { useSearch } from '../packages/features/searchItems'
 import { ICSS, Piv } from '../packages/piv'
-import { Box, Card, Image, Input, List, Section, Text, icss_card, icss_row } from '../packages/pivkit'
-import { GridBox } from '../packages/pivkit/components/Boxes/GridBox'
+import { Box, Card, GridBox, Image, Input, List, Section, Text, icss_card, icss_row } from '../packages/pivkit'
 
 function SiteItem(props: { item: SiteCardItem; level?: /* zero or undefined is the top */ number }) {
   return (

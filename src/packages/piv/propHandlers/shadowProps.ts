@@ -1,7 +1,8 @@
-import { MayArray, shakeNil } from '@edsolater/fnkit'
+import { MayArray, isArray, isObject, omit, shakeNil } from '@edsolater/fnkit'
 import { PivProps } from '../types/piv'
 import { getPivPropsValue } from '../utils/mergeProps'
 import { pivPropsNames } from '../Piv'
+import { getKeys } from '../utils'
 
 export type PivShadowProps<OriginalProps> = MayArray<Partial<Omit<OriginalProps, 'as' | 'children'>>>
 
@@ -12,7 +13,7 @@ export function handleShadowProps<P extends Partial<PivProps<any>>>(
   additionalShadowPropNames?: string[]
 ): Omit<P, 'shadowProps'> {
   if (!('shadowProps' in props)) return props
-  const keys = getMergedPropKeys(props).concat(additionalShadowPropNames ?? [])
+  const keys = getMergedKeys(props).concat(additionalShadowPropNames ?? [])
   const merged = Object.defineProperties(
     {},
     keys.reduce((acc: any, key: any) => {
@@ -30,10 +31,18 @@ export function handleShadowProps<P extends Partial<PivProps<any>>>(
   return merged
 }
 
-function getMergedPropKeys(props: Partial<PivProps<any>>) {
-  const selfProps = Object.keys(props).concat(Object.keys(props.shadowProps))
+function getMergedKeys(props: Partial<PivProps<any>>) {
+  function getShadowPropKeys(props: Partial<PivProps<any>>): string[] {
+    return isArray(props.shadowProps)
+      ? props.shadowProps.flatMap((p) => (isObject(p) ? Object.keys(p) : []))
+      : isObject(props.shadowProps)
+      ? Object.keys(props.shadowProps)
+      : []
+  }
+  const shadowKeys = getShadowPropKeys(props)
+  const selfProps = Object.keys(omit(props, ['shadowProps']))
   const pivProps = pivPropsNames
-  return getIntersection(selfProps, pivProps)
+  return getIntersection(selfProps.concat(shadowKeys), pivProps)
 }
 
 function getIntersection<T, W>(arr1: T[], arr2: W[]): T[] {
