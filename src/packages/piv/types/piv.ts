@@ -18,7 +18,7 @@ export interface PivProps<TagName extends HTMLTag = HTMLTag, Controller extends 
   /** if is settled and is flase , only it's children will render */
   if?: Boollike
   /** if is settled and is flase , only it's children will render */
-  ifCanWrap?: Boollike
+  ifSelfShown?: Boollike
 
   debugLog?: (keyof PivProps)[]
 

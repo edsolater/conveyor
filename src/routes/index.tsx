@@ -64,7 +64,7 @@ function Screenshot(props: { item?: DeMayArray<SiteCardItem['screenshot']>; site
   const href = () => detectedLinkAddress() ?? props.siteUrl
   const hasLink = () => !!href()
   return (
-    <Link href={href()} ifCanWrap={hasLink()}>
+    <Link href={href()} ifSelfShown={hasLink()}>
       <Image icss={{ width: '400px' }} src={src} />
     </Link>
   )

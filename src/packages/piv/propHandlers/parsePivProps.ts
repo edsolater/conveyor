@@ -6,7 +6,7 @@ import { mergeRefs } from '../utils/mergeRefs'
 import { classname } from './classname'
 import { parsePivChildren } from './controller'
 import { parseHTMLProps } from './htmlProps'
-import { parseCSSToString } from './icss'
+import { classifyICSS } from './icss'
 import { parseIStyles } from './istyle'
 import { parseOnClick } from './onClick'
 import { handlePluginProps } from './plugin'
@@ -30,7 +30,7 @@ export function parsePivProps(rawProps: PivProps<any>) {
     )
     const controller = (props.innerController ?? {}) as ValidController
     const ifNeedRenderChildren = 'if' in props ? Boolean(props.if) : undefined
-    const ifNeedRenderSelf = ('ifCanWrap' as keyof PivProps) in props ? Boolean(props.ifCanWrap) : undefined
+    const ifNeedRenderSelf = ('ifSelfShown' as keyof PivProps) in props ? Boolean(props.ifSelfShown) : undefined
     const renderSelf = 'render:self' in props ? props['render:self']?.(omit(props, ['render:self'])) : undefined
     return { props, controller, ifNeedRenderChildren, renderSelf, ifNeedRenderSelf }
   }
@@ -42,7 +42,7 @@ export function parsePivProps(rawProps: PivProps<any>) {
       const { props, controller } = getProps(rawProps)
       // get ter for lazy solidjs render
       return (
-        shakeFalsy([classname(props.class, controller), parseCSSToString(props.icss, controller)]).join(' ') ||
+        shakeFalsy([classname(props.class, controller), classifyICSS(props.icss, controller)]).join(' ') ||
         undefined
       ) /* don't render if empty string */
     },
@@ -126,7 +126,7 @@ function debugLog(rawProps: PivProps<any>, props: PivProps<any>, controller: Val
       console.debug('htmlProps (raw → parsed): ', props.htmlProps, { ...parseHTMLProps(props.htmlProps) })
     }
     if (props.debugLog.includes('icss')) {
-      console.debug('icss (raw → parsed): ', props.icss, parseCSSToString(props.icss, controller))
+      console.debug('icss (raw → parsed): ', props.icss, classifyICSS(props.icss, controller))
     }
     if (props.debugLog.includes('style')) {
       console.debug('style (raw → parsed): ', props.style, parseIStyles(props.style, controller))

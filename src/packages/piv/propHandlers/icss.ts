@@ -1,4 +1,14 @@
-import { filter, flap, flapDeep, isObject, MayArray, mergeObjectsWithConfigs, shrinkFn } from '@edsolater/fnkit'
+import {
+  filter,
+  flap,
+  flapDeep,
+  getKeys,
+  isObject,
+  isString,
+  MayArray,
+  mergeObjectsWithConfigs,
+  shrinkFn
+} from '@edsolater/fnkit'
 import { css, CSSAttribute } from 'solid-styled-components'
 import { LoadController, ValidController } from '../types/tools'
 
@@ -13,21 +23,16 @@ export type ICSS<Controller extends ValidController | unknown = unknown> = MayAr
   LoadController<boolean | string | number | null | undefined, Controller> | ICSSObject<Controller>
 >
 
-export function parseCSSToString<Controller extends ValidController | unknown = unknown>(
+export function classifyICSS<Controller extends ValidController | unknown = unknown>(
   cssProp: ICSS<Controller>,
   controller: Controller = {} as Controller
 ) {
   const cssObjList = flapDeep(cssProp)
     .map((i) => shrinkFn(i, [controller]))
-    .filter((i) => isObject(i)) as CSSObject[]
-  if (!cssObjList.length) return ''
-  const mergedCSSObj = cssObjList.reduce((acc, cur) => mergeCSSObject(acc, cur), {} as CSSObject)
-  return css(mergedCSSObj)
+    .filter((i) => isString(i) || (isObject(i) && getKeys(i).length > 0)) as (CSSObject | string)[]
+  const classes = cssObjList.map((i) => (isString(i) ? i : css(i)))
+  return classes.join(' ')
 }
-
-// export function createICSS<T extends ICSS>(...icsses: T[]): T {
-//   return icsses.length <= 1 ? icsses[0] : icsses.flat()
-// }
 
 export function compressICSSToObj<Controller extends ValidController | unknown = unknown>(
   icss: ICSS<Controller>

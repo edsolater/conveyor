@@ -8,7 +8,7 @@ import { HTMLTag, ValidController } from './types/tools'
 export const pivPropsNames = [
   'id',
   'if',
-  'ifCanWrap',
+  'ifSelfShown',
 
   'domRef',
   'class',

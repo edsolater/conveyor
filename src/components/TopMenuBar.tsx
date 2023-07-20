@@ -1,9 +1,7 @@
-import { createEffect } from 'solid-js'
-import { Piv } from '../packages/piv'
-import { Box, Icon, Text, icss_row } from '../packages/pivkit'
 import { threeGridSlotBoxICSS } from '../icssBlocks/threeGridSlotBoxICSS'
+import { Piv } from '../packages/piv'
+import { Box, Icon, icss_row } from '../packages/pivkit'
 import { Link, renderHTMLDOM } from './Link'
-import { parsePivProps } from '../packages/piv'
 
 export interface TopMenuBarProps {
   title?: string
