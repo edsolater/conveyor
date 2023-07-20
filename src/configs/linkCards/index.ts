@@ -1,6 +1,7 @@
 import { MayArray } from '@edsolater/fnkit'
 import { Tuples } from '../../packages/fnkit'
 import { bilibiliLinkCardItem } from './bilibili'
+import { youtubeLinkCardItem } from './youtube'
 
 type Href = string
 
@@ -18,7 +19,7 @@ export type SiteCardItem = {
   description?: string
   keywords?: string[]
   headerLogo?: Href
-  favicon?: Href
+  icon?: Href
   howToUse?: MayArray<string>
   screenshot?: MayArray<
     | Href
@@ -37,4 +38,4 @@ export type SiteCardItem = {
   subreddits?: SiteCardItem[]
 }
 
-export const linkCards = [bilibiliLinkCardItem] satisfies Tuples
+export const linkCards = [bilibiliLinkCardItem, youtubeLinkCardItem] satisfies Tuples

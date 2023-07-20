@@ -47,5 +47,6 @@ function getMergedKeys(props: Partial<PivProps<any>>) {
 
 function getIntersection<T, W>(arr1: T[], arr2: W[]): T[] {
   const a2 = new Set(arr2)
-  return [...arr1].filter((item) => a2.has(item as any))
+  const result = [...arr1].filter((item) => a2.has(item as any))
+  return result
 }
