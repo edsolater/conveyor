@@ -20,7 +20,7 @@ function SiteItem(props: { item: SiteCardItem; level?: /* zero or undefined is t
         <List icss={icss_row({ gap: '.5em' })} items={props.item.keywords}>
           {(keyword) => <Text icss={{ fontSize: '1em' }}>{keyword}</Text>}
         </List>
-        <List items={flap(props.item.screenshot)}>
+        {/* <List items={flap(props.item.screenshot)}>
           {(screenshotItem) => <Screenshot siteUrl={props.item.url} item={screenshotItem} />}
         </List>
 
@@ -28,7 +28,7 @@ function SiteItem(props: { item: SiteCardItem; level?: /* zero or undefined is t
           <List items={props.item.subreddits}>
             {(subreddit) => <SiteItem item={subreddit} level={(props.level ?? 0) + 1}></SiteItem>}
           </List>
-        </Show>
+        </Show> */}
       </GridBox>
     </Card>
   )

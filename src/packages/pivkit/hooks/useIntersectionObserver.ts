@@ -13,6 +13,7 @@ export type ObserveFn<Item extends HTMLElement> = (
 /** **DOM API** */
 export function useIntersectionObserver<Item extends HTMLElement>(input: {
   rootRef: Accessor<HTMLElement | undefined>
+  disabled?: boolean
   options?: IntersectionObserverInit
 }): {
   observe: ObserveFn<Item>
@@ -25,6 +26,7 @@ export function useIntersectionObserver<Item extends HTMLElement>(input: {
   createEffect(() => {
     const rootEl = input.rootRef()
     if (!rootEl) return
+    if (input.disabled) return
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {

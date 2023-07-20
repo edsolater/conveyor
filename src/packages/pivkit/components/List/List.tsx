@@ -25,14 +25,23 @@ export type ListProps<T> = KitProps<
     items?: MayFn<Iterable<T>>
     children(item: T, index: () => number): JSXElement
 
-    /** @default 30 */
+    turnOnScrollObserver?: boolean
+
+    /**
+     * only meaningfull when turnOnScrollObserver is true
+     * @default 30
+     */
     increaseRenderCount?: number
     /**
+     * only meaningfull when turnOnScrollObserver is true
      * @default 30
      * can accept Infinity
      */
     initRenderCount?: number
-    /** @default 50(px) */
+    /**
+     * only meaningfull when turnOnScrollObserver is true
+     * @default 50(px)
+     */
     reachBottomMargin?: number
   },
   {
@@ -71,11 +80,17 @@ export function List<T>(rawProps: ListProps<T>) {
   const [listRef, setRef] = createRef<HTMLElement>()
 
   // [add to context, this observer can make listItem can auto render or not]
-  const { observe, destory } = useIntersectionObserver({ rootRef: listRef, options: { rootMargin: '100%' } })
+  const { observe, destory } = useIntersectionObserver({
+    rootRef: listRef,
+    options: { rootMargin: '100%' },
+    disabled: !props.turnOnScrollObserver,
+  })
   onCleanup(() => destory())
 
   // [actually showed item count]
-  const [renderItemLength, setRenderItemLength] = createSignal(initRenderCount())
+  const [renderItemLength, setRenderItemLength] = createSignal(
+    props.turnOnScrollObserver ? initRenderCount() : Infinity
+  )
 
   // [scroll handler]
   const { forceCalculate } = useScrollDegreeDetector(listRef, {
@@ -83,6 +98,7 @@ export function List<T>(rawProps: ListProps<T>) {
       setRenderItemLength((n) => n + increaseRenderCount())
     },
     reachBottomMargin: props.reachBottomMargin,
+    disabled: !props.turnOnScrollObserver,
   })
 
   // reset when items.length changed
@@ -91,6 +107,7 @@ export function List<T>(rawProps: ListProps<T>) {
       () => allItems().length,
       () => {
         setRenderItemLength(initRenderCount())
+        console.log('1: ', allItems())
         forceCalculate()
       }
     )

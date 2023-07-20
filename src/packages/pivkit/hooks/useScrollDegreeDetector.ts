@@ -4,6 +4,7 @@ import { onEvent } from '../../domkit'
 export interface UseScrollDegreeDetectorOptions {
   onReachBottom?: () => void
   reachBottomMargin?: number
+  disabled?: boolean
 }
 
 export function useScrollDegreeDetector(
@@ -33,6 +34,7 @@ export function useScrollDegreeDetector(
   createEffect(() => {
     const el = ref()
     if (!el) return
+    if (options?.disabled) return
 
     onScroll()
     const { abort: cancel } = onEvent(el, 'scroll', onScroll, { passive: true })
