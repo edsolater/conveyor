@@ -30,7 +30,7 @@ export function useAccessifiedProps<P extends AnyObj, Controller extends ValidCo
   props: P,
   controller?: Controller,
   /** default is on* and domRef and controllerRef, but you can add more */
-  needAccessifyProps?: string[],
+  needAccessifyProps?: string[]
 ): DeAccessifyProps<P> {
   const accessifiedProps = Object.defineProperties(
     {},
@@ -47,7 +47,7 @@ export function useAccessifiedProps<P extends AnyObj, Controller extends ValidCo
         },
       }
       return acc
-    }, {} as PropertyDescriptorMap),
+    }, {} as PropertyDescriptorMap)
   ) as DeAccessifyProps<P>
   return accessifiedProps
 }

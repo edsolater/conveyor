@@ -9,7 +9,7 @@ export function createSyncSignal<T>(options: {
   set?: (value: T) => void
 }): Signal<T> {
   const [signal, setSignal] = createSignal(
-    'defaultValue' in options ? options.defaultValue?.() ?? options.get() : options.get(),
+    'defaultValue' in options ? options.defaultValue?.() ?? options.get() : options.get()
   )
   // invoke `get`
   createEffect(() => setSignal((prev) => options.get(prev)))
@@ -22,8 +22,8 @@ export function createSyncSignal<T>(options: {
         if (newValue === options.get()) return
         options.set?.(newValue)
       },
-      { defer: true },
-    ),
+      { defer: true }
+    )
   )
 
   return [signal, setSignal]

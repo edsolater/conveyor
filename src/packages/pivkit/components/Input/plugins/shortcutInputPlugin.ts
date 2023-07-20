@@ -29,7 +29,7 @@ export const keyboardShortcutObserverPlugin = (options: {
     createEffect(
       on(recordedShortcut, () => {
         controllerRef()?.setText(recordedShortcut())
-      }),
+      })
     )
 
     const handleKeydownKeyboardShortcut = (text: string) => {
@@ -53,6 +53,6 @@ function subscribeKeyboardShortcut(el: HTMLElement) {
 
 function isValidShortcut(ev: KeyboardEvent, options?: { banedKeywords?: string[] }): boolean {
   return ['control', 'alt', 'shift', 'meta', 'backspace', 'enter', ...(options?.banedKeywords ?? [])].every(
-    (key) => !ev.key.toLowerCase().includes(key.toLowerCase()),
+    (key) => !ev.key.toLowerCase().includes(key.toLowerCase())
   )
 }

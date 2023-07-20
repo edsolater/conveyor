@@ -51,7 +51,7 @@ export function createPlxCreator<Creater extends (...params: any[]) => (props: P
   options?: {
     priority?: number // NOTE -1:  it should be render after final prop has determine
     name?: string
-  },
+  }
 ): (...params: Parameters<Creater>) => Plx {
   const fn = (...params: Parameters<Creater>) => ({
     corefn: createrFn(params),

@@ -35,24 +35,23 @@ export const bilibiliLinkCardItem: BilibiliLinkCardItem = {
     breif: 'https://search.bilibili.com/all',
     regex: /https:\/\/search\.bilibili\.com\/(<?category>all|video|bangui|pgc|live|article|upuser)/,
     vars: {
-      keyword: 'hello+world'
-    }
+      keyword: 'hello+world',
+    },
   },
   subreddits: [
     {
       name: 'movie',
-      screenshot: '/websites/bilibili/screenshots/bilibili_movie.png'
+      screenshot: '/websites/bilibili/screenshots/bilibili_movie.png',
     },
     {
       name: 'anime',
       url: 'https://www.bilibili.com/anime',
-      screenshot: '/websites/bilibili/screenshots/bilibili_anime.png'
+      screenshot: '/websites/bilibili/screenshots/bilibili_anime.png',
     },
     {
       name: 'documentary',
       url: 'https://www.bilibili.com/documentary',
-      screenshot: '/websites/bilibili/screenshots/bilibili_documentary.png'
+      screenshot: '/websites/bilibili/screenshots/bilibili_documentary.png',
     },
-
-  ]
+  ],
 }

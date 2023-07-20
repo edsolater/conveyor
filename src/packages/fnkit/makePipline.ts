@@ -13,6 +13,6 @@ export function makePipline<T>(value: T | (() => T)): PipelineMachine<T> {
     },
     calcValue() {
       return getValue()
-    }
+    },
   }
 }

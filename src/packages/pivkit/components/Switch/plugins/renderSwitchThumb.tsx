@@ -18,7 +18,7 @@ export function renderSwitchThumb(
         borderRadius: '999px',
       }}
     ></Piv>
-  ),
+  )
 ): () => SwitchProps {
   return () => ({
     'anatomy:Thumb': {

@@ -91,7 +91,7 @@ export function createToggle(
     on,
     off,
     toggle,
-    set: setIsOn
+    set: setIsOn,
   }
   return [isOn, controller]
 }

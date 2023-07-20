@@ -9,12 +9,12 @@ export function HTMLCheckbox(rawProps: HTMLCheckboxProps) {
   const { props } = useKitProps(rawProps)
   return (
     <Piv
-      class="HTMLCheckbox"
+      class='HTMLCheckbox'
       render:self={(selfProps) => renderHTMLDOM('input', selfProps)}
       htmlProps={{
         type: 'checkbox',
         checked: props.defaultChecked,
-        'aria-label': props.label ?? 'checkbox'
+        'aria-label': props.label ?? 'checkbox',
       }}
       shadowProps={props}
     />

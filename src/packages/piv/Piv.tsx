@@ -28,7 +28,7 @@ export const pivPropsNames = [
   'render:self',
   'render:outWrapper',
   'render:firstChild',
-  'render:lastChild'
+  'render:lastChild',
 ] satisfies (keyof PivProps<any>)[]
 
 export const Piv = <TagName extends HTMLTag = HTMLTag, Controller extends ValidController | unknown = unknown>(

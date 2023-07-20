@@ -35,17 +35,17 @@ export function CircularProgress(kitProps: KitProps<CircularProgressProps>) {
       >
         <circle
           r={r()}
-          cx="50%"
-          cy="50%"
-          fill="transparent"
+          cx='50%'
+          cy='50%'
+          fill='transparent'
           style={{ 'stroke-width': `${props.strokeWidth}px`, stroke: '#00000014' }}
         />
         <circle
-          id="bar"
+          id='bar'
           r={r()}
-          cx="50%"
-          cy="50%"
-          fill="transparent"
+          cx='50%'
+          cy='50%'
+          fill='transparent'
           stroke-dasharray={String(p())}
           stroke-dashoffset={p() - Math.min(props.percent, 1) * p()}
           style={{
@@ -53,7 +53,7 @@ export function CircularProgress(kitProps: KitProps<CircularProgressProps>) {
             stroke: 'currentcolor',
             transform: 'rotate(-90deg)',
             'transform-origin': 'center',
-            'stroke-linecap': 'round'
+            'stroke-linecap': 'round',
           }}
         />
       </svg>

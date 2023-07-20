@@ -88,7 +88,7 @@ export function createPluginCreator<Params extends AnyObj, Props extends ValidPr
   options?: {
     priority?: number // NOTE -1:  it should be render after final prop has determine
     name?: string
-  },
+  }
 ): PluginCreator<Params> {
   const factory = (params: Params) => ({
     pluginCoreFn: createrFn(params),

@@ -18,7 +18,7 @@ export function renderRadioThumb(
         borderRadius: '999px',
       }}
     ></Piv>
-  ),
+  )
 ): RadioProps['shadowProps'] {
   return {
     'anatomy:Thumb': {

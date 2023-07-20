@@ -17,23 +17,23 @@ export function TopMenuBar(props: TopMenuBarProps) {
       icss={[
         icss_row({ items: 'center' }),
         { userSelect: 'none', padding: '16px 32px', transition: '150ms' },
-        threeGridSlotBoxICSS
+        threeGridSlotBoxICSS,
       ]}
       render:self={(selfProps) => renderHTMLDOM('nav', selfProps)}
     >
       <Box icss={icss_row({ gap: '32px' })}>
-        <Link href="/" innerRoute>
-          <Icon src="/logo-with-text.svg" icss={{ height: '32px' }} />
+        <Link href='/' innerRoute>
+          <Icon src='/logo-with-text.svg' icss={{ height: '32px' }} />
         </Link>
         {/* <Text icss={{ fontSize: '36px', fontWeight: '800px' }}>{props.title}</Text> */}
       </Box>
 
       {/* tabs */}
       <Box icss={{ display: 'flex', gap: '16px' }}>
-        <Link href="/" innerRoute>
+        <Link href='/' innerRoute>
           Home
         </Link>
-        <Link href="/playground" innerRoute>
+        <Link href='/playground' innerRoute>
           Playground
         </Link>
       </Box>

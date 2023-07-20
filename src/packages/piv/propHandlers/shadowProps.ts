@@ -23,7 +23,7 @@ export function handleShadowProps<P extends Partial<PivProps<any>>>(
         get() {
           const candidates = shakeNil([props].concat(props.shadowProps))
           return getPivPropsValue(candidates, key)
-        }
+        },
       }
       return acc
     }, {} as PropertyDescriptorMap)

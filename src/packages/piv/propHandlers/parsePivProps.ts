@@ -42,8 +42,7 @@ export function parsePivProps(rawProps: PivProps<any>) {
       const { props, controller } = getProps(rawProps)
       // get ter for lazy solidjs render
       return (
-        shakeFalsy([classname(props.class, controller), classifyICSS(props.icss, controller)]).join(' ') ||
-        undefined
+        shakeFalsy([classname(props.class, controller), classifyICSS(props.icss, controller)]).join(' ') || undefined
       ) /* don't render if empty string */
     },
     get ref() {
@@ -61,7 +60,7 @@ export function parsePivProps(rawProps: PivProps<any>) {
     get children() {
       const { props, controller } = getProps(rawProps) // 🤔: is children depend on shadow props, shadow props has createMemo, so solidjs engine will re-run this function evey time inner subscribiton changed?
       return parsePivChildren(props.children, controller)
-    }
+    },
   }
   return { props: nativeProps, ifNeedRenderChildren, renderSelf, ifNeedRenderSelf }
 }
@@ -88,7 +87,7 @@ function parsePivRenderPrependChildren<T extends Partial<PivProps<any, any>>>(pr
   return 'render:firstChild' in props
     ? mutateByAdditionalObjectDescriptors(props, {
         newGetters: { children: (props) => flap(props['render:firstChild']).concat(props.children) },
-        deletePropertyNames: ['render:firstChild']
+        deletePropertyNames: ['render:firstChild'],
       })
     : props
 }
@@ -103,9 +102,9 @@ function parsePivRenderAppendChildren<T extends Partial<PivProps<any, any>>>(pro
   return 'render:lastChild' in props
     ? mutateByAdditionalObjectDescriptors(props, {
         newGetters: {
-          children: (props) => flap(props.children).concat(flap(props['render:lastChild']))
+          children: (props) => flap(props.children).concat(flap(props['render:lastChild'])),
         },
-        deletePropertyNames: ['render:lastChild']
+        deletePropertyNames: ['render:lastChild'],
       })
     : props
 }

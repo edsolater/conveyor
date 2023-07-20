@@ -5,7 +5,7 @@
     "build": "solid-start build",
     "start": "solid-start start",
     "type-check": "tsc --skipLibCheck --pretty --noEmit",
-    "prettier": "prettier --write ."
+    "prettier": "pnpx prettier --write ."
   },
   "type": "module",
   "devDependencies": {

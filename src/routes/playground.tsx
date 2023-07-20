@@ -21,13 +21,13 @@ import {
   icss_col,
   icss_row,
   renderSwitchThumb,
-  useCSSTransition
+  useCSSTransition,
 } from '../packages/pivkit'
 
 export default function PlaygroundPage() {
   return (
     <Piv>
-      <NavBar title="Playground" />
+      <NavBar title='Playground' />
       <PlaygoundList />
     </Piv>
   )
@@ -40,42 +40,42 @@ function PlaygoundList() {
         display: 'grid',
         gridTemplateColumns: 'repeat(auto-fill, minmax(400px, 1fr))',
         padding: '16px 32px 0',
-        gap: '16px'
+        gap: '16px',
       }}
     >
-      <ExamplePanel name="IntervalCircle">
+      <ExamplePanel name='IntervalCircle'>
         <CircularProgressExample />
       </ExamplePanel>
 
-      <ExamplePanel name="Drawer">
+      <ExamplePanel name='Drawer'>
         <DrawerExample />
       </ExamplePanel>
 
-      <ExamplePanel name="CSSTransition">
+      <ExamplePanel name='CSSTransition'>
         <CSSTransitionExample />
       </ExamplePanel>
 
-      <ExamplePanel name="Input">
+      <ExamplePanel name='Input'>
         <InputExample />
       </ExamplePanel>
 
-      <ExamplePanel name="Text">
+      <ExamplePanel name='Text'>
         <TextExample />
       </ExamplePanel>
 
-      <ExamplePanel name="Modal">
+      <ExamplePanel name='Modal'>
         <ModalExample />
       </ExamplePanel>
 
-      <ExamplePanel name="List">
+      <ExamplePanel name='List'>
         <ListExample />
       </ExamplePanel>
 
-      <ExamplePanel name="Switch">
+      <ExamplePanel name='Switch'>
         <SwitchExample />
       </ExamplePanel>
 
-      <ExamplePanel name="Radio">
+      <ExamplePanel name='Radio'>
         <RadioExample />
       </ExamplePanel>
     </Box>
@@ -104,7 +104,7 @@ function DrawerExample() {
       >
         Open
       </Button>
-      <Drawer id="big-drawer" />
+      <Drawer id='big-drawer' />
     </>
   )
 }
@@ -116,11 +116,11 @@ function ModalExample() {
   return (
     <>
       <Button onClick={() => modalController.toggle?.()}>Open</Button>
-      <Modal id="example-modal" isModal>
+      <Modal id='example-modal' isModal>
         Modal1
       </Modal>
       <Button onClick={() => modalController2.toggle?.()}>Open</Button>
-      <Modal id="example-modal2" isModal>
+      <Modal id='example-modal2' isModal>
         Modal2 + {couter()}
       </Modal>
     </>
@@ -136,7 +136,7 @@ function CSSTransitionExample() {
     onAfterEnter() {},
     onBeforeEnter() {},
     fromProps: { icss: { width: '100px' } },
-    toProps: { icss: { width: '200px' } }
+    toProps: { icss: { width: '200px' } },
   })
 
   // createEffect(() => {
@@ -193,13 +193,13 @@ function SwitchExample() {
               width: '0.5em',
               height: '0.5em',
               backgroundColor: 'currentcolor',
-              transition: '300ms'
+              transition: '300ms',
             }}
           />
         }
       />
       <Switch
-        name="theme-switch"
+        name='theme-switch'
         isChecked={checked()}
         style={({ isChecked }) => ({ color: isChecked() ? 'snow' : 'white' })} // <-- will cause rerender , why?
         plugin={renderSwitchThumb()}
@@ -265,7 +265,7 @@ function ListExample() {
     { name: 'aw', count: 26 + 23 },
     { name: 'ax', count: 26 + 24 },
     { name: 'ay', count: 26 + 25 },
-    { name: 'az', count: 26 + 26 }
+    { name: 'az', count: 26 + 26 },
   ]
   const [data, setData] = createSignal<typeof mockData>([])
   const increaseCount = createIncresingAccessor()
@@ -296,5 +296,5 @@ function RadioExample() {
     setChecked((b) => !b)
   }, 1200)
 
-  return <Radio option="gender" isChecked={checked()} />
+  return <Radio option='gender' isChecked={checked()} />
 }

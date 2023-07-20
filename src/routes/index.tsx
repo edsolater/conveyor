@@ -38,12 +38,12 @@ export default function Home() {
   const [searchText, setSearchText] = createSignal<string>()
 
   const { searchedItems: links } = useSearch(linkCards, searchText, {
-    matchConfigs: [(i) => i.name, (i) => i.keywords]
+    matchConfigs: [(i) => i.name, (i) => i.keywords],
   })
 
   return (
     <Piv>
-      <NavBar title="Home" />
+      <NavBar title='Home' />
       <Section icss={{ display: 'grid', justifyContent: 'center' }}>
         <Box icss={[icss_row({ gap: '4px' }), { marginBottom: '8px', fontSize: '2em' }]}>
           <Text>search tags:</Text>

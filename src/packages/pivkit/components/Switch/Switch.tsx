@@ -39,7 +39,7 @@ const selfProps = [
   'onChange',
   'anatomy:ContainerBox',
   'anatomy:HTMLCheckbox',
-  'anatomy:Thumb'
+  'anatomy:Thumb',
 ] satisfies (keyof SwitchProps)[]
 
 const accessifyPropNames = ['isChecked', 'isDefaultChecked'] satisfies (keyof SwitchProps)[]
@@ -47,7 +47,7 @@ const accessifyPropNames = ['isChecked', 'isDefaultChecked'] satisfies (keyof Sw
 export type SwitchDefaultSwitchProps = typeof defaultProps
 
 const defaultProps = {
-  isDefaultChecked: false
+  isDefaultChecked: false,
 } satisfies Partial<SwitchProps>
 
 /**
@@ -58,14 +58,14 @@ export function Switch(rawProps: SwitchProps) {
     name: 'Switch',
     defaultProps,
     needAccessify: accessifyPropNames,
-    selfProps: selfProps
+    selfProps: selfProps,
   })
 
   const [isChecked, setIsChecked] = createSyncSignal({
     get: () => props.isChecked ?? props.isDefaultChecked,
     set(value) {
       props.onChange?.({ isChecked: value })
-    }
+    },
   })
 
   const { wrapperLabelStyleProps, htmlCheckboxStyleProps, switchThumbStyleProps } = useSwitchStyle({ props })
@@ -73,7 +73,7 @@ export function Switch(rawProps: SwitchProps) {
   const { setMotionTargetRef } = makeElementMoveSmooth({ observeOn: isChecked })
 
   const switchController = {
-    isChecked
+    isChecked,
   }
 
   lazyLoadController(switchController)
@@ -94,7 +94,7 @@ export function Switch(rawProps: SwitchProps) {
       <Piv
         shadowProps={[switchThumbStyleProps, props['anatomy:Thumb']]}
         innerController={switchController}
-        class="SwitchThumb"
+        class='SwitchThumb'
         domRef={setMotionTargetRef}
         icss={[{ display: 'grid', placeContent: 'center' }]}
         // render:lastChild={({ isChecked }) => {

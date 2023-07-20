@@ -21,6 +21,6 @@ export function gettersProps<T extends object>(props: T): GettersProps<T> {
         },
       }
       return acc
-    }, {} as PropertyDescriptorMap),
+    }, {} as PropertyDescriptorMap)
   ) as GettersProps<T>
 }

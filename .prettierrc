@@ -4,7 +4,7 @@
   "singleQuote": true,
   "semi": false,
   "bracketSpacing": true,
-  "trailingComma": "all",
+  "trailingComma": "es5",
   "printWidth": 120,
   "arrowParens": "always",
   "jsxSingleQuote": true,

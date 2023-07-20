@@ -7,7 +7,7 @@ import {
   isString,
   MayArray,
   mergeObjectsWithConfigs,
-  shrinkFn
+  shrinkFn,
 } from '@edsolater/fnkit'
 import { css, CSSAttribute } from 'solid-styled-components'
 import { LoadController, ValidController } from '../types/tools'

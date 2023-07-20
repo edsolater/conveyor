@@ -5,7 +5,7 @@ import { JSXElement } from 'solid-js'
 
 export function loadPropsControllerRef<Controller extends ValidController | unknown>(
   props: Partial<KitProps<{ controllerRef?: (getController: Controller) => void }>>,
-  providedController: Controller,
+  providedController: Controller
 ) {
   if (hasProperty(props, 'controllerRef')) {
     props.controllerRef?.(providedController)
@@ -14,7 +14,7 @@ export function loadPropsControllerRef<Controller extends ValidController | unkn
 
 /** for aviod access controller too early */
 export function toProxifyController<Controller extends ValidController | unknown>(
-  getController: () => Controller,
+  getController: () => Controller
 ): Controller {
   let controller: Controller | undefined = undefined
   return new Proxy(
@@ -26,7 +26,7 @@ export function toProxifyController<Controller extends ValidController | unknown
         }
         return controller![prop as keyof Controller]
       },
-    },
+    }
   ) as Controller
 }
 

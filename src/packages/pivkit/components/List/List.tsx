@@ -9,7 +9,7 @@ import {
   JSXElement,
   on,
   onCleanup,
-  Show
+  Show,
 } from 'solid-js'
 import { KitProps, Piv, PivProps, useKitProps } from '../../../piv'
 import { createRef } from '../../hooks/createRef'
@@ -54,8 +54,8 @@ export function List<T>(rawProps: ListProps<T>) {
   const { props } = useKitProps(rawProps, {
     noNeedDeAccessifyChildren: true,
     defaultProps: {
-      reachBottomMargin: 50
-    }
+      reachBottomMargin: 50,
+    },
   })
 
   // [configs]
@@ -82,7 +82,7 @@ export function List<T>(rawProps: ListProps<T>) {
     onReachBottom: () => {
       setRenderItemLength((n) => n + increaseRenderCount())
     },
-    reachBottomMargin: props.reachBottomMargin
+    reachBottomMargin: props.reachBottomMargin,
   })
 
   // reset when items.length changed

@@ -40,7 +40,7 @@ export function Modal(rawProps: KitProps<ModalProps>) {
     },
     open: openDialog,
     close: closeDialog,
-    toggle: toggleDialog
+    toggle: toggleDialog,
   }))
   const [dialogRef, setDialogRef] = createRef<HTMLDialogElement>()
   const [dialogContentRef, setDialogContentRef] = createRef<HTMLDivElement>()
@@ -62,7 +62,7 @@ export function Modal(rawProps: KitProps<ModalProps>) {
     disable: () => !innerOpen(),
     onClickOutSide: () => {
       closeDialog()
-    }
+    },
   })
 
   // user action: open dialog

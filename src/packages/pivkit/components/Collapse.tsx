@@ -32,7 +32,7 @@ export function Collapse(rawProps: CollapseProps) {
   const [innerOpen, { toggle, on, off, set }] = createToggle(props.open ?? props.defaultOpen ?? false, {
     onOff: props.onClose,
     onOn: props.onOpen,
-    onToggle: props.onToggle
+    onToggle: props.onToggle,
   })
 
   // reset innerOpen when props.open changes
@@ -47,7 +47,7 @@ export function Collapse(rawProps: CollapseProps) {
     open: on,
     close: off,
     toggle,
-    set
+    set,
   }
   return (
     <CollapseContext.Provider value={controller}>

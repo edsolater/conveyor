@@ -37,7 +37,7 @@ export function onEvent<
   eventName: K,
   fn: (payload: EventCallback<K, El>) => void,
   /** default is `{ passive: true }` */
-  options?: EventListenerOptions,
+  options?: EventListenerOptions
 ): EventListenerController {
   const defaultedOptions = { passive: true, ...options }
   const targetEventId = eventId++

@@ -10,8 +10,8 @@ export const icss_row = (options?: ICSSRowOption) =>
   ({
     display: 'flex',
     alignItems: options?.items ?? 'center',
-    gap: options?.gap
-  } satisfies ICSSObject)
+    gap: options?.gap,
+  }) satisfies ICSSObject
 
 export type ICSSColOption = {
   gap?: CSSObject['gap']
@@ -23,8 +23,8 @@ export const icss_col = (options?: ICSSColOption) =>
     display: 'flex',
     flexDirection: 'column',
     alignItems: options?.items ?? 'center',
-    gap: options?.gap
-  } satisfies ICSSObject)
+    gap: options?.gap,
+  }) satisfies ICSSObject
 
 export type ICSSGridOption = {
   gap?: CSSObject['gap']
@@ -35,8 +35,8 @@ export const icss_grid = (options?: ICSSGridOption) =>
   ({
     display: 'grid',
     placeItems: options?.items ?? 'center',
-    gap: options?.gap
-  } satisfies ICSSObject)
+    gap: options?.gap,
+  }) satisfies ICSSObject
 
 export type ICSSCardOption = {
   gap?: CSSObject['gap']
@@ -48,15 +48,15 @@ export const icss_card = (options?: ICSSCardOption) =>
     display: 'grid',
     border: 'solid',
     padding: '24px',
-    borderRadius: '16px'
-  } satisfies ICSSObject)
+    borderRadius: '16px',
+  }) satisfies ICSSObject
 
 export type ICSSClickableOption = {}
 export const icss_clickable = (options?: ICSSClickableOption) =>
   ({
     cursor: 'pointer',
-    ':is(:hover,:active)': { backdropFilter: 'brightness(0.9)', filter: 'brightness(0.9)' }
-  } satisfies ICSSObject)
+    ':is(:hover,:active)': { backdropFilter: 'brightness(0.9)', filter: 'brightness(0.9)' },
+  }) satisfies ICSSObject
 
 export const icss_label = (options?: { w: CSSObject['minWidth']; h: CSSObject['minHeight'] }) =>
   ({
@@ -66,8 +66,8 @@ export const icss_label = (options?: { w: CSSObject['minWidth']; h: CSSObject['m
     paddingBlock: '.25em',
     paddingInline: '.5em',
     borderRadius: '4px',
-    background: cssColors.component_label_bg_default
-  } satisfies ICSSObject)
+    background: cssColors.component_label_bg_default,
+  }) satisfies ICSSObject
 
 export const icss_inputType = (options?: { w: CSSObject['minWidth']; h: CSSObject['minHeight'] }) =>
   ({
@@ -77,5 +77,5 @@ export const icss_inputType = (options?: { w: CSSObject['minWidth']; h: CSSObjec
     // borderRadius: '4px',
     // background: cssColors.component_input_bg_default,
     // outlineColor: cssColors.dodgerBlue,
-    borderBottom: 'solid'
-  } satisfies ICSSObject)
+    borderBottom: 'solid',
+  }) satisfies ICSSObject

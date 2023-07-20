@@ -23,7 +23,7 @@ export function Link(rawProps: KitProps<LinkProps>) {
           : renderHTMLDOM('a', selfProps, {
               href: props.href,
               rel: 'nofollow noopener noreferrer',
-              target: '_blank'
+              target: '_blank',
             })
       }
       shadowProps={props}
@@ -47,14 +47,10 @@ const domMap = (props: any, additionalProps: any) => ({
   label: () => <label {...props} {...additionalProps} />, // for lazy invoke
   form: () => <form {...props} {...additionalProps} />, // for lazy invoke
   iframe: () => <iframe {...props} {...additionalProps} />, // for lazy invoke
-  canvas: () => <canvas {...props} {...additionalProps} /> // for lazy invoke
+  canvas: () => <canvas {...props} {...additionalProps} />, // for lazy invoke
 })
 
-export const renderHTMLDOM = (
-  type: HTMLTag,
-  selfProps: PivProps<any, any>,
-  additionalProps?: Record<any, any>
-) => {
+export const renderHTMLDOM = (type: HTMLTag, selfProps: PivProps<any, any>, additionalProps?: Record<any, any>) => {
   const { props, ifNeedRenderChildren, ifNeedRenderSelf } = parsePivProps(selfProps)
   if (ifNeedRenderChildren === undefined && ifNeedRenderSelf === undefined) {
     return switchCase(type, domMap(props, additionalProps)) as JSX.Element
