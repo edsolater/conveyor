@@ -11,17 +11,17 @@
   "devDependencies": {
     "@types/babel__core": "^7.20.1",
     "@types/debug": "^4.1.8",
-    "@types/node": "^20.4.2",
-    "solid-start-node": "^0.2.26",
+    "@types/node": "^20.4.4",
+    "solid-start-node": "^0.2.27",
     "typescript": "^5.1.6",
-    "vite": "^4.4.4"
+    "vite": "^4.4.6"
   },
   "dependencies": {
     "@edsolater/fnkit": "^0.1.31",
     "@solidjs/meta": "^0.28.5",
     "@solidjs/router": "^0.8.2",
     "solid-js": "^1.7.8",
-    "solid-start": "^0.2.26",
+    "solid-start": "^0.2.27",
     "solid-styled-components": "^0.28.5",
     "undici": "^5.22.1"
   },

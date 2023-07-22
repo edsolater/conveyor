@@ -8,10 +8,6 @@ const GlobalStyles = createGlobalStyles`
       font-family: Gordita, Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     }
 
-    a {
-      margin-right: 1rem;
-    }
-
     main {
       text-align: center;
       padding: 1em;

@@ -22,7 +22,7 @@ export interface ListController {}
 
 export type ListProps<T> = KitProps<
   {
-    items?: MayFn<Iterable<T>>
+    of?: MayFn<Iterable<T>>
     children(item: T, index: () => number): JSXElement
 
     turnOnScrollObserver?: boolean
@@ -68,24 +68,21 @@ export function List<T>(rawProps: ListProps<T>) {
   })
 
   // [configs]
-  const allItems = createMemo(() => flap([...(shrinkFn(props.items) ?? [])]))
+  const allItems = createMemo(() => flap([...(shrinkFn(props.of) ?? [])]))
   const increaseRenderCount = createMemo(
     () => props.increaseRenderCount ?? Math.min(Math.floor(allItems().length / 10), 30)
   )
-  const initRenderCount = createMemo(
-    () => props.initRenderCount ?? (allItems().length / 5 > 50 ? 50 : allItems().length)
-  )
+  const initRenderCount = createMemo(() => props.initRenderCount ?? Math.min(allItems().length, 50))
 
   // [list ref]
   const [listRef, setRef] = createRef<HTMLElement>()
 
   // [add to context, this observer can make listItem can auto render or not]
-  const { observe, destory } = useIntersectionObserver({
+  const { observe } = useIntersectionObserver({
     rootRef: listRef,
     options: { rootMargin: '100%' },
     disabled: !props.turnOnScrollObserver,
   })
-  onCleanup(() => destory())
 
   // [actually showed item count]
   const [renderItemLength, setRenderItemLength] = createSignal(
@@ -100,6 +97,10 @@ export function List<T>(rawProps: ListProps<T>) {
     reachBottomMargin: props.reachBottomMargin,
     disabled: !props.turnOnScrollObserver,
   })
+  createEffect(() => {
+    console.log(3, listRef())
+    console.count('render list')
+  })
 
   // reset when items.length changed
   createEffect(
@@ -107,7 +108,7 @@ export function List<T>(rawProps: ListProps<T>) {
       () => allItems().length,
       () => {
         setRenderItemLength(initRenderCount())
-        console.log('1: ', allItems())
+        console.log('1: ', allItems(), listRef())
         forceCalculate()
       }
     )
@@ -116,7 +117,7 @@ export function List<T>(rawProps: ListProps<T>) {
     // console.count('render item children in <For>')
     return (
       <Show when={checkNeedRenderByIndex(idx(), renderItemLength())}>
-        <ListItem>{() => props.children(item, idx)}</ListItem>
+        <ListItem forceVisiable={!props.turnOnScrollObserver}>{() => props.children(item, idx)}</ListItem>
       </Show>
     )
   }

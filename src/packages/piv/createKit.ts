@@ -28,7 +28,7 @@ type KitPropsInstance<
   Controller extends ValidController,
   Plugins extends MayDeepArray<Plugin<any>>,
   TagName extends HTMLTag,
-  NeedAccessifyProps extends keyof RawProps,
+  NeedAccessifyProps extends keyof RawProps
 > = AccessifyProps<Pick<RawProps, NeedAccessifyProps>, Controller> &
   Omit<RawProps, NeedAccessifyProps> &
   Omit<PivProps<TagName, Controller>, keyof RawProps | 'plugin' | 'shadowProps'> &
@@ -41,6 +41,7 @@ type KitPropsInstance<
       // -------- additional --------
       // auto inject controller to it
       controllerRef?: CRef<Controller>
+      //TODO: name?:string to express ui-info more readable than class?:string
     },
     keyof RawProps
   >
@@ -58,7 +59,7 @@ export type KitProps<
     // default is auto detect, only set when auto is not ok
     needAccessifyProps?: (keyof RawProps)[]
     extends?: any
-  } = {},
+  } = {}
 > = KitPropsInstance<
   RawProps,
   NonNullable<O['controller']>,
@@ -79,7 +80,7 @@ export type UIKit<
     plugin?: MayArray<Plugin<any>>
     htmlPropsTagName?: HTMLTag
     // /** default is false, only set when children must be function  */
-  } = {},
+  } = {}
 > = KitPropsInstance<
   NonNullable<O['componentProps']>,
   NonNullable<O['controller']>,
@@ -91,7 +92,7 @@ export type UIKit<
 export type KitPropsOptions<
   KitProps extends ValidProps,
   Controller extends ValidController | unknown = unknown,
-  DefaultProps extends Partial<KitProps> = {},
+  DefaultProps extends Partial<KitProps> = {}
 > = {
   name?: string
   controller?: (
@@ -122,12 +123,12 @@ export type ParsedKitProps<RawProps extends ValidProps> = Omit<RawProps, 'plugin
 //   : Props
 
 /**
- * section 1: merge props
+ * parse some special props of component. such as shadowProps, plugin, controller, etc.
  */
 function getParsedKitProps<
   RawProps extends ValidProps,
   Controller extends ValidController | unknown = unknown,
-  DefaultProps extends Partial<RawProps> = {},
+  DefaultProps extends Partial<RawProps> = {}
 >(
   // too difficult to type here
   props: any,
@@ -189,7 +190,7 @@ export type GetDeAccessifiedProps<K extends ValidProps> = DeAccessifyProps<K>
 export function useKitProps<
   P extends ValidProps,
   Controller extends ValidController | unknown = unknown,
-  DefaultProps extends Partial<GetDeAccessifiedProps<P>> = {},
+  DefaultProps extends Partial<GetDeAccessifiedProps<P>> = {}
 >(
   props: P,
   options?: KitPropsOptions<GetDeAccessifiedProps<P>, Controller, DefaultProps>
@@ -206,7 +207,13 @@ export function useKitProps<
     ...options,
   }) as any /* too difficult to type, no need to check */
   const shadowProps = options?.selfProps ? omit(composedProps, options.selfProps) : composedProps
-  return { props: composedProps, shadowProps, lazyLoadController: loadController }
+  return {
+    props: composedProps,
+    shadowProps,
+    lazyLoadController: loadController,
+    // TODO: imply it !!! For complicated DOM API always need this, this is a fast shortcut
+    // componentRef
+  }
 }
 
 /**
@@ -225,6 +232,6 @@ function composeController<RawProps extends ValidProps, Controller extends Valid
 export type DeKitProps<
   P extends ValidProps,
   Controller extends ValidController | unknown = unknown,
-  DefaultProps extends Partial<GetDeAccessifiedProps<P>> = {},
+  DefaultProps extends Partial<GetDeAccessifiedProps<P>> = {}
 > = ParsedKitProps<AddDefaultPivProps<GetDeAccessifiedProps<P>, DefaultProps>> &
   Omit<PivProps<HTMLTag, Controller>, keyof GetDeAccessifiedProps<P>>

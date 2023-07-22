@@ -7,6 +7,8 @@ import { ListContext } from './List'
 
 export interface ListItemProps extends Omit<PivProps, 'children'> {
   children: () => JSX.Element
+  // TODO: just forceVisiable is not enough, should have more control props
+  forceVisiable?: boolean
 }
 
 export interface ListItemController {
@@ -26,7 +28,7 @@ export function ListItem(originalProps: ListItemProps) {
 
   //=== isIntersecting with parent `<List>`'s intersectionObserver
   const listContext = useContext(ListContext)
-  const [isIntersecting, setIsIntersecting] = createSignal(false)
+  const [isIntersecting, setIsIntersecting] = createSignal(Boolean(props.forceVisiable))
   createEffect(() => {
     const el = itemRef()
     if (!el) return
@@ -39,13 +41,12 @@ export function ListItem(originalProps: ListItemProps) {
   const { setRef: setSizeDetectorTarget, innerHeight, innerWidth } = useElementSizeDetector()
 
   //=== Controller
-  const controller: ListItemController = {
-    isIntersecting,
-  }
+  const controller: ListItemController = { isIntersecting }
   lazyLoadController(controller)
 
   //=== render children
   const childContent = createMemo(() => children())
+  
   return (
     <Piv
       class='ListItem'
@@ -72,7 +73,7 @@ function useElementSizeDetector() {
   const { destory } = useResizeObserver(ref, ({ el }) => {
     detectSize(el)
   })
-  onCleanup(destory)
+
 
   function detectSize(el: HTMLElement) {
     if (!el) return

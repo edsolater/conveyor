@@ -275,7 +275,7 @@ function ListExample() {
     }, 100)
   })
   return (
-    <List items={data} initRenderCount={10} icss={[icss_col({ gap: '16px' }), { height: '30dvh' }]}>
+    <List of={data} initRenderCount={10} icss={[icss_col({ gap: '16px' }), { height: '30dvh' }]}>
       {(d, idx) => {
         console.count(`render item from <Playground>, ${d.name}, ${d.count}`)
         return (

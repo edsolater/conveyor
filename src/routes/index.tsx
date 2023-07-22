@@ -5,7 +5,7 @@ import { NavBar } from '../components/NavBar'
 import { SiteCardItem, linkCards } from '../configs/linkCards'
 import { useSearch } from '../packages/features/searchItems'
 import { ICSS, Piv } from '../packages/piv'
-import { Box, Card, GridBox, Image, Input, Loop, Section, Text, icss_card, icss_row } from '../packages/pivkit'
+import { Box, Card, GridBox, Image, Input, List, Loop, Section, Text, icss_card, icss_row } from '../packages/pivkit'
 
 function SiteItem(props: { item: SiteCardItem; level?: /* zero or undefined is the top */ number }) {
   return (
@@ -17,9 +17,9 @@ function SiteItem(props: { item: SiteCardItem; level?: /* zero or undefined is t
         <Link href={props.item.url}>
           <Text icss={{ fontSize: '2em', fontWeight: 'bold' }}>{props.item.name}</Text>
         </Link>
-        <Loop icss={icss_row({ gap: '.5em' })} of={props.item.keywords}>
+        <List icss={icss_row({ gap: '.5em' })} of={props.item.keywords}>
           {(keyword) => <Text icss={{ fontSize: '1em' }}>{keyword}</Text>}
-        </Loop>
+        </List>
         <Loop of={flap(props.item.screenshot)}>
           {(screenshotItem) => <Screenshot siteUrl={props.item.url} item={screenshotItem} />}
         </Loop>
@@ -50,7 +50,7 @@ export default function Home() {
           <Input icss={{ border: 'solid' }} onUserInput={({ text }) => setSearchText(text)} />
         </Box>
         <Piv icss={{ width: '80vw', height: '60vh' }}>
-          <Loop of={links}>{(item) => <SiteItem item={item}></SiteItem>}</Loop>
+          <List of={links}>{(item) => <SiteItem item={item}></SiteItem>}</List>
         </Piv>
       </Section>
     </Piv>
