@@ -1,5 +1,5 @@
 import { MayFn, flap, shrinkFn } from '@edsolater/fnkit'
-import { For, JSXElement, createMemo } from 'solid-js'
+import { For, JSXElement, createEffect, createMemo } from 'solid-js'
 import { KitProps, Piv, useKitProps } from '../../piv'
 import { createRef } from '../hooks/createRef'
 

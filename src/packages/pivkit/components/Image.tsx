@@ -51,7 +51,7 @@ export function Image(rawProps: ImageProps) {
   /* ---------------------------------- props --------------------------------- */
   return (
     <Box class='Image Container' style={shakeNil({ width: props['css:width'], height: props['css:height'] })}>
-      {/* <Piv<'img'>
+      <Piv<'img'>
         domRef={setDom}
         class='Image'
         render:self={(selfProps) => renderHTMLDOM('img', selfProps)}
@@ -61,7 +61,7 @@ export function Image(rawProps: ImageProps) {
           opacity: isLoaded() ? undefined : '0',
         }}
         shadowProps={shadowProps}
-      /> */}
+      />
       
     </Box>
   )

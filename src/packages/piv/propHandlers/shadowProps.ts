@@ -1,8 +1,8 @@
-import { MayArray, isArray, isObject, omit, shakeNil } from '@edsolater/fnkit'
+import { MayArray, isArray, isObject, shakeNil } from '@edsolater/fnkit'
+import { pivPropsNames } from '../Piv'
 import { PivProps } from '../types/piv'
 import { getPivPropsValue } from '../utils/mergeProps'
-import { pivPropsNames } from '../Piv'
-import { getKeys } from '../utils'
+import { omit } from '../utils'
 
 export type PivShadowProps<OriginalProps> = MayArray<Partial<Omit<OriginalProps, 'as' | 'children'>>>
 

@@ -46,19 +46,15 @@ export function parsePivProps(rawProps: PivProps<any>) {
       ) /* don't render if empty string */
     },
     get ref() {
-      const { props } = getProps(rawProps)
       return (el: HTMLElement) => el && mergeRefs(...flap(props.domRef))(el)
     },
     get style() {
-      const { props, controller } = getProps(rawProps)
       return parseIStyles(props.style, controller)
     },
     get onClick() {
-      const { props, controller } = getProps(rawProps)
       return 'onClick' in props ? parseOnClick(props.onClick!, controller) : undefined
     },
     get children() {
-      const { props, controller } = getProps(rawProps) // 🤔: is children depend on shadow props, shadow props has createMemo, so solidjs engine will re-run this function evey time inner subscribiton changed?
       return parsePivChildren(props.children, controller)
     },
   }

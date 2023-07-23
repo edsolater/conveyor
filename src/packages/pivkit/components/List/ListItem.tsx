@@ -21,7 +21,6 @@ export interface ListItemController {
 export function ListItem(originalProps: ListItemProps) {
   const [childrenProps, rawProps] = splitProps(originalProps, ['children'])
   const children = childrenProps.children
-  // console.count('render ListItem')
   const { props, lazyLoadController } = useKitProps(rawProps)
 
   const [itemRef, setRef] = createRef<HTMLElement>()
@@ -46,7 +45,7 @@ export function ListItem(originalProps: ListItemProps) {
 
   //=== render children
   const childContent = createMemo(() => children())
-  
+
   return (
     <Piv
       class='ListItem'
@@ -73,7 +72,6 @@ function useElementSizeDetector() {
   const { destory } = useResizeObserver(ref, ({ el }) => {
     detectSize(el)
   })
-
 
   function detectSize(el: HTMLElement) {
     if (!el) return

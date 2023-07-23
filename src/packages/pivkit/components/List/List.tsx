@@ -1,21 +1,9 @@
-import { MayFn, flap, isArray, shrinkFn } from '@edsolater/fnkit'
-import {
-  Accessor,
-  createContext,
-  createEffect,
-  createMemo,
-  createSignal,
-  For,
-  JSXElement,
-  on,
-  onCleanup,
-  Show,
-} from 'solid-js'
-import { KitProps, Piv, PivProps, useKitProps } from '../../../piv'
+import { MayFn, flap, shrinkFn } from '@edsolater/fnkit'
+import { Accessor, For, JSXElement, Show, createContext, createEffect, createMemo, createSignal, on } from 'solid-js'
+import { KitProps, Piv, useKitProps } from '../../../piv'
 import { createRef } from '../../hooks/createRef'
 import { ObserveFn, useIntersectionObserver } from '../../hooks/useIntersectionObserver'
 import { useScrollDegreeDetector } from '../../hooks/useScrollDegreeDetector'
-import { Accessify } from '../../utils/accessifyProps'
 import { ListItem } from './ListItem'
 
 export interface ListController {}
@@ -24,8 +12,6 @@ export type ListProps<T> = KitProps<
   {
     of?: MayFn<Iterable<T>>
     children(item: T, index: () => number): JSXElement
-
-    turnOnScrollObserver?: boolean
 
     /**
      * only meaningfull when turnOnScrollObserver is true
@@ -81,13 +67,10 @@ export function List<T>(rawProps: ListProps<T>) {
   const { observe } = useIntersectionObserver({
     rootRef: listRef,
     options: { rootMargin: '100%' },
-    disabled: !props.turnOnScrollObserver,
   })
 
   // [actually showed item count]
-  const [renderItemLength, setRenderItemLength] = createSignal(
-    props.turnOnScrollObserver ? initRenderCount() : Infinity
-  )
+  const [renderItemLength, setRenderItemLength] = createSignal(initRenderCount())
 
   // [scroll handler]
   const { forceCalculate } = useScrollDegreeDetector(listRef, {
@@ -95,11 +78,6 @@ export function List<T>(rawProps: ListProps<T>) {
       setRenderItemLength((n) => n + increaseRenderCount())
     },
     reachBottomMargin: props.reachBottomMargin,
-    disabled: !props.turnOnScrollObserver,
-  })
-  createEffect(() => {
-    console.log(3, listRef())
-    console.count('render list')
   })
 
   // reset when items.length changed
@@ -108,25 +86,24 @@ export function List<T>(rawProps: ListProps<T>) {
       () => allItems().length,
       () => {
         setRenderItemLength(initRenderCount())
-        console.log('1: ', allItems(), listRef())
         forceCalculate()
       }
     )
   )
+
   const renderListItems = (item: T, idx: () => number) => {
-    // console.count('render item children in <For>')
     return (
       <Show when={checkNeedRenderByIndex(idx(), renderItemLength())}>
-        <ListItem forceVisiable={!props.turnOnScrollObserver}>{() => props.children(item, idx)}</ListItem>
+        {props.children(item, idx)}
+        <ListItem>{() => props.children(item, idx)}</ListItem>
       </Show>
     )
   }
+
   return (
-    <ListContext.Provider value={{ observeFunction: observe, renderItemLength }}>
-      <Piv class='List' domRef={setRef} shadowProps={props} icss={{ overflow: 'auto', contain: 'paint' }}>
-        <For each={allItems()}>{renderListItems}</For>
-      </Piv>
-    </ListContext.Provider>
+    <Piv class='List' domRef={setRef} shadowProps={props} icss={{ overflow: 'auto', contain: 'paint' }}>
+      <For each={allItems()}>{renderListItems}</For>
+    </Piv>
   )
 }
 

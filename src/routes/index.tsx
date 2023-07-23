@@ -1,5 +1,5 @@
 import { DeMayArray, MayFn, flap, isObject, isString, shrinkFn } from '@edsolater/fnkit'
-import { Show, createSignal } from 'solid-js'
+import { Show, createMemo, createSignal } from 'solid-js'
 import { Link } from '../components/Link'
 import { NavBar } from '../components/NavBar'
 import { SiteCardItem, linkCards } from '../configs/linkCards'
@@ -17,9 +17,9 @@ function SiteItem(props: { item: SiteCardItem; level?: /* zero or undefined is t
         <Link href={props.item.url}>
           <Text icss={{ fontSize: '2em', fontWeight: 'bold' }}>{props.item.name}</Text>
         </Link>
-        <List icss={icss_row({ gap: '.5em' })} of={props.item.keywords}>
+        <Loop icss={icss_row({ gap: '.5em' })} of={props.item.keywords}>
           {(keyword) => <Text icss={{ fontSize: '1em' }}>{keyword}</Text>}
-        </List>
+        </Loop>
         <Loop of={flap(props.item.screenshot)}>
           {(screenshotItem) => <Screenshot siteUrl={props.item.url} item={screenshotItem} />}
         </Loop>
@@ -40,7 +40,6 @@ export default function Home() {
   const { searchedItems: links } = useSearch(linkCards, searchText, {
     matchConfigs: [(i) => i.name, (i) => i.keywords],
   })
-
   return (
     <Piv>
       <NavBar title='Home' />
@@ -50,7 +49,7 @@ export default function Home() {
           <Input icss={{ border: 'solid' }} onUserInput={({ text }) => setSearchText(text)} />
         </Box>
         <Piv icss={{ width: '80vw', height: '60vh' }}>
-          <List of={links}>{(item) => <SiteItem item={item}></SiteItem>}</List>
+          <Loop of={links}>{(item) => <SiteItem item={item}></SiteItem>}</Loop>
         </Piv>
       </Section>
     </Piv>
