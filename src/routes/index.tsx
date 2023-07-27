@@ -1,5 +1,5 @@
 import { DeMayArray, MayFn, flap, isObject, isString, shrinkFn } from '@edsolater/fnkit'
-import { Show, createSignal } from 'solid-js'
+import { Show, createEffect, createSignal } from 'solid-js'
 import { Link } from '../components/Link'
 import { NavBar } from '../components/NavBar'
 import { SiteCardItem, linkCards } from '../configs/linkCards'
@@ -23,7 +23,7 @@ import {
 function SiteItem(props: { item: SiteCardItem; level?: /* zero or undefined is the top */ number }) {
   // const {gridContainerICSS, gridItemICSS} = useICSS('Grid')
   return (
-    <Card icss={[icssCard]}>
+    <Card icss={[icssCard()]}>
       <GridBox
         icss:grid={{
           template: `
@@ -49,11 +49,13 @@ function SiteItem(props: { item: SiteCardItem; level?: /* zero or undefined is t
         </GridItem>
 
         <GridItem icss:area='sub'>
-          <Show when={props.item.subreddits}>
-            <Loop of={props.item.subreddits} icss={icssGrid({ templateColumn: '1fr 1fr 1fr' })}>
-              {(subreddit) => <SiteSubItem item={subreddit} level={(props.level ?? 0) + 1}></SiteSubItem>}
-            </Loop>
-          </Show>
+          <Loop
+            if={props.item.subreddits}
+            of={props.item.subreddits}
+            icss={icssGrid({ templateColumn: '1fr 1fr 1fr' })}
+          >
+            {(subreddit) => <SiteSubItem item={subreddit} level={(props.level ?? 0) + 1}></SiteSubItem>}
+          </Loop>
         </GridItem>
       </GridBox>
     </Card>
@@ -62,39 +64,31 @@ function SiteItem(props: { item: SiteCardItem; level?: /* zero or undefined is t
 
 function SiteSubItem(props: { item: SiteCardItem; level?: /* zero or undefined is the top */ number }) {
   return (
-    <Card icss={[icssCard]}>
-      <GridBox
-        icss:grid={{
-          template: `
+    <GridBox
+      icss:grid={{
+        template: `
             "info" auto 
             "sub " auto / 1fr
           `,
-        }}
-      >
-        <GridItem icss:area='info'>
-          <Link href={props.item.url}>
-            <Image src={props.item.headerLogo} css:width='50px' />
-          </Link>
-          <Link href={props.item.url}>
-            <Text icss={{ fontSize: '2em', fontWeight: 'bold' }}>{props.item.name}</Text>
-          </Link>
-          <Loop icss={icssRow({ gap: '.5em' })} of={props.item.keywords}>
-            {(keyword) => <Text icss={{ fontSize: '1em' }}>{keyword}</Text>}
-          </Loop>
-          <Loop of={flap(props.item.screenshot)}>
-            {(screenshotItem) => <Screenshot siteUrl={props.item.url} item={screenshotItem} />}
-          </Loop>
-        </GridItem>
+      }}
+    >
+      <GridItem icss:area='info'>
+        <Link href={props.item.url}>
+          <Image src={props.item.headerLogo} css:width='50px' />
+        </Link>
+        <Link href={props.item.url}>
+          <Text icss={{ fontSize: '2em', fontWeight: 'bold' }}>{props.item.name}</Text>
+        </Link>
+        <Loop icss={icssRow({ gap: '.5em' })} of={props.item.keywords}>
+          {(keyword) => <Text icss={{ fontSize: '1em' }}>{keyword}</Text>}
+        </Loop>
+        <Loop of={flap(props.item.screenshot)}>
+          {(screenshotItem) => <Screenshot siteUrl={props.item.url} item={screenshotItem} />}
+        </Loop>
+      </GridItem>
 
-        <GridItem icss:area='sub'>
-          <Show when={props.item.subreddits}>
-            <Loop of={props.item.subreddits}>
-              {(subreddit) => <SiteItem item={subreddit} level={(props.level ?? 0) + 1}></SiteItem>}
-            </Loop>
-          </Show>
-        </GridItem>
-      </GridBox>
-    </Card>
+      <GridItem icss:area='sub'></GridItem>
+    </GridBox>
   )
 }
 
@@ -103,6 +97,9 @@ export default function Home() {
 
   const { searchedItems: links } = useSearch(linkCards, searchText, {
     matchConfigs: [(i) => i.name, (i) => i.keywords],
+  })
+  createEffect(() => {
+    console.log(links())
   })
   return (
     <Piv>

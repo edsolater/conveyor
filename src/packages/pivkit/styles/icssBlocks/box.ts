@@ -63,12 +63,14 @@ export const icssCard = (options?: ICSSCardOption) =>
   ({
     display: 'grid',
     // backgroundColor: 'color-mix(in srgb, currentColor, transparent 95%)',
-    background: 'var(--big-card-bg, white)',
+    background: options?.style === 'ghost' ? undefined : 'var(--big-card-bg, white)',
     /* generate by https://shadows.brumm.af/ */
-    boxShadow: `
-    4.1px 4.1px 5.3px -23px rgba(0, 0, 0, 0.012),
-    19.6px 19.6px 17.9px -23px rgba(0, 0, 0, 0.018),
-    100px 100px 80px -23px rgba(0, 0, 0, 0.03)`,
+    boxShadow:
+      options?.style === 'ghost'
+        ? undefined
+        : `4.1px 4.1px 5.3px -23px rgba(0, 0, 0, 0.012),
+           19.6px 19.6px 17.9px -23px rgba(0, 0, 0, 0.018),
+           100px 100px 80px -23px rgba(0, 0, 0, 0.03)`,
     padding: '24px',
     borderRadius: '16px',
   } satisfies ICSSObject)
