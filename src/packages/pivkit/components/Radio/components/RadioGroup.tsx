@@ -6,7 +6,7 @@ import { createSyncSignal } from '../../../hooks'
 import { Label } from '../../Label'
 import { LabelBox } from '../../LabelBox'
 import { Box } from '../../Boxes/Box'
-import { icssCol, icssRow } from '../../../icssBlocks'
+import { icssCol, icssRow } from '../../../styles/icssBlocks'
 
 export interface RadioGroupController {
   name: string

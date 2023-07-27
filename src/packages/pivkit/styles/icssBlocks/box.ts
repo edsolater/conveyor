@@ -1,5 +1,5 @@
-import { CSSObject, ICSSObject } from '../../piv'
-import { cssColors } from '../styles/cssColors'
+import { CSSObject, ICSSObject } from '../../../piv'
+import { cssColors } from '../cssColors'
 
 export type ICSSRowOption = {
   gap?: CSSObject['gap']
@@ -59,12 +59,15 @@ export type ICSSCardOption = {
 export const icssCard = (options?: ICSSCardOption) =>
   ({
     display: 'grid',
-    border: 'solid',
+    backgroundColor: 'color-mix(in srgb, currentColor, transparent 95%)',
     padding: '24px',
     borderRadius: '16px',
   } satisfies ICSSObject)
 
 export type ICSSClickableOption = {}
+
+
+
 export const icssClickable = (options?: ICSSClickableOption) =>
   ({
     cursor: 'pointer',

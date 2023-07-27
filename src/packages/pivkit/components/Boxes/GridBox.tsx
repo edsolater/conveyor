@@ -1,6 +1,6 @@
 import { isObject } from '@edsolater/fnkit'
 import { KitProps, useKitProps } from '../../../piv'
-import { ICSSGridItemOption, ICSSGridOption, icssGrid } from '../../icssBlocks'
+import { ICSSGridItemOption, ICSSGridOption, icssGrid } from '../../styles/icssBlocks'
 import { Box, BoxProps } from './Box'
 
 export type GridBoxProps = KitProps<
