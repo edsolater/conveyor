@@ -6,6 +6,7 @@ import { createGlobalStyles } from 'solid-styled-components'
 const GlobalStyles = createGlobalStyles`
     body {
       font-family: Gordita, Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      background-color: #eef2f7;
     }
 
     main {

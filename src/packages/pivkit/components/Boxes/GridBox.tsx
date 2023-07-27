@@ -35,6 +35,7 @@ export type GridItemBoxProps = KitProps<
 
 /**
  * for direct sub component of `<GridBox>`
+ * @deprecated no , should use `<Box icss={{gridArea: 'xxx'}} />` instead
  */
 export function GridItem(rawProps: GridItemBoxProps) {
   const { shadowProps, props } = useKitProps(rawProps, { name: 'GridItemBox' })

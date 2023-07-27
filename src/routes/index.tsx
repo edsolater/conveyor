@@ -21,18 +21,59 @@ import {
 } from '../packages/pivkit'
 
 function SiteItem(props: { item: SiteCardItem; level?: /* zero or undefined is the top */ number }) {
+  // const {gridContainerICSS, gridItemICSS} = useICSS('Grid')
   return (
     <Card icss={[icssCard]}>
       <GridBox
         icss:grid={{
           template: `
-            "info  sub " auto / auto 1fr
+            "info" auto 
+            "sub " auto / 1fr
+          `,
+          gap: '1em',
+        }}
+      >
+        <GridItem icss:area='info'>
+          <Link href={props.item.url}>
+            <Image src={props.item.headerLogo} css:width='50px' />
+          </Link>
+          <Link href={props.item.url}>
+            <Text icss={{ fontSize: '2em', fontWeight: 'bold' }}>{props.item.name}</Text>
+          </Link>
+          <Loop icss={icssRow({ gap: '.5em' })} of={props.item.keywords}>
+            {(keyword) => <Text icss={{ fontSize: '1em' }}>{keyword}</Text>}
+          </Loop>
+          <Loop of={flap(props.item.screenshot)}>
+            {(screenshotItem) => <Screenshot siteUrl={props.item.url} item={screenshotItem} />}
+          </Loop>
+        </GridItem>
+
+        <GridItem icss:area='sub'>
+          <Show when={props.item.subreddits}>
+            <Loop of={props.item.subreddits} icss={icssGrid({ templateColumn: '1fr 1fr 1fr' })}>
+              {(subreddit) => <SiteSubItem item={subreddit} level={(props.level ?? 0) + 1}></SiteSubItem>}
+            </Loop>
+          </Show>
+        </GridItem>
+      </GridBox>
+    </Card>
+  )
+}
+
+function SiteSubItem(props: { item: SiteCardItem; level?: /* zero or undefined is the top */ number }) {
+  return (
+    <Card icss={[icssCard]}>
+      <GridBox
+        icss:grid={{
+          template: `
+            "info" auto 
+            "sub " auto / 1fr
           `,
         }}
       >
         <GridItem icss:area='info'>
           <Link href={props.item.url}>
-            <Image src={props.item.headerLogo}></Image>
+            <Image src={props.item.headerLogo} css:width='50px' />
           </Link>
           <Link href={props.item.url}>
             <Text icss={{ fontSize: '2em', fontWeight: 'bold' }}>{props.item.name}</Text>
@@ -67,13 +108,13 @@ export default function Home() {
     <Piv>
       <NavBar title='Home' />
 
-      <Section name='content' icss={{ display: 'grid', justifyContent: 'center' }}>
+      <Section name='content' icss={{ display: 'grid', padding: '32px' }}>
         <Box icss={[icssRow({ gap: '4px' }), { marginBottom: '8px', fontSize: '2em' }]}>
           <Text>search tags:</Text>
           <Input icss={{ border: 'solid' }} onUserInput={({ text }) => setSearchText(text)} />
         </Box>
 
-        <Loop of={links} icss={icssGrid({ gap: '4px' })}>
+        <Loop of={links} icss={icssGrid({ gap: '32px' })}>
           {(item) => <SiteItem item={item}></SiteItem>}
         </Loop>
       </Section>

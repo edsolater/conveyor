@@ -32,7 +32,7 @@ export function Loop<T>(rawProps: LoopProps<T>) {
     return <>{() => props.children(item, idx)}</>
   }
   return (
-    <Piv class='Loop' domRef={setRef} shadowProps={props} icss={{ overflow: 'auto', contain: 'paint' }}>
+    <Piv class='Loop' domRef={setRef} shadowProps={props}>
       <For each={allItems()}>{renderLoopItems}</For>
     </Piv>
   )
