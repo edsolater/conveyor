@@ -1,6 +1,6 @@
 import { threeGridSlotBoxICSS } from '../icssBlocks/threeGridSlotBoxICSS'
 import { Piv } from '../packages/piv'
-import { Box, Icon, icss_row } from '../packages/pivkit'
+import { Box, Icon, icssRow } from '../packages/pivkit'
 import { Link, renderHTMLDOM } from './Link'
 
 export interface TopMenuBarProps {
@@ -15,13 +15,13 @@ export function TopMenuBar(props: TopMenuBarProps) {
   return (
     <Piv<'nav'>
       icss={[
-        icss_row({ items: 'center' }),
+        icssRow({ items: 'center' }),
         { userSelect: 'none', padding: '16px 32px', transition: '150ms' },
         threeGridSlotBoxICSS,
       ]}
       render:self={(selfProps) => renderHTMLDOM('nav', selfProps)}
     >
-      <Box icss={icss_row({ gap: '32px' })}>
+      <Box icss={icssRow({ gap: '32px' })}>
         <Link href='/' innerRoute>
           <Icon src='/logo-with-text.svg' icss={{ height: '32px' }} />
         </Link>

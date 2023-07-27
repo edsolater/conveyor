@@ -1,6 +1,6 @@
 import { isObject } from '@edsolater/fnkit'
 import { KitProps, useKitProps } from '../../../piv'
-import { ICSSGridOption, icss_grid } from '../../icssBlocks'
+import { ICSSGridItemOption, ICSSGridOption, icssGrid } from '../../icssBlocks'
 import { Box, BoxProps } from './Box'
 
 export type GridBoxProps = KitProps<
@@ -21,7 +21,22 @@ export function GridBox(rawProps: GridBoxProps) {
     <Box
       class={'GridBox'}
       shadowProps={shadowProps}
-      icss={[icss_grid(isObject(props['icss:grid']) ? props['icss:grid'] : {})]}
+      icss={[icssGrid(isObject(props['icss:grid']) ? props['icss:grid'] : {})]}
     />
   )
+}
+
+export type GridItemBoxProps = KitProps<
+  {
+    'icss:area'?: ICSSGridItemOption['area']
+  },
+  { extends: BoxProps }
+>
+
+/**
+ * for direct sub component of `<GridBox>`
+ */
+export function GridItem(rawProps: GridItemBoxProps) {
+  const { shadowProps, props } = useKitProps(rawProps, { name: 'GridItemBox' })
+  return <Box shadowProps={shadowProps} icss={{ gridArea: props['icss:area'] }} />
 }

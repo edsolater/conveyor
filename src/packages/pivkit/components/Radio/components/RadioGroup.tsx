@@ -6,7 +6,7 @@ import { createSyncSignal } from '../../../hooks'
 import { Label } from '../../Label'
 import { LabelBox } from '../../LabelBox'
 import { Box } from '../../Boxes/Box'
-import { icss_col, icss_row } from '../../../icssBlocks'
+import { icssCol, icssRow } from '../../../icssBlocks'
 
 export interface RadioGroupController {
   name: string
@@ -55,5 +55,5 @@ export function RadioGroup(rawProps: RadioGroupProps) {
 
   lazyLoadController(radioGroupController)
 
-  return <Box class='RadioGroup' shadowProps={shadowProps} icss={icss_col()}></Box>
+  return <Box class='RadioGroup' shadowProps={shadowProps} icss={icssCol()}></Box>
 }

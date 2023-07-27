@@ -1,34 +1,57 @@
 import { DeMayArray, MayFn, flap, isObject, isString, shrinkFn } from '@edsolater/fnkit'
-import { Show, createMemo, createSignal } from 'solid-js'
+import { Show, createSignal } from 'solid-js'
 import { Link } from '../components/Link'
 import { NavBar } from '../components/NavBar'
 import { SiteCardItem, linkCards } from '../configs/linkCards'
 import { useSearch } from '../packages/features/searchItems'
 import { ICSS, Piv } from '../packages/piv'
-import { Box, Card, GridBox, Image, Input, List, Loop, Section, Text, icss_card, icss_row } from '../packages/pivkit'
+import {
+  Box,
+  Card,
+  GridBox,
+  GridItem,
+  Image,
+  Input,
+  Loop,
+  Section,
+  Text,
+  icssCard,
+  icssGrid,
+  icssRow,
+} from '../packages/pivkit'
 
 function SiteItem(props: { item: SiteCardItem; level?: /* zero or undefined is the top */ number }) {
   return (
-    <Card icss={[icss_card]}>
-      <GridBox icss:grid={{}}>
-        <Link href={props.item.url}>
-          <Image src={props.item.headerLogo}></Image>
-        </Link>
-        <Link href={props.item.url}>
-          <Text icss={{ fontSize: '2em', fontWeight: 'bold' }}>{props.item.name}</Text>
-        </Link>
-        <Loop icss={icss_row({ gap: '.5em' })} of={props.item.keywords}>
-          {(keyword) => <Text icss={{ fontSize: '1em' }}>{keyword}</Text>}
-        </Loop>
-        <Loop of={flap(props.item.screenshot)}>
-          {(screenshotItem) => <Screenshot siteUrl={props.item.url} item={screenshotItem} />}
-        </Loop>
-
-        <Show when={props.item.subreddits}>
-          <Loop of={props.item.subreddits}>
-            {(subreddit) => <SiteItem item={subreddit} level={(props.level ?? 0) + 1}></SiteItem>}
+    <Card icss={[icssCard]}>
+      <GridBox
+        icss:grid={{
+          template: `
+            "info  sub " auto / auto 1fr
+          `,
+        }}
+      >
+        <GridItem icss:area='info'>
+          <Link href={props.item.url}>
+            <Image src={props.item.headerLogo}></Image>
+          </Link>
+          <Link href={props.item.url}>
+            <Text icss={{ fontSize: '2em', fontWeight: 'bold' }}>{props.item.name}</Text>
+          </Link>
+          <Loop icss={icssRow({ gap: '.5em' })} of={props.item.keywords}>
+            {(keyword) => <Text icss={{ fontSize: '1em' }}>{keyword}</Text>}
           </Loop>
-        </Show>
+          <Loop of={flap(props.item.screenshot)}>
+            {(screenshotItem) => <Screenshot siteUrl={props.item.url} item={screenshotItem} />}
+          </Loop>
+        </GridItem>
+
+        <GridItem icss:area='sub'>
+          <Show when={props.item.subreddits}>
+            <Loop of={props.item.subreddits}>
+              {(subreddit) => <SiteItem item={subreddit} level={(props.level ?? 0) + 1}></SiteItem>}
+            </Loop>
+          </Show>
+        </GridItem>
       </GridBox>
     </Card>
   )
@@ -43,14 +66,16 @@ export default function Home() {
   return (
     <Piv>
       <NavBar title='Home' />
-      <Section icss={{ display: 'grid', justifyContent: 'center' }}>
-        <Box icss={[icss_row({ gap: '4px' }), { marginBottom: '8px', fontSize: '2em' }]}>
+
+      <Section name='content' icss={{ display: 'grid', justifyContent: 'center' }}>
+        <Box icss={[icssRow({ gap: '4px' }), { marginBottom: '8px', fontSize: '2em' }]}>
           <Text>search tags:</Text>
           <Input icss={{ border: 'solid' }} onUserInput={({ text }) => setSearchText(text)} />
         </Box>
-        <Piv icss={{ width: '80vw', height: '60vh' }}>
-          <Loop of={links}>{(item) => <SiteItem item={item}></SiteItem>}</Loop>
-        </Piv>
+
+        <Loop of={links} icss={icssGrid({ gap: '4px' })}>
+          {(item) => <SiteItem item={item}></SiteItem>}
+        </Loop>
       </Section>
     </Piv>
   )
