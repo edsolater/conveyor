@@ -63,7 +63,7 @@ export const icssCard = (options?: ICSSCardOption) =>
   ({
     display: 'grid',
     // backgroundColor: 'color-mix(in srgb, currentColor, transparent 95%)',
-    background: options?.style === 'ghost' ? undefined : 'var(--big-card-bg, white)',
+    background: options?.style === 'ghost' ? undefined : 'var(--big-card-bg, #ffffffcc)',
     /* generate by https://shadows.brumm.af/ */
     boxShadow:
       options?.style === 'ghost'
