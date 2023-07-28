@@ -99,7 +99,7 @@ export default function Home() {
     matchConfigs: [(i) => i.name, (i) => i.keywords],
   })
   createEffect(() => {
-    console.log(links())
+    console.log('links', links())
   })
   return (
     <Piv>
