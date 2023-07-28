@@ -23,7 +23,7 @@ import {
 function SiteItem(props: { item: SiteCardItem; level?: /* zero or undefined is the top */ number }) {
   // const {gridContainerICSS, gridItemICSS} = useICSS('Grid')
   return (
-    <Card icss={[icssCard()]}>
+    <Box icss={icssCard}>
       <GridBox
         icss:grid={{
           template: `
@@ -58,7 +58,7 @@ function SiteItem(props: { item: SiteCardItem; level?: /* zero or undefined is t
           </Loop>
         </GridItem>
       </GridBox>
-    </Card>
+    </Box>
   )
 }
 

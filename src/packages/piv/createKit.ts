@@ -201,7 +201,7 @@ export function useKitProps<
   lazyLoadController(controller: Controller | ((props: ParsedKitProps<GetDeAccessifiedProps<P>>) => Controller)): void
 } {
   type RawProps = GetDeAccessifiedProps<P>
-  const { loadController, getControllerCreator } = composeController<RawProps, Controller>()
+  const { loadController, getControllerCreator } = createComponentController<RawProps, Controller>()
   const composedProps = getParsedKitProps(props, {
     controller: (props: ParsedKitProps<RawProps>) => getControllerCreator(props),
     ...options,
@@ -219,14 +219,18 @@ export function useKitProps<
 /**
  * section 2: load controller
  */
-function composeController<RawProps extends ValidProps, Controller extends ValidController | unknown>() {
+function createComponentController<RawProps extends ValidProps, Controller extends ValidController | unknown>() {
   const controllerFaker = new Faker<(props: ParsedKitProps<RawProps>) => Controller>()
   const loadController = (inputController: Controller | ((props: ParsedKitProps<RawProps>) => Controller)) => {
     const controllerCreator = typeof inputController === 'function' ? inputController : () => inputController
     //@ts-expect-error unknown ?
     controllerFaker.load(controllerCreator)
   }
-  return { loadController, getControllerCreator: (props: ParsedKitProps<RawProps>) => controllerFaker.spawn()(props) }
+  return {
+    loadController,
+    getControllerCreator: (props: ParsedKitProps<RawProps>) =>
+      controllerFaker.hasLoaded() ? controllerFaker.spawn()(props) : {},
+  }
 }
 
 export type DeKitProps<

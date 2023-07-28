@@ -39,7 +39,6 @@ export function parsePivProps(rawProps: PivProps<any>) {
   const nativeProps = {
     ...parseHTMLProps(props.htmlProps),
     get class() {
-      const { props, controller } = getProps(rawProps)
       // get ter for lazy solidjs render
       return (
         shakeFalsy([classname(props.class, controller), classifyICSS(props.icss, controller)]).join(' ') || undefined
