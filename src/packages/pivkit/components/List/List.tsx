@@ -94,7 +94,6 @@ export function List<T>(rawProps: ListProps<T>) {
   const renderListItems = (item: T, idx: () => number) => {
     return (
       <Show when={checkNeedRenderByIndex(idx(), renderItemLength())}>
-        {props.children(item, idx)}
         <ListItem>{() => props.children(item, idx)}</ListItem>
       </Show>
     )

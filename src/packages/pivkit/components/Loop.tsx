@@ -1,5 +1,5 @@
 import { MayFn, flap, shrinkFn } from '@edsolater/fnkit'
-import { For, JSXElement, createEffect, createMemo } from 'solid-js'
+import { For, JSXElement, createMemo } from 'solid-js'
 import { KitProps, Piv, useKitProps } from '../../piv'
 import { createRef } from '../hooks/createRef'
 
@@ -28,12 +28,9 @@ export function Loop<T>(rawProps: LoopProps<T>) {
   // [loop ref]
   const [loopRef, setRef] = createRef<HTMLElement>()
 
-  const renderLoopItems = (item: T, idx: () => number) => {
-    return <>{() => props.children(item, idx)}</>
-  }
   return (
     <Piv class='Loop' domRef={setRef} shadowProps={props}>
-      <For each={allItems()}>{renderLoopItems}</For>
+      <For each={allItems()}>{(item, idx) => props.children(item, idx)}</For>
     </Piv>
   )
 }
