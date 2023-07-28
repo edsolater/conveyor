@@ -4,8 +4,10 @@ import { MayFn, isArray, shrinkFn } from '@edsolater/fnkit'
 
 export function useSearch<T>(items: (() => T[]) | T[], text: MayFn<string | undefined>, options?: SearchOptions<T>) {
   const allItems = isArray(items) ? items : items()
-  const searchedItems = createMemo(() => searchItems(allItems, { ...options, text: shrinkFn(text) }), allItems, {
-    equals: (prev, next) => prev.length === next.length && prev.every((i, index) => i === next[index]),
-  })
+  const searchedItems = createMemo(
+    () => searchItems(allItems, { ...options, text: shrinkFn(text) }),
+    searchItems(allItems, { ...options, text: shrinkFn(text) }),
+    { equals: (prev, next) => prev.length === next.length && prev.every((i, index) => i === next[index]) }
+  )
   return { searchedItems }
 }
