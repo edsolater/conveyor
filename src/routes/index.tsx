@@ -112,9 +112,6 @@ export default function Home() {
   const { searchedItems: links } = useSearch(linkCards, searchText, {
     matchConfigs: [(i) => i.name, (i) => i.keywords],
   })
-  createEffect(() => {
-    console.log('links', links())
-  })
   return (
     <Piv>
       <NavBar title='Home' />

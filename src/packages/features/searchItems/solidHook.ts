@@ -1,9 +1,14 @@
+import { MayFn, isArray, shrinkFn } from '@edsolater/fnkit'
 import { createDeferred, createMemo } from 'solid-js'
 import { SearchOptions, searchItems } from './core'
-import { MayFn, isArray, shrinkFn } from '@edsolater/fnkit'
 
-export function useSearch<T>(items: (() => T[]) | T[], text: MayFn<string | undefined>, options?: SearchOptions<T>) {
+export function useSearch<T>(
+  items: (() => T[]) | T[],
+  searchText: MayFn<string | undefined>,
+  options?: SearchOptions<T>
+) {
   const allItems = createDeferred(() => (isArray(items) ? items : items()))
+  const text = createDeferred(() => shrinkFn(searchText))
   const searchedItems = createMemo(
     () => searchItems(allItems(), { ...options, text: shrinkFn(text) }),
     searchItems(isArray(items) ? items : items(), { ...options, text: shrinkFn(text) }),
