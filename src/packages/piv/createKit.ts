@@ -16,6 +16,7 @@ import { HTMLTag, ValidController, ValidProps } from './types/tools'
 import { AddDefaultPivProps, addDefaultPivProps } from './utils/addDefaultProps'
 import { omit } from './utils/omit'
 import { mergeProps } from './utils'
+import { createUUID, UUID } from '../pivkit/hooks/utils/createUUID'
 
 /**
  * - auto add `plugin` `shadowProps` `_promisePropsConfig` `controller` props
@@ -199,6 +200,9 @@ export function useKitProps<
   shadowProps: any
   props: DeKitProps<P, Controller, DefaultProps>
   lazyLoadController(controller: Controller | ((props: ParsedKitProps<GetDeAccessifiedProps<P>>) => Controller)): void
+  // TODO: imply it !!! For complicated DOM API always need this, this is a fast shortcut
+  // componentRef
+  uuid: UUID
 } {
   type RawProps = GetDeAccessifiedProps<P>
   const { loadController, getControllerCreator } = createComponentController<RawProps, Controller>()
@@ -207,12 +211,12 @@ export function useKitProps<
     ...options,
   }) as any /* too difficult to type, no need to check */
   const shadowProps = options?.selfProps ? omit(composedProps, options.selfProps) : composedProps
+  const { getUUID } = getComponentID()
   return {
     props: composedProps,
     shadowProps,
     lazyLoadController: loadController,
-    // TODO: imply it !!! For complicated DOM API always need this, this is a fast shortcut
-    // componentRef
+    uuid: getUUID,
   }
 }
 
@@ -239,3 +243,18 @@ export type DeKitProps<
   DefaultProps extends Partial<GetDeAccessifiedProps<P>> = {}
 > = ParsedKitProps<AddDefaultPivProps<GetDeAccessifiedProps<P>, DefaultProps>> &
   Omit<PivProps<HTMLTag, Controller>, keyof GetDeAccessifiedProps<P>>
+
+/**
+ * generate id so component which can pass to triggerController()
+ * inside same component even call multi-time will return same id
+ */
+function getComponentID(): { getUUID(): UUID } {
+  let componentId: UUID | undefined = undefined
+  const getUUID = () => {
+    if (!componentId) {
+      componentId = createUUID().id
+    }
+    return componentId
+  }
+  return { getUUID }
+}

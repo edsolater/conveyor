@@ -6,7 +6,7 @@ import { createGlobalStyles } from 'solid-styled-components'
 const GlobalStyles = createGlobalStyles`
     body {
       font-family: Gordita, Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-      background-color: #eef2f7;
+      background-color: #f6faff;
     }
 
     main {
@@ -29,6 +29,10 @@ const GlobalStyles = createGlobalStyles`
       max-width: 14rem;
       margin: 2rem auto;
       line-height: 1.35;
+    }
+
+    [popover] {
+      padding: inherit;
     }
 
     @media (min-width: 480px) {

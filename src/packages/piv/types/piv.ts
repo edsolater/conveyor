@@ -42,10 +42,10 @@ export interface PivProps<TagName extends HTMLTag = HTMLTag, Controller extends 
   onClick?: (
     utils: {
       ev: MouseEvent & {
-        currentTarget: HTMLElementTagNameMap[TagName]
+        currentTarget: HTMLElement
         target: Element
       }
-      el: HTMLElementTagNameMap[TagName]
+      el: HTMLElement
     } & Controller
   ) => void // for accessifyProps, onClick can't be array
 

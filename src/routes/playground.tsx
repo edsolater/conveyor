@@ -1,4 +1,4 @@
-import { createEffect, createSignal } from 'solid-js'
+import { Show, createEffect, createSignal } from 'solid-js'
 import { CircularProgress } from '../components/CircularProgress'
 import { ExamplePanel } from '../components/ExamplePanel'
 import { NavBar } from '../components/NavBar'
@@ -18,11 +18,14 @@ import {
   Text,
   createIncresingAccessor,
   createIntervalEffect,
+  createRef,
   icssCol,
   icssRow,
   renderSwitchThumb,
   useCSSTransition,
 } from '../packages/pivkit'
+import { createUUID } from '../packages/pivkit/hooks/utils/createUUID'
+import { createTriggerController } from '../packages/pivkit/hooks/utils/createTriggerController'
 
 export default function PlaygroundPage() {
   return (
@@ -77,6 +80,10 @@ function PlaygoundList() {
 
       <ExamplePanel name='Radio'>
         <RadioExample />
+      </ExamplePanel>
+
+      <ExamplePanel name='Popover'>
+        <PopoverExample />
       </ExamplePanel>
     </Box>
   )
@@ -297,4 +304,39 @@ function RadioExample() {
   }, 1200)
 
   return <Radio option='gender' isChecked={checked()} />
+}
+
+function PopoverExample() {
+  const { trigger, isTriggerOn } = createTriggerController()
+
+  const [popoverDom, setPopoverDom] = createRef<HTMLElement>()
+  createEffect(() => {
+    if (isTriggerOn()) {
+      // @ts-expect-error ts dom not ready yet
+      popoverDom()?.showPopover?.()
+    } else {
+      // @ts-expect-error ts dom not ready yet
+      popoverDom()?.hidePopover?.()
+    }
+  })
+  
+  return (
+    <>
+      <Button
+        onClick={({ el }) => {
+          trigger.toggle(el)
+        }}
+      >
+        💬popover
+      </Button>
+
+      <Box
+        domRef={setPopoverDom}
+        icss={{ border: 'solid', width: '20em', minHeight: '5em' }}
+        htmlProps={{ popover: 'auto' }}
+      >
+        hello world
+      </Box>
+    </>
+  )
 }
