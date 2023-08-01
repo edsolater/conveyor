@@ -350,7 +350,7 @@ function PopoverExample() {
       <Box
         domRef={setPopoverDom}
         icss={{ border: 'solid', width: '20em', minHeight: '5em' }}
-        htmlProps={{ popover: 'auto' }}
+        htmlProps={{ popover: 'manual' }}
       >
         hello world
       </Box>
