@@ -1,4 +1,4 @@
-import { Show, createEffect, createSignal } from 'solid-js'
+import { Show, createEffect, createSignal, onCleanup } from 'solid-js'
 import { CircularProgress } from '../components/CircularProgress'
 import { ExamplePanel } from '../components/ExamplePanel'
 import { NavBar } from '../components/NavBar'
@@ -26,6 +26,7 @@ import {
 } from '../packages/pivkit'
 import { createUUID } from '../packages/pivkit/hooks/utils/createUUID'
 import { createTriggerController } from '../packages/pivkit/hooks/utils/createTriggerController'
+import { onEvent } from '../packages/domkit'
 
 export default function PlaygroundPage() {
   return (
@@ -298,11 +299,9 @@ function ListExample() {
 
 function RadioExample() {
   const [checked, setChecked] = createSignal(false)
-
   createIntervalEffect(() => {
     setChecked((b) => !b)
   }, 1200)
-
   return <Radio option='gender' isChecked={checked()} />
 }
 
@@ -310,6 +309,8 @@ function PopoverExample() {
   const { trigger, isTriggerOn } = createTriggerController()
 
   const [popoverDom, setPopoverDom] = createRef<HTMLElement>()
+
+  // open popover by state
   createEffect(() => {
     if (isTriggerOn()) {
       // @ts-expect-error ts dom not ready yet
@@ -319,7 +320,23 @@ function PopoverExample() {
       popoverDom()?.hidePopover?.()
     }
   })
-  
+
+  // listen to popover toggle event and reflect to trigger state
+  createEffect(() => {
+    const el = popoverDom()
+    if (!el) return
+    const { abort } = onEvent(el, 'toggle', ({ ev }) => {
+      // @ts-expect-error force
+      const { newState } = ev as { newState: 'open' | 'closed' }
+      if (newState === 'open') {
+        trigger.turnOn(el)
+      } else {
+        trigger.turnOff(el)
+      }
+    })
+    onCleanup(abort)
+  })
+
   return (
     <>
       <Button
