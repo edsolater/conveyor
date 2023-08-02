@@ -1,10 +1,11 @@
 import { PopoverPlacement } from './type'
 
 export type PopupLocationInfo = {
-  // reltive to screen
+  // relative to viewport
   panelLeft: number
+  // relative to viewport
   panelTop: number
-  // reltive to screen. arrow bottom center
+  // relative to screen. arrow bottom center
   arrowLeftRelativeToPanel: number
   arrowTopRelativeToPanel: number
 }
@@ -41,12 +42,12 @@ export const calcPopupPanelLocation = ({
   const panelWidth = panelElement.clientWidth
   const panelHeight = panelElement.clientHeight
 
-  const viewportWidth = globalThis.document.documentElement.clientWidth - viewportBoundaryInset * 2
-  const viewportHeight = globalThis.document.documentElement.clientHeight - viewportBoundaryInset * 2
-  const viewportTop = viewportBoundaryInset
-  const viewportLeft = viewportBoundaryInset
-  const viewportRight = viewportLeft + viewportWidth
-  const viewportBottom = viewportTop + viewportHeight
+  const customizedViewportWidth = globalThis.document.documentElement.clientWidth - viewportBoundaryInset * 2
+  const customizedViewportHeight = globalThis.document.documentElement.clientHeight - viewportBoundaryInset * 2
+  const customizedViewportTop = viewportBoundaryInset
+  const customizedViewportLeft = viewportBoundaryInset
+  const customizedViewportRight = customizedViewportLeft + customizedViewportWidth
+  const customizedViewportBottom = customizedViewportTop + customizedViewportHeight
 
   const {
     left: buttonLeft,
@@ -77,26 +78,28 @@ export const calcPopupPanelLocation = ({
     return rules[placement]?.()
   }
   // calc panel
-  const [theoreticallyPanelLeft, theoreticallyPanelTop] = calcPanel(placement) ?? [0, 0]
-  const theoreticallyPanelBottom = theoreticallyPanelTop + panelHeight
-  const theoreticallyPanelRight = theoreticallyPanelLeft + panelWidth
+  const [offsetRectPanelLeft, offsetRectPanelTop] = calcPanel(placement) ?? [0, 0]
+
+  const theoreticallyPanelBottom = offsetRectPanelTop + panelHeight
+  const theoreticallyPanelRight = offsetRectPanelLeft + panelWidth
 
   const idealPanelOffsetY =
-    theoreticallyPanelBottom > viewportBottom
-      ? viewportBottom - theoreticallyPanelBottom
-      : theoreticallyPanelTop < viewportTop
-      ? viewportTop - theoreticallyPanelTop
+    theoreticallyPanelBottom > customizedViewportBottom
+      ? customizedViewportBottom - theoreticallyPanelBottom
+      : offsetRectPanelTop < customizedViewportTop
+      ? customizedViewportTop - offsetRectPanelTop
       : 0
 
   const idealPanelOffsetX =
-    theoreticallyPanelRight > viewportRight
-      ? viewportRight - theoreticallyPanelRight
-      : theoreticallyPanelLeft < viewportLeft
-      ? viewportLeft - theoreticallyPanelLeft
+    theoreticallyPanelRight > customizedViewportRight
+      ? customizedViewportRight - theoreticallyPanelRight
+      : offsetRectPanelLeft < customizedViewportLeft
+      ? customizedViewportLeft - offsetRectPanelLeft
       : 0
 
-  const panelLeft = theoreticallyPanelLeft + idealPanelOffsetX
-  const panelTop = theoreticallyPanelTop + idealPanelOffsetY
+  console.log('idealPanelOffsetX: ', idealPanelOffsetX)
+  const panelLeft = offsetRectPanelLeft
+  const panelTop = offsetRectPanelTop + idealPanelOffsetY
 
   // calc arrow
   const arrowTop = clamp(buttonCenterY, { min: panelTop, max: panelTop + panelHeight }) - panelTop

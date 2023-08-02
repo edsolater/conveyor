@@ -7,6 +7,7 @@ const GlobalStyles = createGlobalStyles`
     body {
       font-family: Gordita, Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
       background-color: #f6faff;
+      margin: 0;
     }
 
     main {
@@ -33,6 +34,7 @@ const GlobalStyles = createGlobalStyles`
 
     [popover] {
       padding: inherit;
+      margin: unset;
     }
 
     @media (min-width: 480px) {

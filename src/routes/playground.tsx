@@ -27,6 +27,7 @@ import {
 import { createUUID } from '../packages/pivkit/hooks/utils/createUUID'
 import { createTriggerController } from '../packages/pivkit/hooks/utils/createTriggerController'
 import { onEvent } from '../packages/domkit'
+import { usePopoverLocation } from '../packages/pivkit/pluginComponents/popover/usePopoverLocation'
 
 export default function PlaygroundPage() {
   return (
@@ -336,10 +337,16 @@ function PopoverExample() {
     })
     onCleanup(abort)
   })
-
+  const [buttonDom, setButtonDom] = createRef<HTMLElement>()
+  const { panelStyle } = usePopoverLocation({
+    buttonDom: buttonDom,
+    panelDom: popoverDom,
+    isTriggerOn,
+  })
   return (
     <>
       <Button
+        domRef={setButtonDom}
         onClick={({ el }) => {
           trigger.toggle(el)
         }}
@@ -349,8 +356,9 @@ function PopoverExample() {
 
       <Box
         domRef={setPopoverDom}
-        icss={{ border: 'solid', width: '20em', minHeight: '5em' }}
+        icss={{ border: 'solid', width: '', minHeight: '5em' }}
         htmlProps={{ popover: 'manual' }}
+        style={panelStyle()}
       >
         hello world
       </Box>
