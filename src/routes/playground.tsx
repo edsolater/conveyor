@@ -87,10 +87,27 @@ function PlaygoundList() {
       <ExamplePanel name='Popover'>
         <PopoverExample />
       </ExamplePanel>
+
+      <Foo />
     </Box>
   )
 }
 
+function Foo() {
+  const [count, setCount] = createSignal(0)
+  createEffect(() => {
+    const timeoutId = setInterval(() => {
+      setCount((c) => c + 1)
+    }, 1000)
+    onCleanup(() => clearInterval(timeoutId))
+  })
+  return (
+    <Piv onClick={(console.log('why render?'), ()=>{})} icss={[{ width: count() + 'px' }]}>
+      {console.log('render once')}
+      {count()}
+    </Piv>
+  )
+}
 /**
  *
  * @todo 1. fade out when come to the end, not play track back.
