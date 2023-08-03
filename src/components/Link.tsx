@@ -1,6 +1,6 @@
 import { useNavigate } from '@solidjs/router'
-import { HTMLTag, KitProps, Piv, PivProps, useKitProps } from '../packages/piv'
-import { parsePivProps } from '../packages/piv'
+import { HTMLTag, KitProps, Piv, PivProps, useKitProps } from '../packages/pivkit/piv'
+import { parsePivProps } from '../packages/pivkit/piv'
 import { JSX, Show } from 'solid-js'
 import { isArray, isFunction, isMap } from '@edsolater/fnkit'
 

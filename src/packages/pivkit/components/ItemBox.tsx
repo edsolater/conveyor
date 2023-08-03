@@ -1,5 +1,5 @@
 import { JSXElement } from 'solid-js'
-import { KitProps, Piv, useKitProps } from '../../piv'
+import { KitProps, Piv, useKitProps } from '../piv'
 
 export interface ItemBoxProps {
   suffix?: JSXElement

@@ -1,4 +1,4 @@
-import { PivChild, Piv } from '../../../../piv'
+import { PivChild, Piv } from '../../../piv'
 import { RadioController, RadioProps } from '..'
 
 /**

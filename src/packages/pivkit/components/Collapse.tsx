@@ -1,9 +1,9 @@
 import { createContext, createEffect, useContext } from 'solid-js'
-import { Piv, PivProps } from '../../piv'
-import { KitProps, UIKit, useKitProps } from '../../piv'
+import { Piv, PivProps } from '../piv'
+import { KitProps, UIKit, useKitProps } from '../piv'
 import { createToggle } from '../hooks/createToggle'
 import { Accessify } from '../utils/accessifyProps'
-import { parsePivProps } from '../../piv'
+import { parsePivProps } from '../piv'
 import { renderHTMLDOM } from '../../../components/Link'
 
 export interface CollapseProps extends UIKit<{ controller: CollapseController; htmlPropsTagName: 'details' }> {

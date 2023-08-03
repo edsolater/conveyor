@@ -1,6 +1,6 @@
 import { renderHTMLDOM } from '../../../components/Link'
-import { KitProps, Piv, useKitProps } from '../../piv'
-import { parsePivProps } from '../../piv'
+import { KitProps, Piv, useKitProps } from '../piv'
+import { parsePivProps } from '../piv'
 
 export interface IconProps {
   name?: string

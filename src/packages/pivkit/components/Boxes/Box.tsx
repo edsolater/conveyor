@@ -1,4 +1,4 @@
-import { KitProps, Piv, useKitProps } from '../../../piv'
+import { KitProps, Piv, useKitProps } from '../../piv'
 
 export type BoxProps = KitProps<{}>
 

@@ -1,5 +1,5 @@
 import { renderHTMLDOM } from '../../../../components/Link'
-import { Piv, UIKit, useKitProps } from '../../../piv'
+import { Piv, UIKit, useKitProps } from '../../piv'
 
 export interface HTMLInputRadioProps extends UIKit {
   label?: string

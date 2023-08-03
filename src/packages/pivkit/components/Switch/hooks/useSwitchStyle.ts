@@ -1,4 +1,4 @@
-import { DeKitProps } from '../../../../piv'
+import { DeKitProps } from '../../../piv'
 import { LabelProps } from '../../Label'
 import { HTMLCheckboxProps } from '../HTMLCheckbox'
 import { SwitchProps } from '../Switch'

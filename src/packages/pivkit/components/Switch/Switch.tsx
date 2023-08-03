@@ -1,5 +1,5 @@
 import { Accessor } from 'solid-js'
-import { Piv, PivProps, UIKit, useKitProps } from '../../../piv'
+import { Piv, PivProps, UIKit, useKitProps } from '../../piv'
 import { createSyncSignal } from '../../hooks/createSyncSignal'
 import { makeElementMoveSmooth } from '../../hooks/makeElementMoveSmooth'
 import { Accessify } from '../../utils/accessifyProps'

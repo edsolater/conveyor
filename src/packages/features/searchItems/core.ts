@@ -1,6 +1,6 @@
 import { MayArray, MayFn, flap, isNumber, isObject, isString, map, shakeNil, shrinkFn } from '@edsolater/fnkit'
 import { isStringInsensitivelyContain, isStringInsensitivelyEqual } from './isStringEqual'
-import { omit } from '../../piv/utils'
+import { omit } from '../../pivkit/piv/utils'
 
 type SearchConfigItemObj = {
   text: string | undefined

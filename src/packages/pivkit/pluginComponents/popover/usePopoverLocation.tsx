@@ -2,7 +2,7 @@ import { getScrollParents } from './getScrollParents'
 import { PopoverPlacement } from './type'
 import { PopupLocationInfo, calcPopupPanelLocation } from './calcPopupPanelLocation'
 import { Accessor, createEffect, createMemo, createSignal, onCleanup } from 'solid-js'
-import { IStyle } from '../../../piv/propHandlers'
+import { IStyle } from '../../piv/propHandlers'
 
 // for fade in effect (fade-in is caused by )
 const popupOrigins = {

@@ -1,6 +1,6 @@
 import { MayFn, flap, shrinkFn } from '@edsolater/fnkit'
 import { Accessor, For, JSXElement, Show, createContext, createEffect, createMemo, createSignal, on } from 'solid-js'
-import { KitProps, Piv, useKitProps } from '../../../piv'
+import { KitProps, Piv, useKitProps } from '../../piv'
 import { createRef } from '../../hooks/createRef'
 import { ObserveFn, useIntersectionObserver } from '../../hooks/useIntersectionObserver'
 import { useScrollDegreeDetector } from '../../hooks/useScrollDegreeDetector'

@@ -1,5 +1,5 @@
 import { isObject } from '@edsolater/fnkit'
-import { KitProps, useKitProps } from '../../../piv'
+import { KitProps, useKitProps } from '../../piv'
 import { ICSSGridItemOption, ICSSGridOption, icssGrid } from '../../styles/icssBlocks'
 import { Box, BoxProps } from './Box'
 

@@ -1,5 +1,5 @@
 import { createMemo } from 'solid-js'
-import { addDefaultProps, KitProps, useKitProps } from '../packages/piv'
+import { addDefaultProps, KitProps, useKitProps } from '../packages/pivkit/piv'
 import { createRef } from '../packages/pivkit'
 
 interface CircularProgressProps {

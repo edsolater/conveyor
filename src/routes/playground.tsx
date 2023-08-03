@@ -3,7 +3,7 @@ import { CircularProgress } from '../components/CircularProgress'
 import { ExamplePanel } from '../components/ExamplePanel'
 import { NavBar } from '../components/NavBar'
 import { useLoopPercent } from '../hooks/useLoopPercent'
-import { Piv, useComponentController } from '../packages/piv'
+import { Piv, useComponentController } from '../packages/pivkit/piv'
 import {
   Box,
   Button,

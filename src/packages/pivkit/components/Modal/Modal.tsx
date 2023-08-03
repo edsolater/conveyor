@@ -1,9 +1,9 @@
 import { Accessor, Show, createEffect, createSignal } from 'solid-js'
-import { ICSS, KitProps, Piv, useKitProps } from '../../../piv'
+import { ICSS, KitProps, Piv, useKitProps } from '../../piv'
 import { createRef } from '../../hooks/createRef'
 import { useClickOutside } from '../../hooks/useClickOutside'
 import { useDOMEventListener } from '../../hooks/useDOMEventListener'
-import { parsePivProps } from '../../../piv'
+import { parsePivProps } from '../../piv'
 import { renderHTMLDOM } from '../../../../components/Link'
 
 export interface ModalController {

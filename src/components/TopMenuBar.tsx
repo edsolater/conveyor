@@ -1,5 +1,5 @@
 import { threeGridSlotBoxICSS } from '../icssBlocks/threeGridSlotBoxICSS'
-import { Piv } from '../packages/piv'
+import { Piv } from '../packages/pivkit/piv'
 import { Box, Icon, icssRow } from '../packages/pivkit'
 import { Link, renderHTMLDOM } from './Link'
 

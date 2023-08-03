@@ -1,4 +1,4 @@
-import { KitProps, Piv, useKitProps } from '../../../packages/piv'
+import { KitProps, Piv, useKitProps } from '../piv'
 
 export type TextProps = KitProps<{
   inline?: boolean

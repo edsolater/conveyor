@@ -1,5 +1,5 @@
 import { SwitchController, SwitchProps } from '..'
-import { Piv, PivChild } from '../../../../piv'
+import { Piv, PivChild } from '../../../piv'
 
 /**
  * **Plugin** for Switch

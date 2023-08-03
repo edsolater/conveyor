@@ -1,4 +1,4 @@
-import { DeKitProps } from '../../../../piv'
+import { DeKitProps } from '../../../piv'
 import { LabelProps } from '../../Label'
 import { HTMLInputRadioProps } from '../HTMLInputRadio'
 import { RadioProps } from '../Radio'

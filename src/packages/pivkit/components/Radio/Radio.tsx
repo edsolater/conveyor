@@ -1,5 +1,5 @@
 import { Accessor } from 'solid-js'
-import { KitProps, Piv, PivProps, ValidController, useKitProps } from '../../../piv'
+import { KitProps, Piv, PivProps, ValidController, useKitProps } from '../../piv'
 import { createSyncSignal } from '../../hooks/createSyncSignal'
 import { Label, LabelProps } from '../Label'
 import { LabelBox, LabelBoxProps } from '../LabelBox'

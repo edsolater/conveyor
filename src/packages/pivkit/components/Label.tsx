@@ -1,4 +1,4 @@
-import { KitProps, PivChild, useKitProps } from '../../piv'
+import { KitProps, PivChild, useKitProps } from '../piv'
 import { Text } from './Text'
 
 export type LabelProps = KitProps<{

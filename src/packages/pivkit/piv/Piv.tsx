@@ -1,6 +1,6 @@
 import { flap } from '@edsolater/fnkit'
 import { JSXElement, Show, createComponent } from 'solid-js'
-import { makePipline } from '../fnkit/makePipline'
+import { makePipline } from '../../fnkit/makePipline'
 import { parsePivProps } from './propHandlers/parsePivProps'
 import { PivProps } from './types/piv'
 import { HTMLTag, ValidController } from './types/tools'

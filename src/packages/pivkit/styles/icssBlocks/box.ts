@@ -1,4 +1,4 @@
-import { CSSObject, ICSSObject } from '../../../piv'
+import { CSSObject, ICSSObject } from '../../piv'
 import { cssColors } from '../cssColors'
 
 export type ICSSRowOption = {

@@ -1,6 +1,6 @@
 import { hasProperty, MayArray, MayDeepArray, pipe } from '@edsolater/fnkit'
-import { Faker } from '../fnkit'
-import { AccessifyProps, DeAccessifyProps, useAccessifiedProps } from '../pivkit'
+import { Faker } from '../../fnkit'
+import { AccessifyProps, DeAccessifyProps, useAccessifiedProps } from '..'
 import { registerControllerInCreateKit } from './hooks/useComponentController'
 import { loadPropsControllerRef, toProxifyController } from './propHandlers/controller'
 import {
@@ -16,7 +16,7 @@ import { HTMLTag, ValidController, ValidProps } from './types/tools'
 import { AddDefaultPivProps, addDefaultPivProps } from './utils/addDefaultProps'
 import { omit } from './utils/omit'
 import { mergeProps } from './utils'
-import { createUUID, UUID } from '../pivkit/hooks/utils/createUUID'
+import { createUUID, UUID } from '../hooks/utils/createUUID'
 
 /**
  * - auto add `plugin` `shadowProps` `_promisePropsConfig` `controller` props
