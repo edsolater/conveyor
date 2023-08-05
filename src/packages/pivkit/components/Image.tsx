@@ -1,6 +1,6 @@
 import { shakeNil } from '@edsolater/fnkit'
 import { createEffect, createSignal, onCleanup } from 'solid-js'
-import { renderHTMLDOM } from '../../../components/Link'
+import { renderHTMLDOM } from '../piv/propHandlers/renderHTMLDOM'
 import { onEvent as addEventListener } from '../../domkit'
 import { Piv, UIKit, useKitProps } from '../piv'
 import { createRef } from '../hooks'

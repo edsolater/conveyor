@@ -1,6 +1,5 @@
-import { renderHTMLDOM } from '../../../components/Link'
-import { KitProps, Piv, PivProps, UIKit, useKitProps } from '../piv'
-import { parsePivProps } from '../piv'
+import { KitProps, Piv, useKitProps } from '../piv'
+import { renderHTMLDOM } from '../piv/propHandlers/renderHTMLDOM'
 
 export type LabelBoxProps = KitProps<{}>
 /**

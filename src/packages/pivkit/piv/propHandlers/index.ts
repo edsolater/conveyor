@@ -8,3 +8,6 @@ export * from './parsePivProps'
 export * from './plugin'
 export * from './plx'
 export * from './shadowProps'
+export * from './renderHTMLDOM'
+export * from './domMap'
+

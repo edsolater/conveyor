@@ -11,8 +11,7 @@ import { createRef } from '../hooks/createRef'
 import { useGlobalKitTheme } from '../hooks/useGlobalKitTheme'
 import { cssColors } from '../styles/cssColors'
 import { CSSColorString, CSSStyle } from '../styles/type'
-import { parsePivProps } from '../piv'
-import { renderHTMLDOM } from '../../../components/Link'
+import { renderHTMLDOM } from '../piv/propHandlers/renderHTMLDOM'
 type BooleanLike = unknown
 
 export interface ButtonController {

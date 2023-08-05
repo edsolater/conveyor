@@ -13,6 +13,7 @@ import { handlePluginProps } from './plugin'
 import { handleShadowProps } from './shadowProps'
 import { omit } from '../utils'
 
+export type NativeProps = ReturnType<typeof parsePivProps>['props']
 /**
  * Parses the PivProps object and returns an object with the parsed properties.
  * @param rawProps - The raw PivProps object to be parsed.
@@ -29,35 +30,62 @@ export function parsePivProps(rawProps: PivProps<any>) {
       parsePivRenderAppendChildren
     )
     const controller = (props.innerController ?? {}) as ValidController
-    const ifNeedRenderChildren = 'if' in props ? Boolean(props.if) : undefined
-    const ifNeedRenderSelf = ('ifSelfShown' as keyof PivProps) in props ? Boolean(props.ifSelfShown) : undefined
-    const renderSelf = 'render:self' in props ? props['render:self']?.(omit(props, ['render:self'])) : undefined
-    return { props, controller, ifNeedRenderChildren, renderSelf, ifNeedRenderSelf }
+    const ifOnlyNeedRenderChildren = 'if' in props ? Boolean(props.if) : undefined
+    const ifOnlyNeedRenderSelf = ('ifSelfShown' as keyof PivProps) in props ? Boolean(props.ifSelfShown) : undefined
+    const selfCoverNode = 'render:self' in props ? props['render:self']?.(omit(props, ['render:self'])) : undefined
+    return { props, controller, ifOnlyNeedRenderChildren, selfCoverNode, ifOnlyNeedRenderSelf }
   }
-  const { props, controller, ifNeedRenderChildren, renderSelf, ifNeedRenderSelf } = getProps(rawProps)
+  const { props, controller, ifOnlyNeedRenderChildren, selfCoverNode, ifOnlyNeedRenderSelf } = getProps(rawProps)
   debugLog(rawProps, props, controller)
-  const nativeProps = {
-    ...parseHTMLProps(props.htmlProps),
-    get class() {
-      // get ter for lazy solidjs render
-      return (
-        shakeFalsy([classname(props.class, controller), classifyICSS(props.icss, controller)]).join(' ') || undefined
-      ) /* don't render if empty string */
-    },
-    get ref() {
-      return (el: HTMLElement) => el && mergeRefs(...flap(props.domRef))(el)
-    },
-    get style() {
-      return parseIStyles(props.style, controller)
-    },
-    get onClick() {
-      return 'onClick' in props ? parseOnClick(props.onClick!, controller) : undefined
-    },
-    get children() {
-      return parsePivChildren(props.children, controller)
-    },
-  }
-  return { props: nativeProps, ifNeedRenderChildren, renderSelf, ifNeedRenderSelf }
+  const nativeProps =
+    'htmlProps' in props // 💩 currently urgly now
+      ? {
+          get htmlProps() {
+            return parseHTMLProps(props.htmlProps)
+          },
+          get class() {
+            // get ter for lazy solidjs render
+            return (
+              shakeFalsy([classname(props.class, controller), classifyICSS(props.icss, controller)]).join(' ') ||
+              undefined
+            ) /* don't render if empty string */
+          },
+          get ref() {
+            return (el: HTMLElement) => el && mergeRefs(...flap(props.domRef))(el)
+          },
+          get style() {
+            return parseIStyles(props.style, controller)
+          },
+          get onClick() {
+            return 'onClick' in props ? parseOnClick(props.onClick!, controller) : undefined
+          },
+          get children() {
+            return parsePivChildren(props.children, controller)
+          },
+        }
+      : {
+          get class() {
+            // get ter for lazy solidjs render
+            return (
+              shakeFalsy([classname(props.class, controller), classifyICSS(props.icss, controller)]).join(' ') ||
+              undefined
+            ) /* don't render if empty string */
+          },
+          get ref() {
+            return (el: HTMLElement) => el && mergeRefs(...flap(props.domRef))(el)
+          },
+          get style() {
+            return parseIStyles(props.style, controller)
+          },
+          get onClick() {
+            return 'onClick' in props ? parseOnClick(props.onClick!, controller) : undefined
+          },
+          get children() {
+            return parsePivChildren(props.children, controller)
+          },
+        }
+
+  return { props: nativeProps, ifOnlyNeedRenderChildren, selfCoverNode, ifOnlyNeedRenderSelf }
 }
 
 /**

@@ -30,6 +30,7 @@ import { onEvent } from '../packages/domkit'
 import { usePopoverLocation } from '../packages/pivkit/pluginComponents/popover/usePopoverLocation'
 
 export default function PlaygroundPage() {
+  return <Foo />
   return (
     <Piv>
       <NavBar title='Playground' />
@@ -102,7 +103,7 @@ function Foo() {
     onCleanup(() => clearInterval(timeoutId))
   })
   return (
-    <Piv onClick={(console.log('why render?'), ()=>{})} icss={[{ width: count() + 'px' }]}>
+    <Piv onClick={(console.log('why render?'), () => {})} style={{ width: count() + 'px' }}>
       {console.log('render once')}
       {count()}
     </Piv>
@@ -330,12 +331,16 @@ function PopoverExample() {
 
   // open popover by state
   createEffect(() => {
-    if (isTriggerOn()) {
-      // @ts-expect-error ts dom not ready yet
-      popoverDom()?.showPopover?.()
-    } else {
-      // @ts-expect-error ts dom not ready yet
-      popoverDom()?.hidePopover?.()
+    try {
+      if (isTriggerOn()) {
+        // @ts-expect-error ts dom not ready yet
+        popoverDom()?.showPopover?.()
+      } else {
+        // @ts-expect-error ts dom not ready yet
+        popoverDom()?.hidePopover?.()
+      }
+    } catch (error) {
+      console.log('error: ', error)
     }
   })
 

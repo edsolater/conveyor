@@ -50,7 +50,7 @@ export function mergeSignalProps<P extends SignalizeProps<ValidProps> | undefine
         ['shadowProps', () => (v1 && v2 ? () => [v1(), v2()].flat() : v1 ?? v2)],
         ['plugin', () => (v1 && v2 ? () => [v1(), v2()].flat() : v1 ?? v2)],
         ['debugLog', () => (v1 && v2 ? () => [v1(), v2()].flat() : v1 ?? v2)],
-        ['dangerousRenderWrapperNode', () => (v1 && v2 ? () => [v1(), v2()].flat() : v1 ?? v2)],
+        ['render:outWrapper', () => (v1 && v2 ? () => [v1(), v2()].flat() : v1 ?? v2)],
         ['render:firstChild', () => (v1 && v2 ? () => [v1(), v2()].flat() : v1 ?? v2)],
         ['render:lastChild', () => (v1 && v2 ? () => [v1(), v2()].flat() : v1 ?? v2)],
         ['controller', () => (v1 && v2 ? () => [v1(), v2()].flat() : v1 ?? v2)],

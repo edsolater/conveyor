@@ -1,4 +1,4 @@
-import { renderHTMLDOM } from '../../../../components/Link'
+import { renderHTMLDOM } from '../../piv/propHandlers/renderHTMLDOM'
 import { Piv, UIKit, useKitProps } from '../../piv'
 
 export interface HTMLInputRadioProps extends UIKit {

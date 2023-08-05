@@ -3,8 +3,7 @@ import { Piv, PivProps } from '../piv'
 import { KitProps, UIKit, useKitProps } from '../piv'
 import { createToggle } from '../hooks/createToggle'
 import { Accessify } from '../utils/accessifyProps'
-import { parsePivProps } from '../piv'
-import { renderHTMLDOM } from '../../../components/Link'
+import { renderHTMLDOM } from '../piv/propHandlers/renderHTMLDOM'
 
 export interface CollapseProps extends UIKit<{ controller: CollapseController; htmlPropsTagName: 'details' }> {
   /** TODO: open still can't auto lock the trigger not controled component now */

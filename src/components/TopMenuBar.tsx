@@ -1,7 +1,8 @@
 import { threeGridSlotBoxICSS } from '../icssBlocks/threeGridSlotBoxICSS'
 import { Piv } from '../packages/pivkit/piv'
 import { Box, Icon, icssRow } from '../packages/pivkit'
-import { Link, renderHTMLDOM } from './Link'
+import { Link } from './Link'
+import { renderHTMLDOM } from '../packages/pivkit/piv/propHandlers/renderHTMLDOM'
 
 export interface TopMenuBarProps {
   title?: string
