@@ -4,6 +4,7 @@ import { PivProps } from '../types/piv'
 import { ValidController, ValidProps } from '../types/tools'
 import { mergeProps } from '../utils/mergeProps'
 import { omit } from '../utils/omit'
+import { Accessor, createSignal } from 'solid-js'
 
 export type GetPluginCreatorParams<T> = T extends PluginCreator<infer Px1>
   ? Px1
@@ -33,19 +34,45 @@ export type GetPluginCreatorParams<T> = T extends PluginCreator<infer Px1>
 export type PluginCreator<PluginParams extends Record<string, any>> = (params?: PluginParams) => Plugin<any>
 export type Plugin<T extends ValidProps = ValidProps, C extends ValidController = {}> =
   | {
-      pluginCoreFn?: (props: T) => Partial<KitProps<T, C>> // TODO: should support 'plugin' and 'shadowProps' too
+      pluginCoreFn?: (
+        props: T,
+        utils: {
+          /** only in component has controller, or will be an empty object*/
+          controller: Accessor<C>
+          dom: Accessor<HTMLElement | undefined>
+        }
+      ) => Partial<KitProps<T, C>> // TODO: should support 'plugin' and 'shadowProps' too
       priority?: number
+      affects?: (keyof T)[]
     }
-  | ((props: T) => Partial<KitProps<T, C>> | undefined) // TODO: should support 'plugin' and 'shadowProps' for easier compose
-// TODO2: not accessify yet
+  | ((
+      props: T,
+      utils: {
+        /** only in component has controller, or will be an empty object*/
+        controller: Accessor<C>
+        dom: Accessor<HTMLElement | undefined>
+      }
+    ) => Partial<KitProps<T, C>> | undefined) // TODO: should support 'plugin' and 'shadowProps' for easier compose
 
+//
+// TODO2: not accessify yet
 export function handlePluginProps<P extends AnyObj>(props: P) {
+  if (!('plugin' in props)) return props
   if (!props?.plugin) return props
   return omit(mergePluginReturnedProps({ plugins: props.plugin, props }), 'plugin')
 }
 
 function invokePlugin(plugin: Plugin<any>, props: KitProps<any>) {
-  return isFunction(plugin) ? plugin(props) : plugin.pluginCoreFn?.(props)
+  // build-in hook
+  const [controller, setController] = createSignal<ValidController>({})
+  const [dom, setDom] = createSignal<HTMLElement>()
+
+  
+  const pluginProps = isFunction(plugin)
+    ? plugin(props, { controller, dom })
+    : plugin.pluginCoreFn?.(props, { controller, dom })
+  const returnProps = mergeProps(props, pluginProps, { controllerRef: setController, domRef: setDom })
+  return returnProps
 }
 
 /**
@@ -88,11 +115,13 @@ export function createPluginCreator<Params extends AnyObj, Props extends ValidPr
   options?: {
     priority?: number // NOTE -1:  it should be render after final prop has determine
     name?: string
+    affects?: (keyof Props)[]
   }
 ): PluginCreator<Params> {
   const factory = (params: Params) => ({
     pluginCoreFn: createrFn(params),
     priority: options?.priority,
+    affects: options?.affects,
   })
   // @ts-expect-error no need to check
   return options?.name ? overwriteFunctionName(factory, options.name) : factory
