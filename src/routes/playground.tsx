@@ -103,7 +103,12 @@ function Foo() {
     onCleanup(() => clearInterval(timeoutId))
   })
   return (
-    <Piv onClick={(console.log('why render?'), () => {})} style={{ width: count() + 'px' }}>
+    <Piv
+      icss={[
+        { width: count() * 6 + 'px', background: 'dodgerblue' },
+        (console.log('why render?, should can only render once'), {}),
+      ]}
+    >
       {console.log('render once')}
       {count()}
     </Piv>

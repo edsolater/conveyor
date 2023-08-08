@@ -1,11 +1,10 @@
 import { flap } from '@edsolater/fnkit'
-import { JSXElement, Show, createComponent } from 'solid-js'
+import { JSXElement, createComponent } from 'solid-js'
 import { makePipline } from '../../fnkit/makePipline'
-import { parsePivProps } from './propHandlers/parsePivProps'
+import { renderHTMLDOM } from './propHandlers/renderHTMLDOM'
 import { PivProps } from './types/piv'
 import { HTMLTag, ValidController } from './types/tools'
 import { omit } from './utils'
-import { renderHTMLDOM } from './propHandlers/renderHTMLDOM'
 
 export const pivPropsNames = [
   'id',

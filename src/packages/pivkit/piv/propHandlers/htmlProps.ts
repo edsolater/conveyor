@@ -1,4 +1,12 @@
-import { AnyObj, MayArray, flapDeep, isArray, shakeNil } from '@edsolater/fnkit'
+import {
+  AnyObj,
+  MayArray,
+  flapDeep,
+  isArray,
+  mergeObjectsWithConfigs,
+  shakeNil,
+  shakeUndefinedItem,
+} from '@edsolater/fnkit'
 import { JSX } from 'solid-js'
 import { objectMerge } from '../../../fnkit'
 import { HTMLTag } from '../types/tools'
@@ -15,7 +23,7 @@ export function parseHTMLProps(htmlProps: HTMLProps) {
 
 // TODO: moveToFnkit
 export function mergeObjects<T extends AnyObj | undefined>(...objs: T[]): T {
-  return Object.assign({}, ...objs)
+  return mergeObjectsWithConfigs(shakeUndefinedItem(objs), ({ valueA: v1, valueB: v2 }) => v2 ?? v1)
 }
 
 /**
