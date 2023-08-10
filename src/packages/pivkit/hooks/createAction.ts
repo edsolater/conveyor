@@ -1,22 +1,36 @@
 // util: A more elegant compose function
 // TODO: imply it !!!
 
-import { AnyFn } from '@edsolater/fnkit'
+import { AnyFn, mergeObjects } from '@edsolater/fnkit'
 import { Accessor, createMemo, createSignal } from 'solid-js'
-import { mergeObjects } from '../piv'
 
-// export function composeAPromisifyAction<T>({
-//   action
-// }: {
-//   action: () => T | Promise<T> | void | Promise<T>
-//   /** an additional helper to judge action is ongoing */
-//   asyncActionIsEnd?(): boolean
-// }): ActionSettings<T> {
-//   return async () => {
-//     const result = await action()
-//     return result
-//   }
-// }
+/**
+ * @todo: just merge to useAction
+ * a wrapper of hook: createAction
+ * @param richSettings options
+ * @returns can directly pass to useAction
+ */
+export function useActionFromUnreturnedFunctions<T>(richSettings: ActionParamSettings<T>): ActionSignals<T> & {
+  finishActionDetector(result: T): void
+} {
+  let loadResult: (result: T) => void
+  let throwError: (reason?: unknown) => void
+
+  const wrappedAction = (...args: Parameters<ActionParamSettings<T>['action']>) => {
+    richSettings.action(...args)
+    return new Promise<T>((resolve, reject) => {
+      loadResult = resolve
+      throwError = reject
+    })
+  }
+  const controllers = createAction({ ...richSettings, action: wrappedAction })
+
+  return mergeObjects(controllers, {
+    finishActionDetector(result: T) {
+      loadResult(result)
+    },
+  })
+}
 
 /**
  * @deprecated fnkit already has
@@ -53,13 +67,16 @@ type ActionHookStates<T> = {
 type ActionHookMethods<T> = {
   clearResult: () => void
   clearError: () => void
+
   /** turn the action end (will invoke the registed onCleanUpInEnd)  */
-  endAction(): void
+  end(): void
   /** currently going action's canContinue will be false */
-  abortAction(): void
+  pause(): void
   /** will also invoke the registed onCleanUp */
-  runAction(): Promise<T | void>
-  loadSubscribeFn(subscriber: (picker: (result: T) => void) => void): void
+  run(): Promise<T | undefined | void>
+
+  /** load result from outside; will also end pending action */
+  loadResult(result: T): void
 }
 
 export type ActionSignals<T> = ActionHookStates<T> & ActionHookMethods<T>
@@ -67,38 +84,36 @@ export type ActionSignals<T> = ActionHookStates<T> & ActionHookMethods<T>
 type ActionFunctionProvideParamsUtils<T> = {
   /** action result, maybe undefined */
   prevResult?: T
-  /** everytime invoke the action run will increase one */
-  runCount: number
-  /** pause/resume cleanUp callback register */
-  onAbortCleanUp(cb: AnyFn): void
-  /** init/end cleanUp callback register */
-  onEndCleanUp(cb: AnyFn): void
-
-  loadSubscribeFn(subscriber: (picker: (result: T) => void) => void): void
-
   /**
    * when pause or end the task, canContinue will be false in all action task
    * when run another task, canContinue will be false in ongoing action
    */
   canContinue(): boolean
+  /** everytime invoke the action run will increase one */
+  runCount: number
+
+  /** pause/resume cleanUp callback register */
+  onAbortCleanUp(cb: AnyFn): void
+  /** init/end cleanUp callback register */
+  onEndCleanUp(cb: AnyFn): void
 }
 
 type ActionParamSettings<T> = {
   /** core */
   action: (utils: ActionFunctionProvideParamsUtils<T>) => Promise<T> | T | void | Promise<void>
 
-  /** [Optional] lifecycle hook: run when init */
-  onActionInit?(utils: ActionHookStates<T>): void
-  /** [Optional] lifecycle hook: run on resume */
-  onActionResume?(utils: ActionHookStates<T>): void
-  /** [Optional] lifecycle hook: run on pause */
-  onActionPause?(utils: ActionHookStates<T>): void
-  /** [Optional] lifecycle hook: run in the end */
-  onActionEnd?(utils: ActionHookStates<T>): void
+  /** lifecycle hook: run when init */
+  onActionBegin?(utils: ActionSignals<T>): void
+  /** lifecycle hook: run on resume */
+  onActionResume?(utils: ActionSignals<T>): void // TODO: imply it
+  /** lifecycle hook: run on pause */
+  onActionPause?(utils: ActionSignals<T>): void // TODO: imply it
+  /** lifecycle hook: run in the end */
+  onActionEnd?(utils: ActionSignals<T>): void // TODO: imply it
 
-  /** [Optional] helper for checking result state */
+  /** helper for checking result state */
   checkResultIsEmpty?(result: T): boolean
-  /** [Optional] helper for checking result state */
+  /** helper for checking result state */
   checkResultIsValid?(result: T): boolean
 }
 
@@ -107,12 +122,13 @@ type ActionParamSettings<T> = {
  * @param settings settings
  * @returns
  */
-export function useAction<T>(settings: ActionParamSettings<T>): ActionSignals<T> {
-  const [isCalculating, setIsCalculating] = createSignal(false)
-  const [result, setResult] = createSignal<Awaited<T>>()
-  const clearResult = () => setResult(undefined)
+export function createAction<T>(settings: ActionParamSettings<T>): ActionSignals<T> {
+  const [result, setResult] = createSignal<T>()
   const [error, setError] = createSignal<unknown>()
+  const clearResult = () => setResult(undefined)
   const clearError = () => setError(undefined)
+
+  const [isCalculating, setIsCalculating] = createSignal(false)
   const isResultValid = createMemo(() => {
     const v = result()
     if (v === undefined) return false
@@ -124,13 +140,6 @@ export function useAction<T>(settings: ActionParamSettings<T>): ActionSignals<T>
     return settings.checkResultIsEmpty ? settings.checkResultIsEmpty(v) : isEmpty(v)
   })
   const isError = createMemo(() => !isCalculating() && !!error())
-
-  type SubscribeFn = (picker: (result: T) => void) => void
-  const loadSubscribeFn: (subscribeFn: SubscribeFn) => void = (subscribeFn: SubscribeFn) =>
-    subscribeFn(async (result: T) => {
-      const v = await result
-      setResult(() => v)
-    })
 
   // run count
   const [runCount, setRunCount] = createSignal(0)
@@ -172,11 +181,13 @@ export function useAction<T>(settings: ActionParamSettings<T>): ActionSignals<T>
   }
   const invokeEndCleanUps = (...args: any[]) => endCleanUps.map((cb) => cb(...args))
 
-  const abortAction = () => {
+  const pause = () => {
     setIsCalculating(false)
   }
 
-  const runAction = async () => {
+  const loadResult = (result: T) => setResult(() => result)
+
+  const run = async () => {
     const canContinue = () => true // TODO: action should can abort
     try {
       // run cleanUp
@@ -185,23 +196,27 @@ export function useAction<T>(settings: ActionParamSettings<T>): ActionSignals<T>
       setIsCalculating(true)
       const count = genRunCount()
 
-      const newResult = await (settings.onActionInit && count === 1
-        ? settings.onActionInit?.(createObjectByGetters(innerStatus) as ActionHookStates<T>)
-        : settings.action({
-            get prevResult() {
-              return result()
-            },
-            get runCount() {
-              return count
-            },
-            canContinue,
-            onAbortCleanUp: registAbortCleanUp,
-            onEndCleanUp: registEndCleanUp,
-            loadSubscribeFn,
-          }))
+      // invoke lifecycle hook
+      if (count === 1) {
+        //@ts-expect-error  type for solidjs  is not good enough currently
+        settings.onActionBegin?.(mergeObjects(createObjectByGetters(innerStatus), innerMethods))
+      }
+
+      const returnedResult = await settings.action({
+        get prevResult() {
+          return result()
+        },
+        get runCount() {
+          return count
+        },
+        canContinue,
+        onAbortCleanUp: registAbortCleanUp,
+        onEndCleanUp: registEndCleanUp,
+      })
       setError(undefined)
-      if (newResult) setResult(() => newResult)
-      return newResult
+      //@ts-expect-error void should can be treated as undefined
+      setResult(() => returnedResult)
+      return returnedResult
     } catch (err) {
       setError(err)
       throw err
@@ -209,17 +224,17 @@ export function useAction<T>(settings: ActionParamSettings<T>): ActionSignals<T>
       setIsCalculating(false)
     }
   }
-  const endAction = () => {
+  const end = () => {
     invokeEndCleanUps()
     clearRegistedEndCleanUps()
   }
   const innerMethods = {
     clearError,
     clearResult,
-    runAction,
-    endAction,
-    abortAction,
-    loadSubscribeFn,
+    run,
+    end,
+    pause,
+    loadResult,
   }
   const all = mergeObjects(innerStatus, innerMethods)
   return all
