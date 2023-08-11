@@ -1,7 +1,8 @@
-import { AnyFn, mergeObjects, createObjectByGetters } from '@edsolater/fnkit'
+import { AnyFn, mergeObjects } from '@edsolater/fnkit'
 import { Accessor, createMemo, createSignal, untrack } from 'solid-js'
-import { getAccessorValue } from '../utils/parseAccessorWithoutTrack'
+import { DeAccessorObject, deAccessorObject } from '../utils/parseAccessorWithoutTrack'
 
+/** inner state to help to judge lifecycle phase */ 
 type ActionPhase = 'before-init' | 'running' | 'paused' | 'end' | 'idle' /* (after-run) */
 
 type ActionHookStates<T> = {
@@ -39,6 +40,8 @@ type ActionHookMethods<T> = {
   loadError(reason?: unknown): void
 }
 
+export type DeAccessoredActionSignals<T> = DeAccessorObject<ActionHookStates<T>> & ActionHookMethods<T>
+
 export type ActionSignals<T> = ActionHookStates<T> & ActionHookMethods<T>
 
 type ActionCoreFunctionProvideParamsUtils<T> = {
@@ -66,13 +69,13 @@ type ActionParamSettings<T> = {
   action: (utils: ActionCoreFunctionProvideParamsUtils<T>) => Promise<T | void>
 
   /** lifecycle hook: run when init */
-  onActionBegin?(utils: ActionSignals<T>): void
+  onActionBegin?(utils: DeAccessoredActionSignals<T>): void
   /** lifecycle hook: run on resume */
-  onActionResume?(utils: ActionSignals<T>): void
+  onActionResume?(utils: DeAccessoredActionSignals<T>): void
   /** lifecycle hook: run on pause */
-  onActionPause?(utils: ActionSignals<T>): void
+  onActionPause?(utils: DeAccessoredActionSignals<T>): void
   /** lifecycle hook: run in the end */
-  onActionEnd?(utils: ActionSignals<T>): void
+  onActionEnd?(utils: DeAccessoredActionSignals<T>): void
 
   /** helper for checking result state */
   checkResultIsEmpty?(result: T | undefined): boolean
@@ -92,6 +95,14 @@ export function createAction<T>(settings: ActionParamSettings<T>): ActionSignals
   const [currentPhase, setCurrentPhase] = createSignal<ActionPhase>('before-init')
   const [result, setResult] = createSignal<T>()
   const [error, setError] = createSignal<unknown>()
+  //--- run count
+  const [runCount, setRunCount] = createSignal(0)
+  function genRunCount() {
+    const newCount = runCount() + 1
+    setRunCount(newCount)
+    return newCount
+  }
+
   const clearResult = () => setResult(undefined)
   const clearError = () => setError(undefined)
 
@@ -106,40 +117,34 @@ export function createAction<T>(settings: ActionParamSettings<T>): ActionSignals
   })
   const isError = createMemo(() => !isCalculating() && !!error())
 
-  //--- run count
-  const [runCount, setRunCount] = createSignal(0)
-  const genRunCount = () => {
-    const newCount = runCount() + 1
-    setRunCount(newCount)
-    return newCount
-  }
-
   //--- abort clean ups
-  const abortCleanUps = [] as AnyFn[]
-  const registAbortCleanUp = (cb: AnyFn) => {
-    abortCleanUps.push(cb)
+  const abortCleanUpFunctions = [] as AnyFn[]
+  function registAbortCleanUp(cb: AnyFn) {
+    abortCleanUpFunctions.push(cb)
   }
-  const clearRegistedAbortCleanUps = () => {
-    abortCleanUps.splice(0, abortCleanUps.length)
+  function clearRegistedAbortCleanUps() {
+    abortCleanUpFunctions.splice(0, abortCleanUpFunctions.length)
   }
-  const invokeAbortCleanUps = (...args: any[]) => {
-    return abortCleanUps.map((cb) => cb(...args))
+  function invokeAbortCleanUps(...args: any[]) {
+    return abortCleanUpFunctions.map((cb) => cb(...args))
   }
 
   //--- end clean ups
-  const endCleanUps = [] as AnyFn[]
-  const registEndCleanUp = (cb: AnyFn) => {
-    endCleanUps.push(cb)
+  const endCleanUpFunctions = [] as AnyFn[]
+  function registEndCleanUp(cb: AnyFn) {
+    endCleanUpFunctions.push(cb)
   }
-  const clearRegistedEndCleanUps = () => {
-    endCleanUps.splice(0, endCleanUps.length)
+  function clearRegistedEndCleanUps() {
+    endCleanUpFunctions.splice(0, endCleanUpFunctions.length)
   }
 
-  const invokeEndCleanUps = (...args: any[]) => endCleanUps.map((cb) => cb(...args))
+  function invokeEndCleanUps(...args: any[]) {
+    return endCleanUpFunctions.map((cb) => cb(...args))
+  }
 
-  const pause = () => {
+  function pause() {
     setCurrentPhase((p) => (p === 'running' ? 'paused' : p))
-    settings.onActionPause?.(all)
+    settings.onActionPause?.(deAcessoredAll)
     // run cleanUp
     invokeAbortCleanUps()
     clearRegistedAbortCleanUps()
@@ -149,15 +154,15 @@ export function createAction<T>(settings: ActionParamSettings<T>): ActionSignals
   //--- get result
   let resolvePromiseResult: ((result: T) => void) | undefined = undefined
   let rejectPromiseError: ((reason?: unknown) => void) | undefined = undefined
-  const loadResult = (result: T) => {
+  function loadResult(result: T) {
     setResult(() => result)
     resolvePromiseResult?.(result)
   }
-  const loadError = (reason?: unknown) => {
+  function loadError(reason?: unknown) {
     setError(() => reason)
     rejectPromiseError?.(reason)
   }
-  const run = async () => {
+  async function run() {
     const canContinue = () => true // TODO: action should can abort
     try {
       // run cleanUp
@@ -168,23 +173,23 @@ export function createAction<T>(settings: ActionParamSettings<T>): ActionSignals
 
       // invoke lifecycle hook
       if (count === 1) {
-        settings.onActionBegin?.(all)
+        settings.onActionBegin?.(deAcessoredAll)
       }
-      if (getAccessorValue(currentPhase) === 'paused') {
-        settings.onActionResume?.(all)
+      if (untrack(currentPhase) === 'paused') {
+        settings.onActionResume?.(deAcessoredAll)
       }
 
       // get result by run action
       const promisedResult =
         settings.action({
           get prevResult() {
-            return getAccessorValue(result)
+            return untrack(result)
           },
           get runCount() {
             return count
           },
           get prevPhase() {
-            return getAccessorValue(currentPhase)
+            return untrack(currentPhase)
           },
           canContinue,
           onAbortCleanUp: registAbortCleanUp,
@@ -209,11 +214,11 @@ export function createAction<T>(settings: ActionParamSettings<T>): ActionSignals
       setIsCalculating(false)
     }
   }
-  const end = () => {
+  function end() {
     invokeEndCleanUps()
     clearRegistedEndCleanUps()
     setCurrentPhase('end')
-    settings.onActionEnd?.(all)
+    settings.onActionEnd?.(deAcessoredAll)
   }
   const innerStatus = {
     result,
@@ -234,6 +239,7 @@ export function createAction<T>(settings: ActionParamSettings<T>): ActionSignals
     loadResult,
     loadError,
   }
+  const deAcessoredAll = mergeObjects(deAccessorObject(innerStatus), innerMethods)
   const all = mergeObjects(innerStatus, innerMethods)
   return all
 }
