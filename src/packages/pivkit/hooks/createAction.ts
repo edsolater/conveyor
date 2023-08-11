@@ -1,8 +1,8 @@
 import { AnyFn, mergeObjects } from '@edsolater/fnkit'
-import { Accessor, createMemo, createSignal, untrack } from 'solid-js'
+import { Accessor, createMemo, createSignal } from 'solid-js'
 import { DeAccessorObject, deAccessorObject } from '../utils/parseAccessorWithoutTrack'
 
-/** inner state to help to judge lifecycle phase */ 
+/** inner state to help to judge lifecycle phase */
 type ActionPhase = 'before-init' | 'running' | 'paused' | 'end' | 'idle' /* (after-run) */
 
 type ActionHookStates<T> = {
@@ -175,7 +175,7 @@ export function createAction<T>(settings: ActionParamSettings<T>): ActionSignals
       if (count === 1) {
         settings.onActionBegin?.(deAcessoredAll)
       }
-      if (untrack(currentPhase) === 'paused') {
+      if (currentPhase() === 'paused') {
         settings.onActionResume?.(deAcessoredAll)
       }
 
@@ -183,13 +183,13 @@ export function createAction<T>(settings: ActionParamSettings<T>): ActionSignals
       const promisedResult =
         settings.action({
           get prevResult() {
-            return untrack(result)
+            return result()
           },
           get runCount() {
             return count
           },
           get prevPhase() {
-            return untrack(currentPhase)
+            return currentPhase()
           },
           canContinue,
           onAbortCleanUp: registAbortCleanUp,
