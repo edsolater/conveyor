@@ -1,10 +1,10 @@
 import { AnyObj, flap, flapDeep, isFunction, MayArray, MayDeepArray, shakeNil } from '@edsolater/fnkit'
+import { createSignal } from 'solid-js'
 import { KitProps } from '../createKit'
 import { PivProps } from '../types/piv'
 import { ValidController } from '../types/tools'
 import { mergeProps } from '../utils/mergeProps'
 import { omit } from '../utils/omit'
-import { createSignal } from 'solid-js'
 import { Plugin } from './plugin'
 
 //
@@ -17,11 +17,12 @@ export function handlePluginProps<P extends AnyObj>(
   if (!props) return props
   if (!checkHasPlugin(props)) return props
   const plugin = getPlugin(props)
-  if (!plugin) return props
-  return omit(mergePluginReturnedProps({ plugins: sortPluginByPriority(plugin), props }), 'plugin')
+  if (!plugin) return omit(props, 'plugin')
+  const parsed = omit(mergePluginReturnedProps({ plugins: sortPluginByPriority(plugin), props }), 'plugin')
+  return parsed
 }
 
-export function sortPluginByPriority(deepPluginList?: MayDeepArray<Plugin<any>>) {
+function sortPluginByPriority(deepPluginList?: MayDeepArray<Plugin<any>>) {
   const plugins = shakeNil(flapDeep(deepPluginList))
   if (plugins.length <= 1) return plugins
   if (plugins.every((p) => isFunction(p) || !p.priority)) return plugins
@@ -36,7 +37,7 @@ export function sortPluginByPriority(deepPluginList?: MayDeepArray<Plugin<any>>)
  * merge additional props from plugin
  */
 
-export function mergePluginReturnedProps<T extends AnyObj>({
+function mergePluginReturnedProps<T extends AnyObj>({
   plugins,
   props,
 }: {

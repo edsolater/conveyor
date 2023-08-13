@@ -1,17 +1,17 @@
 import { hasProperty, MayArray, MayDeepArray, pipe } from '@edsolater/fnkit'
-import { Faker } from '../../fnkit'
 import { AccessifyProps, DeAccessifyProps, useAccessifiedProps } from '..'
+import { Faker } from '../../fnkit'
+import { createUUID, UUID } from '../hooks/utils/createUUID'
 import { registerControllerInCreateKit } from './hooks/useComponentController'
 import { loadPropsControllerRef, toProxifyController } from './propHandlers/controller'
+import { handlePluginProps } from './propHandlers/handlePluginProps'
 import { GetPluginCreatorParams, Plugin } from './propHandlers/plugin'
-import { handlePluginProps, mergePluginReturnedProps, sortPluginByPriority } from './propHandlers/handlePluginProps'
 import { handleShadowProps } from './propHandlers/shadowProps'
 import { CRef, PivProps } from './types/piv'
 import { HTMLTag, ValidController, ValidProps } from './types/tools'
+import { mergeProps } from './utils'
 import { AddDefaultPivProps, addDefaultPivProps } from './utils/addDefaultProps'
 import { omit } from './utils/omit'
-import { mergeProps } from './utils'
-import { createUUID, UUID } from '../hooks/utils/createUUID'
 
 /**
  * - auto add `plugin` `shadowProps` `_promisePropsConfig` `controller` props
@@ -156,7 +156,7 @@ function getParsedKitProps<
       ), // defined-time
     (props) => (hasProperty(options, 'name') ? mergeProps(props, { class: options!.name }) : props), // defined-time
     (props) => handleShadowProps(props, options?.selfProps), // outside-props-run-time // TODO: assume can't be promisify
-    handlePluginProps // outside-props-run-time // TODO: assume can't be promisify
+    (props) => handlePluginProps(props) // outside-props-run-time // TODO: assume can't be promisify
   ) as any /* too difficult to type */
 
   // load controller

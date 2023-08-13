@@ -52,13 +52,13 @@ function PlaygoundList() {
         <CircularProgressExample />
       </ExamplePanel>
 
-      <ExamplePanel name='Drawer'>
+      {/* <ExamplePanel name='Drawer'>
         <DrawerExample />
-      </ExamplePanel>
+      </ExamplePanel> */}
 
-      <ExamplePanel name='CSSTransition'>
+      {/* <ExamplePanel name='CSSTransition'>
         <CSSTransitionExample />
-      </ExamplePanel>
+      </ExamplePanel> */}
 
       <ExamplePanel name='Input'>
         <InputExample />
@@ -68,17 +68,17 @@ function PlaygoundList() {
         <TextExample />
       </ExamplePanel>
 
-      <ExamplePanel name='Modal'>
+      {/* <ExamplePanel name='Modal'>
         <ModalExample />
-      </ExamplePanel>
+      </ExamplePanel> */}
 
       <ExamplePanel name='List'>
         <ListExample />
       </ExamplePanel>
 
-      <ExamplePanel name='Switch'>
+      {/* <ExamplePanel name='Switch'>
         <SwitchExample />
-      </ExamplePanel>
+      </ExamplePanel> */}
 
       <ExamplePanel name='Radio'>
         <RadioExample />
@@ -88,7 +88,7 @@ function PlaygoundList() {
         <PopoverExample />
       </ExamplePanel>
 
-      <Foo />
+      {/* <Foo /> */}
     </Box>
   )
 }
@@ -108,7 +108,6 @@ function Foo() {
         (console.log('why render?, should can only render once'), {}),
       ]}
     >
-      {console.log('render once')}
       {count()}
     </Piv>
   )
@@ -308,7 +307,7 @@ function ListExample() {
   return (
     <List of={data} initRenderCount={10} icss={[icssCol({ gap: '16px' }), { height: '30dvh' }]}>
       {(d, idx) => {
-        console.count(`render item from <Playground>, ${d.name}, ${d.count}`)
+        // console.count(`render item from <Playground>, ${d.name}, ${d.count}`)
         return (
           <Box icss={[icssRow({ gap: '8px' }), { background: '#0001', width: '100%' }]}>
             <Text>{d.name}</Text>
@@ -375,6 +374,19 @@ function PopoverExample() {
         domRef={setButtonDom}
         onClick={({ el }) => {
           trigger.toggle(el)
+        }}
+        plugin={(props, { controller, dom }) => {
+          const [count, setCount] = createSignal(0)
+          console.log('solid count',count())
+          createEffect(() => {
+            console.log('3: ', 3, dom(), count())
+          })
+          return {
+            onClick() {
+              console.log('click', count())
+              setCount((c) => c + 1)
+            },
+          }
         }}
       >
         💬popover

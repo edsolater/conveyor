@@ -1,7 +1,4 @@
-import {
-  AnyObj,
-  overwriteFunctionName,
-} from '@edsolater/fnkit'
+import { AnyObj, overwriteFunctionName } from '@edsolater/fnkit'
 import { KitProps } from '../createKit'
 import { ValidController, ValidProps } from '../types/tools'
 import { Accessor } from 'solid-js'
@@ -41,9 +38,9 @@ export type Plugin<T extends ValidProps = ValidProps, C extends ValidController 
           controller: Accessor<C>
           dom: Accessor<HTMLElement | undefined>
         }
-      ) => Partial<KitProps<T, C>> // TODO: should support 'plugin' and 'shadowProps' too
+      ) => Partial<KitProps<T, C> | undefined | void> // TODO: should support 'plugin' and 'shadowProps' too
       priority?: number
-      affects?: (keyof T)[]
+      affects?: (keyof T)[] // maybe no need
     }
   | ((
       props: T,
@@ -52,7 +49,7 @@ export type Plugin<T extends ValidProps = ValidProps, C extends ValidController 
         controller: Accessor<C>
         dom: Accessor<HTMLElement | undefined>
       }
-    ) => Partial<KitProps<T, C>> | undefined) // TODO: should support 'plugin' and 'shadowProps' for easier compose
+    ) => Partial<KitProps<T, C>> | undefined | void) // TODO: should support 'plugin' and 'shadowProps' for easier compose
 
 /**
  * create normal plugin
@@ -87,4 +84,3 @@ export function createPluginCreator<Params extends AnyObj, Props extends ValidPr
   // @ts-expect-error no need to check
   return options?.name ? overwriteFunctionName(factory, options.name) : factory
 }
-
