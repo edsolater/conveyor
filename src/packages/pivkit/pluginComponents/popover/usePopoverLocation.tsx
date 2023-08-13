@@ -71,6 +71,14 @@ export function usePopoverLocation({
   })
 
   createEffect(() => {
+    console.log('buttonDom(): ', buttonDom())
+  })
+
+  createEffect(() => {
+    console.log('panelDom(): ', panelDom())
+  })
+
+  createEffect(() => {
     const buttonElement = buttonDom()
     if (!buttonElement) return
     const panelElement = panelDom()
@@ -97,7 +105,6 @@ export function usePopoverLocation({
           top: panelCoordinates()?.panelTop + 'px',
         } as IStyle)
       : ({ visibility: 'hidden' } as IStyle)
-    console.log('style: ', style)
     return style
   })
 

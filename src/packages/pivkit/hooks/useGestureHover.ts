@@ -4,7 +4,7 @@ import { createEffect } from 'solid-js'
 import { createToggle } from './createToggle'
 
 export interface UseGestureHoverOptions {
-  el: HTMLElement | undefined | null,
+  el: HTMLElement | undefined | null
   triggerDelay?: number
   disable?: boolean
   onHoverStart?: (info: { ev: PointerEvent }) => void
@@ -17,7 +17,7 @@ export function useGestureHover(options: UseGestureHoverOptions) {
 
   createEffect(() => {
     if (options.disable) return
-    let hoverDelayTimerId: number | undefined
+    let hoverDelayTimerId: number | undefined | NodeJS.Timeout
     const hoverStartHandler = (ev: PointerEvent) => {
       if (options.disable) return
       if (options.triggerDelay) {

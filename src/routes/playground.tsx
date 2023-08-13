@@ -18,16 +18,13 @@ import {
   Text,
   createIncresingAccessor,
   createIntervalEffect,
-  createRef,
   icssCol,
   icssRow,
   renderSwitchThumb,
   useCSSTransition,
 } from '../packages/pivkit'
 import { createUUID } from '../packages/pivkit/hooks/utils/createUUID'
-import { createTriggerController } from '../packages/pivkit/hooks/utils/createTriggerController'
-import { onEvent } from '../packages/domkit'
-import { usePopoverLocation } from '../packages/pivkit/pluginComponents/popover/usePopoverLocation'
+import { usePluginPopover } from '../packages/pivkit/plugins/usePluginPopover'
 
 export default function PlaygroundPage() {
   return (
@@ -328,76 +325,20 @@ function RadioExample() {
 }
 
 function PopoverExample() {
-  const { trigger, isTriggerOn } = createTriggerController()
+  const {
+    buttonPlugin,
+    popoverTargetPlugin,
+    state: { isTriggerOn },
+  } = usePluginPopover()
 
-  const [popoverDom, setPopoverDom] = createRef<HTMLElement>()
-
-  // open popover by state
   createEffect(() => {
-    try {
-      if (isTriggerOn()) {
-        // @ts-expect-error ts dom not ready yet
-        popoverDom()?.showPopover?.()
-      } else {
-        // @ts-expect-error ts dom not ready yet
-        popoverDom()?.hidePopover?.()
-      }
-    } catch (error) {
-      console.log('error: ', error)
-    }
+    console.log('isTriggerOn: ', isTriggerOn())
   })
 
-  // listen to popover toggle event and reflect to trigger state
-  createEffect(() => {
-    const el = popoverDom()
-    if (!el) return
-    const { abort } = onEvent(el, 'toggle', ({ ev }) => {
-      // @ts-expect-error force
-      const { newState } = ev as { newState: 'open' | 'closed' }
-      if (newState === 'open') {
-        trigger.turnOn(el)
-      } else {
-        trigger.turnOff(el)
-      }
-    })
-    onCleanup(abort)
-  })
-  const [buttonDom, setButtonDom] = createRef<HTMLElement>()
-  const { panelStyle } = usePopoverLocation({
-    buttonDom: buttonDom,
-    panelDom: popoverDom,
-    isTriggerOn,
-  })
   return (
     <>
-      <Button
-        domRef={setButtonDom}
-        onClick={({ el }) => {
-          trigger.toggle(el)
-        }}
-        plugin={(props, { controller, dom }) => {
-          const [count, setCount] = createSignal(0)
-          console.log('solid count',count())
-          createEffect(() => {
-            console.log('3: ', 3, dom(), count())
-          })
-          return {
-            onClick() {
-              console.log('click', count())
-              setCount((c) => c + 1)
-            },
-          }
-        }}
-      >
-        💬popover
-      </Button>
-
-      <Box
-        domRef={setPopoverDom}
-        icss={{ border: 'solid', width: '', minHeight: '5em' }}
-        htmlProps={{ popover: 'manual' }}
-        style={panelStyle()}
-      >
+      <Button plugin={buttonPlugin}>💬popover</Button>
+      <Box icss={{ border: 'solid', width: '', minHeight: '5em' }} plugin={popoverTargetPlugin}>
         hello world
       </Box>
     </>
