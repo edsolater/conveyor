@@ -30,7 +30,6 @@ import { onEvent } from '../packages/domkit'
 import { usePopoverLocation } from '../packages/pivkit/pluginComponents/popover/usePopoverLocation'
 
 export default function PlaygroundPage() {
-  return <Foo />
   return (
     <Piv>
       <NavBar title='Playground' />

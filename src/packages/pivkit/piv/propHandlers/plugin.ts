@@ -1,10 +1,10 @@
-import { AnyObj, flapDeep, isFunction, MayDeepArray, overwriteFunctionName, shakeNil } from '@edsolater/fnkit'
+import {
+  AnyObj,
+  overwriteFunctionName,
+} from '@edsolater/fnkit'
 import { KitProps } from '../createKit'
-import { PivProps } from '../types/piv'
 import { ValidController, ValidProps } from '../types/tools'
-import { mergeProps } from '../utils/mergeProps'
-import { omit } from '../utils/omit'
-import { Accessor, createSignal } from 'solid-js'
+import { Accessor } from 'solid-js'
 
 export type GetPluginCreatorParams<T> = T extends PluginCreator<infer Px1>
   ? Px1
@@ -54,45 +54,6 @@ export type Plugin<T extends ValidProps = ValidProps, C extends ValidController 
       }
     ) => Partial<KitProps<T, C>> | undefined) // TODO: should support 'plugin' and 'shadowProps' for easier compose
 
-//
-// TODO2: not accessify yet
-export function handlePluginProps<P extends AnyObj>(props: P) {
-  if (!('plugin' in props)) return props
-  if (!props?.plugin) return props
-  return omit(mergePluginReturnedProps({ plugins: props.plugin, props }), 'plugin')
-}
-
-function invokePlugin(plugin: Plugin<any>, props: KitProps<any>) {
-  // build-in hook
-  const [controller, setController] = createSignal<ValidController>({})
-  const [dom, setDom] = createSignal<HTMLElement>()
-
-  
-  const pluginProps = isFunction(plugin)
-    ? plugin(props, { controller, dom })
-    : plugin.pluginCoreFn?.(props, { controller, dom })
-  const returnProps = mergeProps(props, pluginProps, { controllerRef: setController, domRef: setDom })
-  return returnProps
-}
-
-/**
- * merge additional props from plugin
- */
-export function mergePluginReturnedProps<T extends AnyObj>({
-  plugins,
-  props,
-}: {
-  plugins: MayDeepArray<Plugin<T> | undefined>
-  props: T & PivProps
-}): T & PivProps {
-  return plugins
-    ? shakeNil(flapDeep(plugins)).reduce((acc, plugin) => {
-        const pluginProps = invokePlugin(plugin, acc)
-        return pluginProps ? mergeProps(acc, pluginProps) : acc
-      }, props)
-    : props
-}
-
 /**
  * create normal plugin
  * it will merge returned props
@@ -127,14 +88,3 @@ export function createPluginCreator<Params extends AnyObj, Props extends ValidPr
   return options?.name ? overwriteFunctionName(factory, options.name) : factory
 }
 
-export function sortPluginByPriority(deepPluginList?: MayDeepArray<Plugin<any>>) {
-  const plugins = shakeNil(flapDeep(deepPluginList))
-  if (plugins.length <= 1) return plugins
-  if (plugins.every((p) => isFunction(p) || !p.priority)) return plugins
-
-  return [...plugins].sort((pluginA, pluginB) => {
-    const priorityA = isFunction(pluginA) ? 0 : pluginA.priority
-    const priorityB = isFunction(pluginB) ? 0 : pluginB.priority
-    return (priorityB ?? 0) - (priorityA ?? 0)
-  })
-}

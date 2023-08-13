@@ -9,7 +9,7 @@ import { parseHTMLProps } from './htmlProps'
 import { classifyICSS } from './icss'
 import { parseIStyles } from './istyle'
 import { parseOnClick } from './onClick'
-import { handlePluginProps } from './plugin'
+import { handlePluginProps } from './handlePluginProps'
 import { handleShadowProps } from './shadowProps'
 import { omit } from '../utils'
 

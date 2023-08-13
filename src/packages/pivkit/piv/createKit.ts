@@ -3,13 +3,8 @@ import { Faker } from '../../fnkit'
 import { AccessifyProps, DeAccessifyProps, useAccessifiedProps } from '..'
 import { registerControllerInCreateKit } from './hooks/useComponentController'
 import { loadPropsControllerRef, toProxifyController } from './propHandlers/controller'
-import {
-  GetPluginCreatorParams,
-  handlePluginProps,
-  mergePluginReturnedProps,
-  Plugin,
-  sortPluginByPriority,
-} from './propHandlers/plugin'
+import { GetPluginCreatorParams, Plugin } from './propHandlers/plugin'
+import { handlePluginProps, mergePluginReturnedProps, sortPluginByPriority } from './propHandlers/handlePluginProps'
 import { handleShadowProps } from './propHandlers/shadowProps'
 import { CRef, PivProps } from './types/piv'
 import { HTMLTag, ValidController, ValidProps } from './types/tools'
@@ -154,10 +149,11 @@ function getParsedKitProps<
     (props) => (proxyController ? mergeProps(props, { innerController: proxyController } as PivProps) : props),
     // parse plugin of **options**
     (props) =>
-      hasProperty(options, 'plugin')
-        ? (console.log(props, options?.name),
-          mergePluginReturnedProps({ plugins: sortPluginByPriority(options!.plugin), props }))
-        : props, // defined-time
+      handlePluginProps(
+        props,
+        () => options?.plugin,
+        () => hasProperty(options, 'plugin')
+      ), // defined-time
     (props) => (hasProperty(options, 'name') ? mergeProps(props, { class: options!.name }) : props), // defined-time
     (props) => handleShadowProps(props, options?.selfProps), // outside-props-run-time // TODO: assume can't be promisify
     handlePluginProps // outside-props-run-time // TODO: assume can't be promisify
