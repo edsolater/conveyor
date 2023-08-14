@@ -1,8 +1,9 @@
-import { getScrollParents } from './getScrollParents'
-import { PopoverPlacement } from './type'
-import { PopupLocationInfo, calcPopupPanelLocation } from './calcPopupPanelLocation'
 import { Accessor, createEffect, createMemo, createSignal, onCleanup } from 'solid-js'
 import { IStyle } from '../../piv/propHandlers'
+import { runInNextLoop } from '../../utils/runInNextLoop'
+import { PopupLocationInfo, calcPopupPanelLocation } from './calcPopupPanelLocation'
+import { getScrollParents } from './getScrollParents'
+import { PopoverPlacement } from './type'
 
 // for fade in effect (fade-in is caused by )
 const popupOrigins = {
@@ -20,6 +21,19 @@ const popupOrigins = {
   'bottom-right': 'top-right',
 }
 
+export type PopoverLocationHookOptions = {
+  buttonDom: Accessor<HTMLElement | undefined>
+  panelDom: Accessor<HTMLElement | undefined>
+  isTriggerOn: Accessor<boolean>
+  placement?: PopoverPlacement
+  /** for corner placement like 'top-left' 'top-right etc. */
+  cornerOffset?: number
+  /** gap between `<PopoverButton>` and `<PopoverPanel>`*/
+  popoverGap?: number
+  /** to leave some space when touch the viewport boundary */
+  viewportBoundaryInset?: number
+}
+
 export function usePopoverLocation({
   buttonDom,
   panelDom,
@@ -28,20 +42,7 @@ export function usePopoverLocation({
   cornerOffset,
   popoverGap,
   viewportBoundaryInset,
-}: {
-  buttonDom: Accessor<HTMLElement | undefined>
-  panelDom: Accessor<HTMLElement | undefined>
-  isTriggerOn: Accessor<boolean>
-
-  placement?: PopoverPlacement
-
-  /** for corner placement like 'top-left' 'top-right etc. */
-  cornerOffset?: number
-  /** gap between `<PopoverButton>` and `<PopoverPanel>`*/
-  popoverGap?: number
-  /** to leave some space when touch the viewport boundary */
-  viewportBoundaryInset?: number
-}) {
+}: PopoverLocationHookOptions) {
   const [panelCoordinates, setPanelCoordinates] = createSignal<PopupLocationInfo>()
 
   const update = () => {
@@ -65,16 +66,8 @@ export function usePopoverLocation({
   // if not trigger on, can't calculate location
   createEffect(() => {
     if (isTriggerOn()) {
-      update()
+      runInNextLoop(update) // calc coor in next frame for safer lifecycle:layout
     }
-  })
-
-  createEffect(() => {
-    console.log('buttonDom(): ', buttonDom())
-  })
-
-  createEffect(() => {
-    console.log('panelDom(): ', panelDom())
   })
 
   createEffect(() => {

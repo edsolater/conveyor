@@ -1,9 +1,9 @@
-import { createEffect, createMemo, onCleanup } from 'solid-js'
-import { PivProps, Plugin } from '../piv'
+import { createEffect, onCleanup } from 'solid-js'
 import { createRef } from '..'
-import { createTriggerController } from '../hooks/utils/createTriggerController'
 import { onEvent } from '../../domkit'
-import { usePopoverLocation } from '../pluginComponents/popover/usePopoverLocation'
+import { createTriggerController } from '../hooks/utils/createTriggerController'
+import { PivProps, Plugin } from '../piv'
+import { PopoverLocationHookOptions, usePopoverLocation } from '../pluginComponents/popover/usePopoverLocation'
 
 /**
  *
@@ -12,7 +12,7 @@ import { usePopoverLocation } from '../pluginComponents/popover/usePopoverLocati
  * - popoverPlugin(Piv): plugin for popover
  * - info: accessors about trigger and popover
  */
-export function usePluginPopover() {
+export function usePluginPopover(options?: Omit<PopoverLocationHookOptions, 'isTriggerOn' | 'buttonDom' | 'panelDom'>) {
   const { trigger, isTriggerOn } = createTriggerController()
 
   const [buttonDom, setButtonDom] = createRef<HTMLElement>()
@@ -68,6 +68,7 @@ export function usePluginPopover() {
       buttonDom: buttonDom,
       panelDom: panelDom,
       isTriggerOn,
+      ...options,
     })
     return {
       domRef: setPanelDom,

@@ -329,11 +329,7 @@ function PopoverExample() {
     buttonPlugin,
     popoverTargetPlugin,
     state: { isTriggerOn },
-  } = usePluginPopover()
-
-  createEffect(() => {
-    console.log('isTriggerOn: ', isTriggerOn())
-  })
+  } = usePluginPopover({ placement: 'bottom' })
 
   return (
     <>

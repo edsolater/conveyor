@@ -42,7 +42,6 @@ export const calcPopupPanelLocation = ({
   const rect = panelElement.getBoundingClientRect()
   const panelWidth = rect.width
   const panelHeight = rect.height
-  console.log('panelHeight: ', panelHeight, panelElement) // FIXME: Why zero in click three time?
 
   const customizedViewportWidth = globalThis.document.documentElement.clientWidth - viewportBoundaryInset * 2
   const customizedViewportHeight = globalThis.document.documentElement.clientHeight - viewportBoundaryInset * 2
@@ -98,8 +97,7 @@ export const calcPopupPanelLocation = ({
       ? customizedViewportLeft - offsetRectPanelLeft
       : 0
 
-  console.log('idealPanelOffsetX: ', idealPanelOffsetX)
-  const panelLeft = offsetRectPanelLeft
+  const panelLeft = offsetRectPanelLeft + idealPanelOffsetX
   const panelTop = offsetRectPanelTop + idealPanelOffsetY
 
   // calc arrow
