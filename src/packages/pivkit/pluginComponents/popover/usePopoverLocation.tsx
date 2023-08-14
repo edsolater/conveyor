@@ -51,16 +51,15 @@ export function usePopoverLocation({
     const panelElement = panelDom()
     if (!buttonElement || !panelElement) return
 
-    setPanelCoordinates(
-      calcPopupPanelLocation({
-        buttonElement: buttonElement,
-        panelElement: panelElement,
-        placement,
-        cornerOffset,
-        popoverGap,
-        viewportBoundaryInset,
-      })
-    )
+    const coors = calcPopupPanelLocation({
+      buttonElement: buttonElement,
+      panelElement: panelElement,
+      placement,
+      cornerOffset,
+      popoverGap,
+      viewportBoundaryInset,
+    })
+    setPanelCoordinates(coors)
   }
 
   // if not trigger on, can't calculate location

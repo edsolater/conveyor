@@ -137,20 +137,20 @@ export function Button(kitProps: KitProps<ButtonProps, { controller: ButtonContr
       onClick={(...args) => isActive() && props.onClick?.(...args)}
       htmlProps={{ type: 'button' }}
       icss={[
-        { transition: `50ms ${cssTransitionTimeFnOutCubic}` }, // make it's change smooth
-        { border: 'none' }, // initialize
-        { color: shrinkFn(mainTextColor, [mergedProps]) }, // light mode
+        {
+          transition: `50ms ${cssTransitionTimeFnOutCubic}`, // make it's change smooth
+          border: 'none',
+          color: shrinkFn(mainTextColor, [mergedProps]), // light mode
+          cursor: 'pointer',
+          userSelect: 'none',
+          width: 'max-content',
+        },
         {
           display: 'inline-flex',
           gap: shrinkFn(contentGap, [mergedProps]),
           alignItems: 'center',
           justifyContent: 'center',
         }, // center the items
-        {
-          cursor: 'pointer',
-          userSelect: 'none',
-          width: 'max-content',
-        },
         !isActive() && {
           opacity: shrinkFn(disableOpacity, [mergedProps]),
           cursor: 'not-allowed',

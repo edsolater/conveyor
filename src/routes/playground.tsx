@@ -338,7 +338,7 @@ function PopoverExample() {
   return (
     <>
       <Button plugin={buttonPlugin}>💬popover</Button>
-      <Box icss={{ border: 'solid', width: '', minHeight: '5em' }} plugin={popoverTargetPlugin}>
+      <Box icss={{ border: 'solid', minHeight: '5em' }} plugin={popoverTargetPlugin}>
         hello world
       </Box>
     </>

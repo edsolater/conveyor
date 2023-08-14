@@ -1,4 +1,4 @@
-import { createEffect, onCleanup } from 'solid-js'
+import { createEffect, createMemo, onCleanup } from 'solid-js'
 import { PivProps, Plugin } from '../piv'
 import { createRef } from '..'
 import { createTriggerController } from '../hooks/utils/createTriggerController'
@@ -46,7 +46,7 @@ export function usePluginPopover() {
    * in {@link buttonPlugin}\
    * plugin registerer for popover content
    * @example
-   * <Box plugin={popoverTargetPlugin} />Popover Content</Box>
+   * <Box plugin={popoverTargetPlugin}>Popover Content</Box>
    */
   const popoverTargetPlugin: Plugin = () => {
     // listen to popover toggle event and reflect to trigger state
