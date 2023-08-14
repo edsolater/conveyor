@@ -35,7 +35,7 @@ type ActionHookMethods<T> = {
   run(): Promise<T | undefined | void>
 
   /** core action: **load result from outside; will also end pending action** */
-  loadResult(result: T): void
+  loadResult(result: T | ((prev?: T) => T)): void
   /** core action: **load result from outside; will also end pending action** */
   loadError(reason?: unknown): void
 }
@@ -118,29 +118,24 @@ export function createAction<T>(settings: ActionParamSettings<T>): ActionSignals
   const isError = createMemo(() => !isCalculating() && !!error())
 
   //--- abort clean ups
-  const abortCleanUpFunctions = [] as AnyFn[]
-  function registAbortCleanUp(cb: AnyFn) {
-    abortCleanUpFunctions.push(cb)
+  const abortCleanUpFunctions = new Set<AnyFn>()
+  const registAbortCleanUp = (cb: AnyFn) => {
+    abortCleanUpFunctions.add(cb)
   }
-  function clearRegistedAbortCleanUps() {
-    abortCleanUpFunctions.splice(0, abortCleanUpFunctions.length)
+  const clearRegistedAbortCleanUps = () => {
+    abortCleanUpFunctions.clear()
   }
-  function invokeAbortCleanUps(...args: any[]) {
-    return abortCleanUpFunctions.map((cb) => cb(...args))
-  }
+  const invokeAbortCleanUps = (...args: any[]) => abortCleanUpFunctions.forEach((cb) => cb(...args))
 
   //--- end clean ups
-  const endCleanUpFunctions = [] as AnyFn[]
-  function registEndCleanUp(cb: AnyFn) {
-    endCleanUpFunctions.push(cb)
+  const endCleanUpFunctions = new Set<AnyFn>()
+  const registEndCleanUp = (cb: AnyFn) => {
+    endCleanUpFunctions.add(cb)
   }
-  function clearRegistedEndCleanUps() {
-    endCleanUpFunctions.splice(0, endCleanUpFunctions.length)
+  const clearRegistedEndCleanUps = () => {
+    endCleanUpFunctions.clear()
   }
-
-  function invokeEndCleanUps(...args: any[]) {
-    return endCleanUpFunctions.map((cb) => cb(...args))
-  }
+  const invokeEndCleanUps = (...args: any[]) => endCleanUpFunctions.forEach((cb) => cb(...args))
 
   function pause() {
     setCurrentPhase((p) => (p === 'running' ? 'paused' : p))
@@ -154,9 +149,14 @@ export function createAction<T>(settings: ActionParamSettings<T>): ActionSignals
   //--- get result
   let resolvePromiseResult: ((result: T) => void) | undefined = undefined
   let rejectPromiseError: ((reason?: unknown) => void) | undefined = undefined
-  function loadResult(result: T) {
-    setResult(() => result)
-    resolvePromiseResult?.(result)
+
+  function loadResult(result: T | ((prev?: T) => T)) {
+    setResult((prev) => {
+      // @ts-expect-error T should not be a function
+      const newResult = typeof result === 'function' ? result(prev) : result
+      resolvePromiseResult?.(newResult)
+      return newResult
+    })
   }
   function loadError(reason?: unknown) {
     setError(() => reason)
