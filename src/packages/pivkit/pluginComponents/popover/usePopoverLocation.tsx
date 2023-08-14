@@ -38,7 +38,7 @@ export function usePopoverLocation({
   buttonDom,
   panelDom,
   isTriggerOn,
-  placement = 'top',
+  placement,
   cornerOffset,
   popoverGap,
   viewportBoundaryInset,

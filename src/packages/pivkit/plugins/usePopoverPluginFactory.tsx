@@ -12,7 +12,9 @@ import { PopoverLocationHookOptions, usePopoverLocation } from '../pluginCompone
  * - popoverPlugin(Piv): plugin for popover
  * - info: accessors about trigger and popover
  */
-export function usePluginPopover(options?: Omit<PopoverLocationHookOptions, 'isTriggerOn' | 'buttonDom' | 'panelDom'>) {
+export function usePopoverPluginFactory(
+  options?: Omit<PopoverLocationHookOptions, 'isTriggerOn' | 'buttonDom' | 'panelDom'>
+) {
   const { trigger, isTriggerOn } = createTriggerController()
 
   const [buttonDom, setButtonDom] = createRef<HTMLElement>()

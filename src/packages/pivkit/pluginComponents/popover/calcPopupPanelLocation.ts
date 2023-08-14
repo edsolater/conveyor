@@ -21,14 +21,14 @@ const POPOVER_VIEWPORT_BOUNDARY_INSET = 6
 export const calcPopupPanelLocation = ({
   buttonElement,
   panelElement,
-  placement,
+  placement = 'top',
   cornerOffset = 0,
   popoverGap = POPOVER_GAP,
   viewportBoundaryInset = POPOVER_VIEWPORT_BOUNDARY_INSET,
 }: {
   buttonElement: HTMLElement
   panelElement: HTMLElement
-  placement: PopoverPlacement
+  placement?: PopoverPlacement
 
   /** for corner placement like 'top-left' 'top-right etc. */
   cornerOffset?: number

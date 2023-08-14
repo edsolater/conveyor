@@ -24,7 +24,7 @@ import {
   useCSSTransition,
 } from '../packages/pivkit'
 import { createUUID } from '../packages/pivkit/hooks/utils/createUUID'
-import { usePluginPopover } from '../packages/pivkit/plugins/usePluginPopover'
+import { usePopoverPluginFactory } from '../packages/pivkit/plugins/usePopoverPluginFactory'
 
 export default function PlaygroundPage() {
   return (
@@ -329,7 +329,7 @@ function PopoverExample() {
     buttonPlugin,
     popoverTargetPlugin,
     state: { isTriggerOn },
-  } = usePluginPopover({ placement: 'bottom' })
+  } = usePopoverPluginFactory({ placement: 'top' })
 
   return (
     <>
