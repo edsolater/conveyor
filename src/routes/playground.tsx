@@ -3,7 +3,7 @@ import { CircularProgress } from '../components/CircularProgress'
 import { ExamplePanel } from '../components/ExamplePanel'
 import { NavBar } from '../components/NavBar'
 import { useLoopPercent } from '../hooks/useLoopPercent'
-import { Piv, useComponentController } from '../packages/pivkit/piv'
+import { Piv, PivProps, createPluginFactory, useComponentController } from '../packages/pivkit/piv'
 import {
   Box,
   Button,
@@ -18,13 +18,16 @@ import {
   Text,
   createIncresingAccessor,
   createIntervalEffect,
+  createRef,
   icssCol,
   icssRow,
   renderSwitchThumb,
   useCSSTransition,
 } from '../packages/pivkit'
 import { createUUID } from '../packages/pivkit/hooks/utils/createUUID'
-import { usePopoverPluginFactory } from '../packages/pivkit/plugins/usePopoverPluginFactory'
+import { generatePopoverPlugins } from '../packages/pivkit/plugins/generatePopoverPlugins'
+import { UseGestureHoverOptions, useGestureHover } from '../packages/pivkit/hooks/useGestureHover'
+import { AnyObj, addDefault } from '@edsolater/fnkit'
 
 export default function PlaygroundPage() {
   return (
@@ -326,17 +329,50 @@ function RadioExample() {
 
 function PopoverExample() {
   const {
-    buttonPlugin,
-    popoverTargetPlugin,
+    popoverButtonPlugin,
+    popoverPanelPlugin,
     state: { isTriggerOn },
-  } = usePopoverPluginFactory({ placement: 'top' })
+  } = generatePopoverPlugins({ placement: 'top' })
+
+  const { hoverPlugin } = generateHoverPlugin({
+    onHover: () => {
+      console.log('hover')
+    },
+  })
 
   return (
     <>
-      <Button plugin={buttonPlugin}>💬popover</Button>
-      <Box icss={{ border: 'solid', minHeight: '5em' }} plugin={popoverTargetPlugin}>
+      <Button plugin={[popoverButtonPlugin, hoverPlugin]}>💬popover</Button>
+      <Box icss={{ border: 'solid', minHeight: '5em' }} plugin={popoverPanelPlugin}>
         hello world
       </Box>
     </>
   )
 }
+
+/**
+ *
+ * @param options options for useGestureHover
+ * @returns
+ */
+function generateHoverPlugin(options?: Partial<UseGestureHoverOptions>) {
+  const [dom, setDom] = createRef<HTMLElement>()
+  const { isHover } = useGestureHover({ el: dom, ...options })
+  const hoverPlugin = () => ({ domRef: setDom })
+  return { hoverPlugin, state: { isHover } }
+}
+
+// /**
+//  *
+//  * @param hook original hook
+//  * @param param1
+//  */
+// function pluginGenerator<H extends (options?:AnyObj)=> AnyObj>(
+//   hook: H,
+//   config: {
+//     pluginName: string
+//     load:(makePlugin:()=>)
+//   }
+// ) {
+//   throw 'no impl'
+// }

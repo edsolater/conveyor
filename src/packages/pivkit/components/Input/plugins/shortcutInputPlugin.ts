@@ -2,7 +2,7 @@ import { createEffect, createSignal, on, onCleanup } from 'solid-js'
 import { onEvent } from '../../../../domkit'
 import { KeybordShortcutKeys, getShorcutStringFromKeyboardEvent } from '../../../../domkit'
 import { Subscribable } from '../../../../fnkit'
-import { createPluginCreator } from '../../../piv'
+import { createPluginFactory } from '../../../piv'
 import { createControllerRef } from '../../../hooks/createControllerRef'
 import { createRef } from '../../../hooks/createRef'
 import { InputController, InputProps } from '../Input'
@@ -12,7 +12,7 @@ import { InputController, InputProps } from '../Input'
 export const keyboardShortcutObserverPlugin = (options: {
   onRecordShortcut?: (shortcut: KeybordShortcutKeys) => void
 }) =>
-  createPluginCreator<{}, InputProps>(() => (inputProps) => {
+  createPluginFactory<{}, InputProps>(() => (inputProps) => {
     const [elRef, setElRef] = createRef<HTMLDivElement>()
 
     const [controllerRef, setControllerRef] = createControllerRef<InputController>()

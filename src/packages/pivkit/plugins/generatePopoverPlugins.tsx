@@ -12,7 +12,7 @@ import { PopoverLocationHookOptions, usePopoverLocation } from '../pluginCompone
  * - popoverPlugin(Piv): plugin for popover
  * - info: accessors about trigger and popover
  */
-export function usePopoverPluginFactory(
+export function generatePopoverPlugins(
   options?: Omit<PopoverLocationHookOptions, 'isTriggerOn' | 'buttonDom' | 'panelDom'>
 ) {
   const { trigger, isTriggerOn } = createTriggerController()
@@ -21,12 +21,12 @@ export function usePopoverPluginFactory(
   const [panelDom, setPanelDom] = createRef<HTMLElement>()
 
   /**
-   * in {@link buttonPlugin}\
+   * in {@link popoverButtonPlugin}\
    * plugin registerer for trigger
    * @example
    * <Button plugin={buttonPlugin} />
    */
-  function buttonPlugin() {
+  function popoverButtonPlugin() {
     // open popover by state
     createEffect(() => {
       try {
@@ -45,19 +45,19 @@ export function usePopoverPluginFactory(
   }
 
   /**
-   * in {@link buttonPlugin}\
+   * in {@link popoverButtonPlugin}\
    * plugin registerer for popover content
    * @example
    * <Box plugin={popoverTargetPlugin}>Popover Content</Box>
    */
-  const popoverTargetPlugin: Plugin = () => {
+  function popoverPanelPlugin() {
     // listen to popover toggle event and reflect to trigger state
     createEffect(() => {
       const el = panelDom()
       if (!el) return
       const { abort } = onEvent(el, 'toggle', ({ ev }) => {
         // @ts-expect-error force
-        const { newState } = ev as { newState: 'open' | 'closed' }
+        const { newState } = ev as { newState: 'open' | 'closed'} 
         if (newState === 'open') {
           trigger.turnOn(el)
         } else {
@@ -83,14 +83,14 @@ export function usePopoverPluginFactory(
   }
 
   /**
-   * in {@link buttonPlugin}\
+   * in {@link popoverButtonPlugin}\
    *  public accessors
    */
-  const state = {
+  const pluginState = {
     buttonDom,
     panelDom,
     isTriggerOn,
   }
 
-  return { state, buttonPlugin, popoverTargetPlugin }
+  return { state: pluginState, popoverButtonPlugin, popoverPanelPlugin }
 }

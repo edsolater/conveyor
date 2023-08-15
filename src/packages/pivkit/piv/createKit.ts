@@ -5,7 +5,7 @@ import { createUUID, UUID } from '../hooks/utils/createUUID'
 import { registerControllerInCreateKit } from './hooks/useComponentController'
 import { loadPropsControllerRef, toProxifyController } from './propHandlers/controller'
 import { handlePluginProps } from './propHandlers/handlePluginProps'
-import { GetPluginCreatorParams, Plugin } from './propHandlers/plugin'
+import { GetPluginFactoryParams, Plugin } from './propHandlers/plugin'
 import { handleShadowProps } from './propHandlers/shadowProps'
 import { CRef, PivProps } from './types/piv'
 import { HTMLTag, ValidController, ValidProps } from './types/tools'
@@ -28,7 +28,7 @@ type KitPropsInstance<
 > = AccessifyProps<Pick<RawProps, NeedAccessifyProps>, Controller> &
   Omit<RawProps, NeedAccessifyProps> &
   Omit<PivProps<TagName, Controller>, keyof RawProps | 'plugin' | 'shadowProps'> &
-  Omit<GetPluginCreatorParams<Plugins>, keyof RawProps | 'plugin' | 'shadowProps'> &
+  Omit<GetPluginFactoryParams<Plugins>, keyof RawProps | 'plugin' | 'shadowProps'> &
   Omit<
     {
       plugin?: MayArray<Plugin<any /* too difficult to type */>>

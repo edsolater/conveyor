@@ -1,10 +1,10 @@
 //#region ------------------- hook: useHover() -------------------
 
-import { createEffect } from 'solid-js'
+import { Accessor, createEffect, onCleanup } from 'solid-js'
 import { createToggle } from './createToggle'
 
 export interface UseGestureHoverOptions {
-  el: HTMLElement | undefined | null
+  el: Accessor<HTMLElement | undefined | null>
   triggerDelay?: number
   disable?: boolean
   onHoverStart?: (info: { ev: PointerEvent }) => void
@@ -17,6 +17,8 @@ export function useGestureHover(options: UseGestureHoverOptions) {
 
   createEffect(() => {
     if (options.disable) return
+    const el = options.el()
+    if (!el) return
     let hoverDelayTimerId: number | undefined | NodeJS.Timeout
     const hoverStartHandler = (ev: PointerEvent) => {
       if (options.disable) return
@@ -41,14 +43,15 @@ export function useGestureHover(options: UseGestureHoverOptions) {
       clearTimeout(hoverDelayTimerId)
       hoverDelayTimerId = undefined
     }
-    options.el?.addEventListener('pointerenter', hoverStartHandler)
-    options.el?.addEventListener('pointerleave', hoverEndHandler)
-    options.el?.addEventListener('pointercancel', hoverEndHandler)
-    return () => {
-      options.el?.removeEventListener('pointerenter', hoverStartHandler)
-      options.el?.removeEventListener('pointerleave', hoverEndHandler)
-      options.el?.removeEventListener('pointercancel', hoverEndHandler)
-    }
+
+    el.addEventListener('pointerenter', hoverStartHandler)
+    el.addEventListener('pointerleave', hoverEndHandler)
+    el.addEventListener('pointercancel', hoverEndHandler)
+    onCleanup(() => {
+      el.removeEventListener('pointerenter', hoverStartHandler)
+      el.removeEventListener('pointerleave', hoverEndHandler)
+      el.removeEventListener('pointercancel', hoverEndHandler)
+    })
   })
 
   return { isHover }
