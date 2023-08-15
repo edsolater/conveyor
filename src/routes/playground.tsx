@@ -3,7 +3,7 @@ import { CircularProgress } from '../components/CircularProgress'
 import { ExamplePanel } from '../components/ExamplePanel'
 import { NavBar } from '../components/NavBar'
 import { useLoopPercent } from '../hooks/useLoopPercent'
-import { Piv, PivProps, createPluginFactory, useComponentController } from '../packages/pivkit/piv'
+import { Piv, PivProps, Plugin, createPluginFactory, useComponentController } from '../packages/pivkit/piv'
 import {
   Box,
   Button,
@@ -356,10 +356,13 @@ function PopoverExample() {
  * @returns
  */
 function generateHoverPlugin(options?: Partial<UseGestureHoverOptions>) {
+  // if this hook need domRef
   const [dom, setDom] = createRef<HTMLElement>()
-  const { isHover } = useGestureHover({ el: dom, ...options })
-  const hoverPlugin = () => ({ domRef: setDom })
-  return { hoverPlugin, state: { isHover } }
+
+  // usually, state is created by hook
+  const state = useGestureHover({ el: dom, ...options })
+  const plugin: Plugin = () => ({ domRef: setDom })
+  return { hoverPlugin: plugin, state: state }
 }
 
 // /**
