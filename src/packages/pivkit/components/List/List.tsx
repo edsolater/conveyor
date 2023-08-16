@@ -10,8 +10,9 @@ export interface ListController {}
 
 export type ListProps<T> = KitProps<
   {
-    of?: MayFn<Iterable<T>>
     children(item: T, index: () => number): JSXElement
+
+    of?: MayFn<Iterable<T>>
 
     /**
      * only meaningfull when turnOnScrollObserver is true

@@ -28,6 +28,6 @@ export function makeDeepFunction<F extends (options?: AnyObj) => any>(coreFn: F)
 /**
  * @todo test it!!!
  */
-export function consumeDeepFunction<F extends (options?: AnyObj) => any>(coreFn: DeepFunction<F>): ReturnType<F> {
+export function invokeDeepFunction<F extends (options?: AnyObj) => any>(coreFn: DeepFunction<F>): ReturnType<F> {
   return Reflect.get(coreFn, execSymbol)()
 }
