@@ -18,12 +18,12 @@ export function handlePluginProps<P extends AnyObj>(
   if (!checkHasPlugin(props)) return props
   const plugin = getPlugin(props)
   if (!plugin) return omit(props, 'plugin')
-  const parsed = omit(mergePluginReturnedProps({ plugins: sortPluginByPriority(plugin), props }), 'plugin')
+  const flated = flap(plugin).map((i) => ('plugin' in i ? i.plugin : i))
+  const parsed = omit(mergePluginReturnedProps({ plugins: sortPluginByPriority(flated), props }), 'plugin')
   return parsed
 }
 
-function sortPluginByPriority(deepPluginList?: MayDeepArray<Plugin<any>>) {
-  const plugins = shakeNil(flapDeep(deepPluginList))
+function sortPluginByPriority(plugins: Plugin<any>[]) {
   if (plugins.length <= 1) return plugins
   if (plugins.every((p) => isFunction(p) || !p.priority)) return plugins
 

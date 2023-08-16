@@ -29,6 +29,8 @@ export type GetPluginFactoryParams<T> = T extends PluginFactory<infer Px1>
   : unknown
 
 export type PluginFactory<PluginParams extends Record<string, any>> = (params?: PluginParams) => Plugin<any>
+
+/** plugin can only have one level */
 export type Plugin<T extends ValidProps = ValidProps, C extends ValidController = {}> =
   | {
       pluginCoreFn?: (
@@ -50,6 +52,7 @@ export type Plugin<T extends ValidProps = ValidProps, C extends ValidController 
         dom: Accessor<HTMLElement | undefined>
       }
     ) => Partial<KitProps<T, C>> | undefined | void) // TODO: should support 'plugin' and 'shadowProps' for easier compose
+  // | { plugin: Plugin<T, C> }
 
 /**
  * create normal plugin

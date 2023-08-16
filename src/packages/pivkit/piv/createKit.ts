@@ -31,8 +31,8 @@ type KitPropsInstance<
   Omit<GetPluginFactoryParams<Plugins>, keyof RawProps | 'plugin' | 'shadowProps'> &
   Omit<
     {
-      plugin?: MayArray<Plugin<any /* too difficult to type */>>
-      shadowProps?: MayArray<any /* too difficult to type */> // component must merged before `<Div>`
+      plugin?: PivProps['plugin']
+      shadowProps?: PivProps['shadowProps'] // component must merged before `<Div>`
       // shadowProps?: MayArray<KitPropsInstance<RawProps, Controller, Plugins, TagName, NeedAccessifyProps> | undefined> // component must merged before `<Div>`
       // -------- additional --------
       // auto inject controller to it

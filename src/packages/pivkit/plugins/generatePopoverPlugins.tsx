@@ -26,7 +26,7 @@ export function generatePopoverPlugins(
    * @example
    * <Button plugin={buttonPlugin} />
    */
-  function popoverButtonPlugin() {
+  const popoverButtonPlugin: Plugin = () => {
     // open popover by state
     createEffect(() => {
       try {
@@ -50,14 +50,14 @@ export function generatePopoverPlugins(
    * @example
    * <Box plugin={popoverTargetPlugin}>Popover Content</Box>
    */
-  function popoverPanelPlugin() {
+  const popoverPanelPlugin: Plugin = () => {
     // listen to popover toggle event and reflect to trigger state
     createEffect(() => {
       const el = panelDom()
       if (!el) return
       const { abort } = onEvent(el, 'toggle', ({ ev }) => {
         // @ts-expect-error force
-        const { newState } = ev as { newState: 'open' | 'closed'} 
+        const { newState } = ev as { newState: 'open' | 'closed' }
         if (newState === 'open') {
           trigger.turnOn(el)
         } else {

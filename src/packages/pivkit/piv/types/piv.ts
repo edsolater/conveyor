@@ -84,7 +84,7 @@ export interface PivProps<TagName extends HTMLTag = HTMLTag, Controller extends 
    * auto merge by shadowProps
    * special: every kit baseon <Piv> should support this prop
    */
-  plugin?: MayArray<Plugin<any>>
+  plugin?: MayArray<Plugin<any> | { plugin: Plugin<any> }>
 
   // -------- special prop --------
 
