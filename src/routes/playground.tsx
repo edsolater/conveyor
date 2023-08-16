@@ -334,6 +334,7 @@ function PopoverExample() {
       <Button
         plugin={[
           popoverButtonPlugin,
+          // plugin need to be deep function (icssBlock also)
           hoverPlugin({
             onHover: () => console.log('hover'),
           }),

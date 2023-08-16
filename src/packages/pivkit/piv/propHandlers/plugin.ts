@@ -30,47 +30,33 @@ export type GetPluginFactoryParams<T> = T extends PluginFactory<infer Px1>
 
 export type PluginFactory<PluginParams extends Record<string, any>> = (params?: PluginParams) => Plugin<any>
 
+type PluginObject<T extends ValidProps, C extends ValidController> = {
+  pluginCoreFn?: (
+    props: T,
+    utils: {
+      /** only in component has controller, or will be an empty object*/
+      controller: Accessor<C>
+      dom: Accessor<HTMLElement | undefined>
+    }
+  ) => Partial<KitProps<T, C> | undefined | void> // TODO: should support 'plugin' and 'shadowProps' too
+  priority?: number
+  affects?: (keyof T)[] // maybe no need
+}
+
+type PluginFn<T extends ValidProps, C extends ValidController> = (
+  props: T,
+  utils: {
+    /** only in component has controller, or will be an empty object*/
+    controller: Accessor<C>
+    dom: Accessor<HTMLElement | undefined>
+  }
+) => Partial<KitProps<T, C>> | undefined | void // TODO: should support 'plugin' and 'shadowProps' for easier compose
+
 /** plugin can only have one level */
 export type Plugin<T extends ValidProps = ValidProps, C extends ValidController = {}> =
-  | {
-      pluginCoreFn?: (
-        props: T,
-        utils: {
-          /** only in component has controller, or will be an empty object*/
-          controller: Accessor<C>
-          dom: Accessor<HTMLElement | undefined>
-        }
-      ) => Partial<KitProps<T, C> | undefined | void> // TODO: should support 'plugin' and 'shadowProps' too
-      priority?: number
-      affects?: (keyof T)[] // maybe no need
-    }
-  | ((
-      props: T,
-      utils: {
-        /** only in component has controller, or will be an empty object*/
-        controller: Accessor<C>
-        dom: Accessor<HTMLElement | undefined>
-      }
-    ) => Partial<KitProps<T, C>> | undefined | void) // TODO: should support 'plugin' and 'shadowProps' for easier compose
-  // | { plugin: Plugin<T, C> }
+  | PluginObject<T, C>
+  | PluginFn<T, C>
 
-/**
- * create normal plugin
- * it will merge returned props
- * @example
- *  <Icon
- *    src='/delete.svg'
- *    icss={{ color: 'crimson' }}
- *    plugin={[
- *      click({ onClick: () => onDeleteItem?.(item) }),
- *      Kit((self) => (
- *        <Tooltip placement='right' renderButton={self}>
- *          delete
- *        </Tooltip>
- *      ))
- *    ]}
- *  />
- */
 export function createPluginFactory<Params extends AnyObj, Props extends ValidProps = ValidProps>(
   createrFn: (params?: Params) => (props: Props) => Partial<Props>, // return a function , in this function can exist hooks
   options?: {
