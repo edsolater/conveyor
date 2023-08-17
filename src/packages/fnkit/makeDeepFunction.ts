@@ -12,14 +12,13 @@ export type DeepFunction<F extends AnyFn = AnyFn> = {
   [execSymbol]: F
 }
 
-export type MayDeepFunction<F extends AnyFn> = DeepFunction<F> | F
+export type MayDeepFunction<F extends AnyFn = AnyFn> = DeepFunction<F> | F
 
 // use symbol so user can assign any symbol he like
 const execSymbol = Symbol('exec')
 
-// creator
 /**
- * @todo test it!!!
+ *  creator
  */
 export function makeDeepFunction<F extends AnyFn>(coreFn: F): DeepFunction<F> {
   let innerParameters = [] as unknown as Parameters<F>
@@ -27,13 +26,9 @@ export function makeDeepFunction<F extends AnyFn>(coreFn: F): DeepFunction<F> {
     apply(target, thisArg, argArray) {
       const additionalArgs = argArray
       additionalArgs.forEach((arg, index) => {
+        if (arg === undefined) return
         const oldParam = innerParameters[index]
-        const isOldParamObject = isObject(oldParam)
-        const isArgObject = isObject(arg)
-        const isOldParamUndefined = oldParam === undefined
-        const isArgUndefined = arg === undefined
-        if (isArgUndefined) return
-        if ((isOldParamObject || isOldParamUndefined) && isArgObject) {
+        if ((isObject(oldParam) || oldParam === undefined) && isObject(arg)) {
           innerParameters[index] = mergeObjects(oldParam, arg)
         } else {
           innerParameters[index] = arg
@@ -42,7 +37,7 @@ export function makeDeepFunction<F extends AnyFn>(coreFn: F): DeepFunction<F> {
       return deepFunction
     },
   }) as any
-  Reflect.set(deepFunction, execSymbol, () => coreFn(innerParameters))
+  Reflect.set(deepFunction, execSymbol, () => coreFn.apply(coreFn, innerParameters))
   return deepFunction
 }
 
@@ -50,9 +45,8 @@ export function isDeepFunction(v: any): v is DeepFunction {
   return Reflect.has(v, execSymbol)
 }
 
-// consumer
 /**
- * @todo test it!!!
+ * consumer
  */
 export function invokeDeepFunction<F extends (options?: AnyObj) => any>(coreFn: DeepFunction<F>): ReturnType<F> {
   return Reflect.get(coreFn, execSymbol)()
