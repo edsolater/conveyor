@@ -21,7 +21,8 @@ export type SearchOptions<T> = {
  * @returns An array of items that match the search options.
  */
 
-export function searchItems<T>(items: T[], options?: SearchOptions<T>): T[] {
+export function searchItems<T>(items: T[] | undefined, options?: SearchOptions<T>): T[] {
+  if (!items) return []
   if (!options) return items
   if (!options.text) return items
   const allMatchedStatusInfos = shakeNil(
