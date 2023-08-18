@@ -1,8 +1,16 @@
 import { createEventCenter } from '@edsolater/fnkit'
 
-type StateVariable<T> = {
-  /** get current state */
-  currentValue: T
+type State<T> = {
+  /**
+   * get current state
+   * can also just access property:value. `state.value`
+   */
+  (): T
+  /**
+   * get current state
+   * can also just invoke this state. `state()`
+   */
+  value: T
 
   /** used by consumer */
   onChange(cb: (newValue: T) => void): { unsubscribe(): void }
@@ -18,14 +26,14 @@ type StateVariable<T> = {
 /**
  * hold value, so can subscribe it's change
  */
-export function createStateVariable<T>(): StateVariable<T | undefined>
-export function createStateVariable<T>(defaultValue: T): StateVariable<T>
-export function createStateVariable<T>(defaultValue?: T): StateVariable<any> {
-  let innerValue: T | undefined = defaultValue
+export function createState<T>(): State<T | undefined>
+export function createState<T>(defaultValue: T): State<T>
+export function createState<T>(defaultValue?: T): State<any> {
+  let innerValue = defaultValue
   const eventCenter = createEventCenter<{
     valueSet(value: T): void
   }>()
-  return {
+  const state = Object.assign(() => innerValue, {
     onChange(cb: (newValue: T) => void) {
       return eventCenter.on('valueSet', cb)
     },
@@ -40,12 +48,13 @@ export function createStateVariable<T>(defaultValue?: T): StateVariable<any> {
       }
       eventCenter.emit('valueSet', [innerValue])
     },
-    get currentValue() {
+    get value() {
       return innerValue
     },
 
-    [Symbol.toPrimitive](hint) {
+    [Symbol.toPrimitive]() {
       return innerValue
     },
-  }
+  })
+  return state
 }
