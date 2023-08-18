@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@edsolater/fnkit':
-    specifier: ^0.1.37
-    version: 0.1.37
+    specifier: ^0.1.38
+    version: 0.1.38
   '@solidjs/meta':
     specifier: ^0.28.6
     version: 0.28.6(solid-js@1.7.11)
@@ -1156,8 +1156,8 @@ packages:
       '@babel/helper-validator-identifier': 7.22.5
       to-fast-properties: 2.0.0
 
-  /@edsolater/fnkit@0.1.37:
-    resolution: {integrity: sha512-/WcyEngCbYs3o3A8ZzT5X64sZpd+l7322Rv+f3NyopRcXaJVDtoHulFVPl3dh9pAMUUcyFcti4fxQcVcOuaf2Q==}
+  /@edsolater/fnkit@0.1.38:
+    resolution: {integrity: sha512-Rju8YAxN1tvoVqGb7ip7GPRHtis8CsVgy+6U9EOUR4mg8BcvwJqT8jZV0LG+XjXFIZUDIMxJjjPnFQlghr6LPA==}
     dev: false
 
   /@esbuild/android-arm64@0.17.19:
@@ -1831,7 +1831,7 @@ packages:
     hasBin: true
     dependencies:
       caniuse-lite: 1.0.30001521
-      electron-to-chromium: 1.4.494
+      electron-to-chromium: 1.4.495
       node-releases: 2.0.13
       update-browserslist-db: 1.0.11(browserslist@4.21.10)
 
@@ -2024,8 +2024,8 @@ packages:
   /ee-first@1.1.1:
     resolution: {integrity: sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==}
 
-  /electron-to-chromium@1.4.494:
-    resolution: {integrity: sha512-KF7wtsFFDu4ws1ZsSOt4pdmO1yWVNWCFtijVYZPUeW4SV7/hy/AESjLn/+qIWgq7mHscNOKAwN5AIM1+YAy+Ww==}
+  /electron-to-chromium@1.4.495:
+    resolution: {integrity: sha512-mwknuemBZnoOCths4GtpU/SDuVMp3uQHKa2UNJT9/aVD6WVRjGpXOxRGX7lm6ILIenTdGXPSTCTDaWos5tEU8Q==}
 
   /emoji-regex@8.0.0:
     resolution: {integrity: sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A==}
