@@ -31,14 +31,14 @@ export function createState<T>(defaultValue: T): State<T>
 export function createState<T>(defaultValue?: T): State<any> {
   let innerValue = defaultValue
   const eventCenter = createEventCenter<{
-    valueSet(value: T): void
+    value(v: T): void
   }>()
   const state = Object.assign(() => innerValue, {
     onChange(cb: (newValue: T) => void) {
-      return eventCenter.on('valueSet', cb)
+      return eventCenter.on('value', cb)
     },
     clear() {
-      eventCenter.clear('valueSet')
+      eventCenter.clear('value')
     },
     emitValue(newValue: T | ((prev: T) => T)) {
       if (typeof newValue === 'function') {
@@ -46,7 +46,7 @@ export function createState<T>(defaultValue?: T): State<any> {
       } else {
         innerValue = newValue
       }
-      eventCenter.emit('valueSet', [innerValue])
+      eventCenter.emit('value', [innerValue])
     },
     get value() {
       return innerValue
