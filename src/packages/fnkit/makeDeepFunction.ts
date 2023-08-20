@@ -1,4 +1,4 @@
-import { AnyFn, AnyObj, isObject, mergeObjects } from '@edsolater/fnkit'
+import { AnyFn, AnyObj, generateEmptyObjectByCloneOlds, isObject, mergeObjects } from '@edsolater/fnkit'
 
 export type DeepFunction<F extends AnyFn = AnyFn> = {
   (): DeepFunction<F>
@@ -18,11 +18,16 @@ export type MayDeepFunction<F extends AnyFn = AnyFn> = DeepFunction<F> | F
 const execSymbol = Symbol('exec')
 
 /**
- *  creator
+ * creator
+ * will auto-merge parameters according to their index
  */
-export function makeDeepFunction<F extends AnyFn>(coreFn: F): DeepFunction<F> {
+export function createDeepFunction<F extends AnyFn, P extends object | undefined>(
+  coreFn: F,
+  obj?: P
+): P extends undefined ? DeepFunction<F> : DeepFunction<F> & P {
   let innerParameters = [] as unknown as Parameters<F>
-  const deepFunction = new Proxy(coreFn, {
+  const fnWithObj = obj ? Object.assign(coreFn, generateEmptyObjectByCloneOlds(obj)) : coreFn
+  const deepFunction = new Proxy(fnWithObj, {
     apply(target, thisArg, argArray) {
       const additionalArgs = argArray
       additionalArgs.forEach((arg, index) => {
@@ -36,8 +41,11 @@ export function makeDeepFunction<F extends AnyFn>(coreFn: F): DeepFunction<F> {
       })
       return deepFunction
     },
+    get(target, p, receiver) {
+      if (p === execSymbol) return () => coreFn.apply(coreFn, innerParameters)
+      return obj ? Reflect.get(obj, p, receiver) : Reflect.get(target, p, receiver)
+    },
   }) as any
-  Reflect.set(deepFunction, execSymbol, () => coreFn.apply(coreFn, innerParameters))
   return deepFunction
 }
 

@@ -1,9 +1,8 @@
-import { Show, createEffect, createSignal, onCleanup } from 'solid-js'
+import { createEffect, createSignal, onCleanup } from 'solid-js'
 import { CircularProgress } from '../components/CircularProgress'
 import { ExamplePanel } from '../components/ExamplePanel'
 import { NavBar } from '../components/NavBar'
 import { useLoopPercent } from '../hooks/useLoopPercent'
-import { Piv, PivProps, createPluginFactory, useComponentController } from '../packages/pivkit/piv'
 import {
   Box,
   Button,
@@ -23,10 +22,10 @@ import {
   renderSwitchThumb,
   useCSSTransition,
 } from '../packages/pivkit'
-import { createUUID } from '../packages/pivkit/hooks/utils/createUUID'
+import { Piv, useComponentController } from '../packages/pivkit/piv'
 import { generatePopoverPlugins } from '../packages/pivkit/plugins/generatePopoverPlugins'
-import { AnyObj, addDefault } from '@edsolater/fnkit'
 import { hoverPlugin } from '../packages/pivkit/plugins/hoverPlugin'
+
 
 export default function PlaygroundPage() {
   return (

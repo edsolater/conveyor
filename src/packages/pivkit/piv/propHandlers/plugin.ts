@@ -70,6 +70,10 @@ export function createPluginFactory<Params extends AnyObj, Props extends ValidPr
     priority: options?.priority,
     affects: options?.affects,
   })
+
+  // rename
+  const fn = options?.name ? overwriteFunctionName(factory, options.name) : factory
+
   // @ts-expect-error no need to check
-  return options?.name ? overwriteFunctionName(factory, options.name) : factory
+  return fn
 }
