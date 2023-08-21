@@ -25,7 +25,7 @@ export type DrawerDefaultProps = typeof drawerDefaultProps
 
 export function Drawer(kitProps: DrawerProps) {
   const { props: rawProps } = useKitProps(kitProps, {
-    plugin: [drawerKeyboardShortcut()],
+    plugin: drawerKeyboardShortcut,
     controller: (mergedProps) => ({
       get isOpen() {
         return Boolean(isOpen())

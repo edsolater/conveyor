@@ -52,12 +52,13 @@ function mergePluginReturnedProps<T extends AnyObj>({
       }, props)
     : props
 }
+
 /** core */
 function invokePlugin(plugin: Plugin<any>, props: KitProps<any>) {
   const [controller, setController] = createSignal<ValidController>({})
   const [dom, setDom] = createSignal<HTMLElement>()
 
-  const pluginProps = invoke(plugin, [props, { controller, dom }])
+  const pluginProps = plugin()(props, { controller, dom })
   const returnProps = mergeProps(props, pluginProps, { controllerRef: setController, domRef: setDom })
   return returnProps
 }

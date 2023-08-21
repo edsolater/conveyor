@@ -2,7 +2,7 @@ import { createEffect, onCleanup } from 'solid-js'
 import { createRef } from '..'
 import { onEvent } from '../../domkit'
 import { createTriggerController } from '../hooks/utils/createTriggerController'
-import { PivProps, Plugin } from '../piv'
+import { PivProps, Plugin, createPlugin } from '../piv'
 import { PopoverLocationHookOptions, usePopoverLocation } from '../pluginComponents/popover/usePopoverLocation'
 
 /**
@@ -26,7 +26,7 @@ export function generatePopoverPlugins(
    * @example
    * <Button plugin={buttonPlugin} />
    */
-  const popoverButtonPlugin: Plugin = () => {
+  const popoverButtonPlugin = createPlugin(() => () => {
     // open popover by state
     createEffect(() => {
       try {
@@ -42,7 +42,7 @@ export function generatePopoverPlugins(
       }
     })
     return { domRef: setButtonDom, onClick: ({ el }) => trigger.toggle(el) } satisfies Partial<PivProps>
-  }
+  })
 
   /**
    * in {@link popoverButtonPlugin}\
@@ -50,7 +50,7 @@ export function generatePopoverPlugins(
    * @example
    * <Box plugin={popoverTargetPlugin}>Popover Content</Box>
    */
-  const popoverPanelPlugin: Plugin = () => {
+  const popoverPanelPlugin = createPlugin(() => () => {
     // listen to popover toggle event and reflect to trigger state
     createEffect(() => {
       const el = panelDom()
@@ -80,7 +80,7 @@ export function generatePopoverPlugins(
       // @ts-expect-error lack of correct html type
       htmlProps: { popover: 'manual' },
     } satisfies Partial<PivProps>
-  }
+  })
 
   /**
    * in {@link popoverButtonPlugin}\

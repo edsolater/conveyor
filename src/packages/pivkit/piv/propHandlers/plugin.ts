@@ -1,8 +1,8 @@
 import { AnyObj, overwriteFunctionName } from '@edsolater/fnkit'
+import { Accessor } from 'solid-js'
+import { SettingsFunction, createSettingsFunction } from '../../../fnkit/createSettingsFunction'
 import { KitProps } from '../createKit'
 import { ValidController, ValidProps } from '../types/tools'
-import { Accessor } from 'solid-js'
-import { DeepFunction } from '../../../fnkit/createDeepFunction'
 
 export type GetPluginParams<T> = T extends Plugin<infer Px1>
   ? Px1
@@ -19,33 +19,41 @@ export type GetPluginParams<T> = T extends Plugin<infer Px1>
   : unknown
 
 export type Plugin<
-  PluginParams extends Record<string, any>,
+  PluginSettings extends Record<string, any>,
   T extends ValidProps = any,
   C extends ValidController = ValidController
-> = DeepFunction<
-  (params?: PluginParams) => (
+> = SettingsFunction<{
+  (settings?: PluginSettings): (
     props: T,
     utils: {
       /** only in component has controller, or will be an empty object*/
       controller: Accessor<C>
       dom: Accessor<HTMLElement | undefined>
     }
-  ) => Partial<KitProps<T, C>> | undefined | void, // TODO: should support 'plugin' and 'shadowProps' for easier compose
-  {
-    priority?: number
-    pluginName?: string
-  }
->
+  ) => Partial<KitProps<T, C>> | undefined | void // TODO: should support 'plugin' and 'shadowProps' for easier compose
+  priority?: number
+  pluginName?: string
+}>
 
 /** plugin can only have one level */
-export function createPlugin<Params extends AnyObj, Props extends ValidProps = ValidProps>(
-  createrFn: (params?: Params) => (props: Props) => Partial<Props>, // return a function , in this function can exist hooks
+export function createPlugin<
+  Settings extends AnyObj,
+  Props extends ValidProps = ValidProps,
+  Controller extends ValidController = ValidController
+>(
+  createrFn: (settings: Settings) => (
+    props: Props,
+    utils: {
+      controller: Accessor<Controller>
+      dom: Accessor<HTMLElement | undefined>
+    }
+  ) => Partial<Props>, // return a function , in this function can exist hooks
   options?: {
     priority?: number // NOTE -1:  it should be render after final prop has determine
     name?: string
   }
-): Plugin<Params> {
-  const factory = (params: Params) => createrFn(params)
+): Plugin<Settings> {
+  const factory = createSettingsFunction((params: Settings) => createrFn(params))
   Object.assign(factory, options)
   // rename
   const fn = options?.name ? overwriteFunctionName(factory, options.name) : factory
