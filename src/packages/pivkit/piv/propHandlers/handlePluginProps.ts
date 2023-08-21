@@ -6,6 +6,7 @@ import { ValidController } from '../types/tools'
 import { mergeProps } from '../utils/mergeProps'
 import { omit } from '../utils/omit'
 import { Plugin } from './plugin'
+import { invoke } from '../../../fnkit/createDeepFunction'
 
 //
 // TODO2: not accessify yet
@@ -25,7 +26,7 @@ export function handlePluginProps<P extends AnyObj>(
 
 function sortPluginByPriority(plugins: Plugin<any>[]) {
   if (plugins.length <= 1) return plugins
-  if (plugins.every((p) => isFunction(p) || !p.priority)) return plugins
+  if (plugins.every((p) => p.priority)) return plugins
 
   return [...plugins].sort((pluginA, pluginB) => {
     const priorityA = isFunction(pluginA) ? 0 : pluginA.priority
@@ -56,9 +57,7 @@ function invokePlugin(plugin: Plugin<any>, props: KitProps<any>) {
   const [controller, setController] = createSignal<ValidController>({})
   const [dom, setDom] = createSignal<HTMLElement>()
 
-  const pluginProps = isFunction(plugin)
-    ? plugin(props, { controller, dom })
-    : plugin.pluginCoreFn?.(props, { controller, dom })
+  const pluginProps = invoke(plugin, [props, { controller, dom }])
   const returnProps = mergeProps(props, pluginProps, { controllerRef: setController, domRef: setDom })
   return returnProps
 }

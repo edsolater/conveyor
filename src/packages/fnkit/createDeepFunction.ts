@@ -1,18 +1,25 @@
 import { AnyFn, AnyObj, generateEmptyObjectByCloneOlds, isObject, mergeObjects } from '@edsolater/fnkit'
 
-export type DeepFunction<F extends AnyFn = AnyFn> = {
-  (): DeepFunction<F>
-  (...args: [Partial<Parameters<F>[0]>]): DeepFunction<F>
-  (...args: [Partial<Parameters<F>[0]>, Partial<Parameters<F>[1]>]): DeepFunction<F>
-  (...args: [Partial<Parameters<F>[0]>, Partial<Parameters<F>[1]>, Partial<Parameters<F>[2]>]): DeepFunction<F>
+type DeepFunctionFunctionPart<F extends AnyFn = AnyFn> = {
+  (): DeepFunctionFunctionPart<F>
+  (...args: [Partial<Parameters<F>[0]>]): DeepFunctionFunctionPart<F>
+  (...args: [Partial<Parameters<F>[0]>, Partial<Parameters<F>[1]>]): DeepFunctionFunctionPart<F>
+  (
+    ...args: [Partial<Parameters<F>[0]>, Partial<Parameters<F>[1]>, Partial<Parameters<F>[2]>]
+  ): DeepFunctionFunctionPart<F>
   (
     ...args: [Partial<Parameters<F>[0]>, Partial<Parameters<F>[1]>, Partial<Parameters<F>[2]>, ...any[]]
-  ): DeepFunction<F>
-  (...args: any[]): DeepFunction<F>
+  ): DeepFunctionFunctionPart<F>
+  (...args: any[]): DeepFunctionFunctionPart<F>
   [execSymbol]: F
 }
 
-export type MayDeepFunction<F extends AnyFn = AnyFn> = DeepFunction<F> | F
+export type DeepFunction<
+  F extends AnyFn = AnyFn,
+  P extends object | undefined = undefined
+> = DeepFunctionFunctionPart<F> & P
+
+export type MayDeepFunction<F extends AnyFn = AnyFn, P extends object | undefined = undefined> = DeepFunction<F, P> | F
 
 // use symbol so user can assign any symbol he like
 const execSymbol = Symbol('exec')
@@ -56,15 +63,19 @@ export function isDeepFunction(v: any): v is DeepFunction {
 /**
  * consumer
  */
-export function invokeDeepFunction<F extends (options?: AnyObj) => any>(coreFn: DeepFunction<F>): ReturnType<F> {
-  return Reflect.get(coreFn, execSymbol)()
+export function invokeDeepFunction<F extends (options?: AnyObj) => any>(
+  coreFn: DeepFunction<F>,
+  parameters?: Parameters<F>
+): ReturnType<F> {
+  return parameters ? Reflect.get(coreFn, execSymbol)(...parameters) : Reflect.get(coreFn, execSymbol)()
 }
 
 /**
  * accept both **DeepFunction** and **NormalFunction**
  */
 export function invoke<T extends DeepFunction | AnyFn>(
-  fn: T
+  fn: T,
+  parameters?: Parameters<T>
 ): T extends DeepFunction ? ReturnType<T[typeof execSymbol]> : ReturnType<T> {
-  return isDeepFunction(fn) ? invokeDeepFunction(fn) : fn()
+  return isDeepFunction(fn) ? invokeDeepFunction(fn, parameters) : parameters ? fn(...parameters) : fn()
 }
