@@ -1,12 +1,12 @@
-import { AnyObj, flap, flapDeep, isFunction, MayArray, MayDeepArray, shakeNil } from '@edsolater/fnkit'
+import { AnyObj, flap, MayArray, shakeNil } from '@edsolater/fnkit'
 import { createSignal } from 'solid-js'
+import { invoke } from '../../../fnkit/createDeepFunction'
 import { KitProps } from '../createKit'
 import { PivProps } from '../types/piv'
 import { ValidController } from '../types/tools'
 import { mergeProps } from '../utils/mergeProps'
 import { omit } from '../utils/omit'
 import { Plugin } from './plugin'
-import { invoke } from '../../../fnkit/createDeepFunction'
 
 //
 // TODO2: not accessify yet
@@ -26,11 +26,11 @@ export function handlePluginProps<P extends AnyObj>(
 
 function sortPluginByPriority(plugins: Plugin<any>[]) {
   if (plugins.length <= 1) return plugins
-  if (plugins.every((p) => p.priority)) return plugins
+  if (plugins.every((plugin) => plugin.priority)) return plugins
 
   return [...plugins].sort((pluginA, pluginB) => {
-    const priorityA = isFunction(pluginA) ? 0 : pluginA.priority
-    const priorityB = isFunction(pluginB) ? 0 : pluginB.priority
+    const priorityA = pluginA.priority ?? 0
+    const priorityB = pluginB.priority ?? 0
     return (priorityB ?? 0) - (priorityA ?? 0)
   })
 }

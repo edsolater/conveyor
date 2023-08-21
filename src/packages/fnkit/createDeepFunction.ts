@@ -1,4 +1,4 @@
-import { AnyFn, AnyObj, generateEmptyObjectByCloneOlds, isObject, mergeObjects } from '@edsolater/fnkit'
+import { AnyFn, AnyObj, createEmptyObjectByOlds, isObject, mergeObjects } from '@edsolater/fnkit'
 
 type DeepFunctionFunctionPart<F extends AnyFn = AnyFn> = {
   (): DeepFunctionFunctionPart<F>
@@ -14,10 +14,9 @@ type DeepFunctionFunctionPart<F extends AnyFn = AnyFn> = {
   [execSymbol]: F
 }
 
-export type DeepFunction<
-  F extends AnyFn = AnyFn,
-  P extends object | undefined = undefined
-> = DeepFunctionFunctionPart<F> & P
+export type DeepFunction<F extends AnyFn = AnyFn, P extends object | undefined = undefined> = P extends undefined
+  ? DeepFunctionFunctionPart<F>
+  : DeepFunctionFunctionPart<F> & P
 
 export type MayDeepFunction<F extends AnyFn = AnyFn, P extends object | undefined = undefined> = DeepFunction<F, P> | F
 
@@ -33,7 +32,7 @@ export function createDeepFunction<F extends AnyFn, P extends object | undefined
   obj?: P
 ): P extends undefined ? DeepFunction<F> : DeepFunction<F> & P {
   let innerParameters = [] as unknown as Parameters<F>
-  const fnWithObj = obj ? Object.assign(coreFn, generateEmptyObjectByCloneOlds(obj)) : coreFn
+  const fnWithObj = obj ? Object.assign(coreFn, createEmptyObjectByOlds(obj)) : coreFn
   const deepFunction = new Proxy(fnWithObj, {
     apply(target, thisArg, argArray) {
       const additionalArgs = argArray
@@ -63,7 +62,7 @@ export function isDeepFunction(v: any): v is DeepFunction {
 /**
  * consumer
  */
-export function invokeDeepFunction<F extends (options?: AnyObj) => any>(
+export function invokeDeepFunction<F extends AnyFn>(
   coreFn: DeepFunction<F>,
   parameters?: Parameters<F>
 ): ReturnType<F> {
