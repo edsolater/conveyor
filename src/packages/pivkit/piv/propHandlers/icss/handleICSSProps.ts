@@ -1,10 +1,4 @@
-import {
-  flapDeep,
-  getKeys,
-  isObject,
-  isString,
-  shrinkFn,
-} from '@edsolater/fnkit'
+import { flapDeep, getKeys, isObject, isString, shrinkFn } from '@edsolater/fnkit'
 import { css } from 'solid-styled-components'
 import { ValidController } from '../../types/tools'
 import { ICSS, CSSObject } from './type'
@@ -19,4 +13,3 @@ export function handleICSSProps<Controller extends ValidController | unknown = u
   const classes = cssObjList.map((i) => (isString(i) ? i : css(i)))
   return classes.join(' ')
 }
-

@@ -1,9 +1,4 @@
-import {
-  MayArray,
-  flapDeep,
-  isArray,
-  shakeNil
-} from '@edsolater/fnkit'
+import { MayArray, flapDeep, isArray, shakeNil } from '@edsolater/fnkit'
 import { JSX } from 'solid-js'
 import { objectMerge } from '../../../fnkit'
 import { HTMLTag } from '../types/tools'
@@ -25,5 +20,7 @@ export function parseHTMLProps(htmlProps: HTMLProps) {
  */
 export function getHTMLPropsKeys(htmlProps: HTMLProps): string[] {
   if (!htmlProps) return []
-  return isArray(htmlProps) ? htmlProps.map((i) => (i ? Object.getOwnPropertyNames(i) : [])).flat() : Object.getOwnPropertyNames(htmlProps)
+  return isArray(htmlProps)
+    ? htmlProps.map((i) => (i ? Object.getOwnPropertyNames(i) : [])).flat()
+    : Object.getOwnPropertyNames(htmlProps)
 }

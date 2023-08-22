@@ -57,5 +57,3 @@ export function createSettingsFunction<F extends AnyFn>(
 export function isSettingsFunction(v: any): v is SettingsFunction {
   return Reflect.has(v, 'in')
 }
-
-

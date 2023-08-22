@@ -29,5 +29,3 @@ export function Link(rawProps: KitProps<LinkProps>) {
     />
   )
 }
-
-

@@ -21,7 +21,7 @@ export type GetPluginParams<T> = T extends Plugin<infer Px1>
 export type Plugin<
   PluginSettings extends Record<string, any>,
   T extends ValidProps = any,
-  C extends ValidController = ValidController
+  C extends ValidController = ValidController,
 > = SettingsFunction<{
   (settings?: PluginSettings): (
     props: T,
@@ -39,7 +39,7 @@ export type Plugin<
 export function createPlugin<
   Settings extends AnyObj,
   Props extends ValidProps = ValidProps,
-  Controller extends ValidController = ValidController
+  Controller extends ValidController = ValidController,
 >(
   createrFn: (settings: Settings) => (
     props: Props,

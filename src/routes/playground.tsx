@@ -26,7 +26,6 @@ import { Piv, useComponentController } from '../packages/pivkit/piv'
 import { generatePopoverPlugins } from '../packages/pivkit/plugins/generatePopoverPlugins'
 import { hoverPlugin } from '../packages/pivkit/plugins/hoverPlugin'
 
-
 export default function PlaygroundPage() {
   return (
     <Piv>

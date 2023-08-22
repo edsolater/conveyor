@@ -6,9 +6,10 @@ import { Piv, PivChild, Plugin, createPlugin } from '../../../piv'
  * can render switch Thumb
  */
 export const renderSwitchThumb = createPlugin<{ renderThumbContent?: PivChild<SwitchController> }, SwitchProps>(
-  ({renderThumbContent}) => () => ({
-    'anatomy:Thumb': {
-      'render:lastChild': renderThumbContent,
-    },
-  })
+  ({ renderThumbContent }) =>
+    () => ({
+      'anatomy:Thumb': {
+        'render:lastChild': renderThumbContent,
+      },
+    })
 )
