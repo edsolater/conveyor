@@ -143,7 +143,9 @@ function getParsedKitProps<
         props,
         proxyController,
         options?.needAccessify ??
-          (options?.noNeedDeAccessifyChildren ? omitItems(Object.keys(props), ['children']) : Object.keys(props))
+          (options?.noNeedDeAccessifyChildren
+            ? omitItems(Object.getOwnPropertyNames(props), ['children'])
+            : Object.getOwnPropertyNames(props))
       ),
     // inject controller
     (props) => (proxyController ? mergeProps(props, { innerController: proxyController } as PivProps) : props),

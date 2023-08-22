@@ -25,5 +25,5 @@ export function parseHTMLProps(htmlProps: HTMLProps) {
  */
 export function getHTMLPropsKeys(htmlProps: HTMLProps): string[] {
   if (!htmlProps) return []
-  return isArray(htmlProps) ? htmlProps.map((i) => (i ? Object.keys(i) : [])).flat() : Object.keys(htmlProps)
+  return isArray(htmlProps) ? htmlProps.map((i) => (i ? Object.getOwnPropertyNames(i) : [])).flat() : Object.getOwnPropertyNames(htmlProps)
 }

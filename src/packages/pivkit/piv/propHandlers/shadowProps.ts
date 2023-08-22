@@ -34,13 +34,13 @@ export function handleShadowProps<P extends Partial<PivProps<any>>>(
 function getMergedKeys(props: Partial<PivProps<any>>) {
   function getShadowPropKeys(props: Partial<PivProps<any>>): string[] {
     return isArray(props.shadowProps)
-      ? props.shadowProps.flatMap((p) => (isObject(p) ? Object.keys(p) : []))
+      ? props.shadowProps.flatMap((p) => (isObject(p) ? Object.getOwnPropertyNames(p) : []))
       : isObject(props.shadowProps)
-      ? Object.keys(props.shadowProps)
+      ? Object.getOwnPropertyNames(props.shadowProps)
       : []
   }
   const shadowKeys = getShadowPropKeys(props)
-  const selfProps = Object.keys(omit(props, ['shadowProps']))
+  const selfProps = Object.getOwnPropertyNames(omit(props, ['shadowProps']))
   const pivProps = pivPropsNames
   return getIntersection(selfProps.concat(shadowKeys), pivProps)
 }

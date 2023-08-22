@@ -36,7 +36,7 @@ function registerGlobalKeyboardShortcut(settings: DetailKeyboardShortcutSetting)
   return {
     remove() {
       if (!originalObject) return
-      const removedKeys = Object.keys(settings) as KeybordShortcutKeys[]
+      const removedKeys = Object.getOwnPropertyNames(settings) as KeybordShortcutKeys[]
       removedKeys.forEach((key) => {
         delete originalObject[key]
       })
@@ -159,7 +159,7 @@ export function makeSubscriable<T extends AnyObj>(
       ? ['add', 'delete']
       : originalObject instanceof Map || originalObject instanceof WeakMap || originalObject instanceof WeakerMap
       ? ['set', 'delete']
-      : Object.keys(originalObject)
+      : Object.getOwnPropertyNames(originalObject)
   const subscribable = new Subscribable<T>()
   const proxiedValue = new Proxy(originalObject, {
     get(target, prop) {

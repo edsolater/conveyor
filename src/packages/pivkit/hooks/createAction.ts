@@ -250,6 +250,6 @@ function isEmpty(v: unknown) {
     v === null ||
     v === '' ||
     (Array.isArray(v) && v.length === 0) ||
-    (typeof v === 'object' && Object.keys(v).length === 0)
+    (typeof v === 'object' && Object.getOwnPropertyNames(v).length === 0)
   )
 }
