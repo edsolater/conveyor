@@ -6,7 +6,7 @@ import { mergeRefs } from '../utils/mergeRefs'
 import { classname } from './classname'
 import { parsePivChildren } from './controller'
 import { parseHTMLProps } from './htmlProps'
-import { classifyICSS } from './icss'
+import { handleICSSProps } from './icss/handleICSSProps'
 import { parseIStyles } from './istyle'
 import { parseOnClick } from './onClick'
 import { handlePluginProps } from './handlePluginProps'
@@ -46,7 +46,7 @@ export function parsePivProps(rawProps: PivProps<any>) {
           get class() {
             // get ter for lazy solidjs render
             return (
-              shakeFalsy([classname(props.class, controller), classifyICSS(props.icss, controller)]).join(' ') ||
+              shakeFalsy([classname(props.class, controller), handleICSSProps(props.icss, controller)]).join(' ') ||
               undefined
             ) /* don't render if empty string */
           },
@@ -67,7 +67,7 @@ export function parsePivProps(rawProps: PivProps<any>) {
           get class() {
             // get ter for lazy solidjs render
             return (
-              shakeFalsy([classname(props.class, controller), classifyICSS(props.icss, controller)]).join(' ') ||
+              shakeFalsy([classname(props.class, controller), handleICSSProps(props.icss, controller)]).join(' ') ||
               undefined
             ) /* don't render if empty string */
           },
@@ -148,7 +148,7 @@ function debugLog(rawProps: PivProps<any>, props: PivProps<any>, controller: Val
       console.debug('htmlProps (raw → parsed): ', props.htmlProps, { ...parseHTMLProps(props.htmlProps) })
     }
     if (props.debugLog.includes('icss')) {
-      console.debug('icss (raw → parsed): ', props.icss, classifyICSS(props.icss, controller))
+      console.debug('icss (raw → parsed): ', props.icss, handleICSSProps(props.icss, controller))
     }
     if (props.debugLog.includes('style')) {
       console.debug('style (raw → parsed): ', props.style, parseIStyles(props.style, controller))

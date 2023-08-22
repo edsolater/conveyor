@@ -49,11 +49,12 @@ export function createPlugin<
     }
   ) => Partial<Props>, // return a function , in this function can exist hooks
   options?: {
+    defaultSettings?: Partial<Settings>
     priority?: number // NOTE -1:  it should be render after final prop has determine
     name?: string
   }
 ): Plugin<Settings> {
-  const factory = createSettingsFunction((params: Settings) => createrFn(params))
+  const factory = createSettingsFunction((params: Settings) => createrFn(params), options?.defaultSettings)
   Object.assign(factory, options)
   // rename
   const fn = options?.name ? overwriteFunctionName(factory, options.name) : factory
