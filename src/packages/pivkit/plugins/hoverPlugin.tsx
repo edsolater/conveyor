@@ -13,6 +13,8 @@ export function hoverPlugin(options?: Partial<UseGestureHoverOptions>) {
 
   // usually, state is created by hook
   const state = useGestureHover({ el: dom, ...options })
+
+  //TODO: plugin should can be both a hook and plugin
   const plugin = createPlugin(() => () => ({ domRef: setDom }))
   return { plugin, state }
 }
