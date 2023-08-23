@@ -1,4 +1,4 @@
-import { createICSS, CSSObject, ICSSObject } from '../../piv'
+import { createICSS, CSSObject } from '../../piv'
 import { cssColors } from '../cssColors'
 
 export type ICSSRowOption = {
@@ -17,13 +17,12 @@ export type ICSSColOption = {
   items?: CSSObject['alignItems']
 }
 
-export const icssCol = ({ gap, items }: ICSSRowOption = {}) =>
-  ({
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: items,
-    gap: gap,
-  } satisfies ICSSObject)
+export const icssCol = createICSS(({ gap, items }: ICSSRowOption = {}) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: items,
+  gap: gap,
+}))
 
 //#region ------------------- grid -------------------
 export type ICSSGridOption = {
@@ -33,23 +32,21 @@ export type ICSSGridOption = {
   templateColumn?: CSSObject['gridTemplateColumns']
 }
 
-export const icssGrid = ({items, template, templateColumn, gap}: ICSSGridOption) =>
-  ({
-    display: 'grid',
-    placeItems: items,
-    gridTemplate: template,
-    gridTemplateColumns: templateColumn,
-    gap: gap,
-  } satisfies ICSSObject)
+export const icssGrid = createICSS(({ items, template, templateColumn, gap }: ICSSGridOption = {}) => ({
+  display: 'grid',
+  placeItems: items,
+  gridTemplate: template,
+  gridTemplateColumns: templateColumn,
+  gap: gap,
+}))
 
 export type ICSSGridItemOption = {
-  area: CSSObject['gridArea']
+  area?: CSSObject['gridArea']
 }
 
-export const icssGridItem = (options?: ICSSGridItemOption) =>
-  ({
-    gridArea: options?.area,
-  } satisfies ICSSObject)
+export const icssGridItem = createICSS((opts: ICSSGridItemOption = {}) => ({
+  gridArea: opts?.area,
+}))
 
 //#endregion
 
@@ -58,48 +55,44 @@ export type ICSSCardOption = {
   gap?: CSSObject['gap']
   items?: CSSObject['alignItems']
 }
-export const icssCard = (options?: ICSSCardOption) =>
-  ({
-    display: 'grid',
-    // backgroundColor: 'color-mix(in srgb, currentColor, transparent 95%)',
-    background: options?.style === 'ghost' ? undefined : 'var(--big-card-bg, #ffffffcc)',
-    /* generate by https://shadows.brumm.af/ */
-    boxShadow:
-      options?.style === 'ghost'
-        ? undefined
-        : `4.1px 4.1px 5.3px -23px rgba(0, 0, 0, 0.012),
+export const icssCard = createICSS((options: ICSSCardOption = {}) => ({
+  display: 'grid',
+  // backgroundColor: 'color-mix(in srgb, currentColor, transparent 95%)',
+  background: options?.style === 'ghost' ? undefined : 'var(--big-card-bg, #ffffffcc)',
+  /* generate by https://shadows.brumm.af/ */
+  boxShadow:
+    options?.style === 'ghost'
+      ? undefined
+      : `4.1px 4.1px 5.3px -23px rgba(0, 0, 0, 0.012),
            19.6px 19.6px 17.9px -23px rgba(0, 0, 0, 0.018),
            100px 100px 80px -23px rgba(0, 0, 0, 0.03)`,
-    padding: '24px',
-    borderRadius: '16px',
-  } satisfies ICSSObject)
+  padding: '24px',
+  borderRadius: '16px',
+}))
 
 export type ICSSClickableOption = {}
 
-export const icssClickable = (options?: ICSSClickableOption) =>
-  ({
-    cursor: 'pointer',
-    ':is(:hover,:active)': { backdropFilter: 'brightness(0.9)', filter: 'brightness(0.9)' },
-  } satisfies ICSSObject)
+export const icssClickable = createICSS((options?: ICSSClickableOption) => ({
+  cursor: 'pointer',
+  ':is(:hover,:active)': { backdropFilter: 'brightness(0.9)', filter: 'brightness(0.9)' },
+}))
 
-export const icssLabel = (options?: { w: CSSObject['minWidth']; h: CSSObject['minHeight'] }) =>
-  ({
-    minWidth: options?.w ?? '5em',
-    minHeight: options?.h ?? 'calc(2em)',
-    textAlign: 'center',
-    paddingBlock: '.25em',
-    paddingInline: '.5em',
-    borderRadius: '4px',
-    background: cssColors.component_label_bg_default,
-  } satisfies ICSSObject)
+export const icssLabel = createICSS((options?: { w?: CSSObject['minWidth']; h?: CSSObject['minHeight'] }) => ({
+  minWidth: options?.w ?? '5em',
+  minHeight: options?.h ?? 'calc(2em)',
+  textAlign: 'center',
+  paddingBlock: '.25em',
+  paddingInline: '.5em',
+  borderRadius: '4px',
+  background: cssColors.component_label_bg_default,
+}))
 
-export const icssInputType = (options?: { w: CSSObject['minWidth']; h: CSSObject['minHeight'] }) =>
-  ({
-    minWidth: '12em',
-    paddingBlock: '.25em',
-    paddingInline: '.5em',
-    // borderRadius: '4px',
-    // background: cssColors.component_input_bg_default,
-    // outlineColor: cssColors.dodgerBlue,
-    borderBottom: 'solid',
-  } satisfies ICSSObject)
+export const icssInputType = createICSS((options?: { w?: CSSObject['minWidth']; h?: CSSObject['minHeight'] }) => ({
+  minWidth: '12em',
+  paddingBlock: '.25em',
+  paddingInline: '.5em',
+  // borderRadius: '4px',
+  // background: cssColors.component_input_bg_default,
+  // outlineColor: cssColors.dodgerBlue,
+  borderBottom: 'solid',
+}))
