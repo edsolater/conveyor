@@ -306,7 +306,7 @@ function ListExample() {
       {(d, idx) => {
         // console.count(`render item from <Playground>, ${d.name}, ${d.count}`)
         return (
-          <Box icss={[icssRow({ gap: '8px' }), { background: '#0001', width: '100%' }]}>
+          <Box icss={[icssRow, { background: '#0001', width: '100%' }]}>
             <Text>{d.name}</Text>
             <Text>{d.count + increaseCount()}</Text>
           </Box>

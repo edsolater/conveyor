@@ -1,4 +1,5 @@
-import { CSSObject, ICSSObject } from '../../piv'
+import { type CSSObject, type ICSSObject, } from '../../piv'
+import { createICSS } from '../../piv/propHandlers'
 import { cssColors } from '../cssColors'
 
 export type ICSSRowOption = {
@@ -6,12 +7,11 @@ export type ICSSRowOption = {
   items?: CSSObject['alignItems']
 }
 
-export const icssRow = (options?: ICSSRowOption) =>
-  ({
-    display: 'flex',
-    alignItems: options?.items ?? 'center',
-    gap: options?.gap,
-  }) satisfies ICSSObject
+export const icssRow = createICSS((options?: ICSSRowOption) => ({
+  display: 'flex',
+  alignItems: options?.items ?? 'center',
+  gap: options?.gap,
+}))
 
 export type ICSSColOption = {
   gap?: CSSObject['gap']
@@ -24,7 +24,7 @@ export const icssCol = (options?: ICSSColOption) =>
     flexDirection: 'column',
     alignItems: options?.items,
     gap: options?.gap,
-  }) satisfies ICSSObject
+  } satisfies ICSSObject)
 
 //#region ------------------- grid -------------------
 export type ICSSGridOption = {
@@ -41,7 +41,7 @@ export const icssGrid = (options?: ICSSGridOption) =>
     gridTemplate: options?.template,
     gridTemplateColumns: options?.templateColumn,
     gap: options?.gap,
-  }) satisfies ICSSObject
+  } satisfies ICSSObject)
 
 export type ICSSGridItemOption = {
   area: CSSObject['gridArea']
@@ -50,7 +50,7 @@ export type ICSSGridItemOption = {
 export const icssGridItem = (options?: ICSSGridItemOption) =>
   ({
     gridArea: options?.area,
-  }) satisfies ICSSObject
+  } satisfies ICSSObject)
 
 //#endregion
 
@@ -73,7 +73,7 @@ export const icssCard = (options?: ICSSCardOption) =>
            100px 100px 80px -23px rgba(0, 0, 0, 0.03)`,
     padding: '24px',
     borderRadius: '16px',
-  }) satisfies ICSSObject
+  } satisfies ICSSObject)
 
 export type ICSSClickableOption = {}
 
@@ -81,7 +81,7 @@ export const icssClickable = (options?: ICSSClickableOption) =>
   ({
     cursor: 'pointer',
     ':is(:hover,:active)': { backdropFilter: 'brightness(0.9)', filter: 'brightness(0.9)' },
-  }) satisfies ICSSObject
+  } satisfies ICSSObject)
 
 export const icssLabel = (options?: { w: CSSObject['minWidth']; h: CSSObject['minHeight'] }) =>
   ({
@@ -92,7 +92,7 @@ export const icssLabel = (options?: { w: CSSObject['minWidth']; h: CSSObject['mi
     paddingInline: '.5em',
     borderRadius: '4px',
     background: cssColors.component_label_bg_default,
-  }) satisfies ICSSObject
+  } satisfies ICSSObject)
 
 export const icssInputType = (options?: { w: CSSObject['minWidth']; h: CSSObject['minHeight'] }) =>
   ({
@@ -103,4 +103,4 @@ export const icssInputType = (options?: { w: CSSObject['minWidth']; h: CSSObject
     // background: cssColors.component_input_bg_default,
     // outlineColor: cssColors.dodgerBlue,
     borderBottom: 'solid',
-  }) satisfies ICSSObject
+  } satisfies ICSSObject)
