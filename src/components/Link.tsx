@@ -1,6 +1,5 @@
 import { useNavigate } from '@solidjs/router'
-import { KitProps, Piv, useKitProps } from '../packages/pivkit/piv'
-import { renderHTMLDOM } from '../packages/pivkit/piv/propHandlers/renderHTMLDOM'
+import { KitProps, Piv, renderHTMLDOM, useKitProps } from '../packages/pivkit'
 
 export interface LinkProps {
   href?: string

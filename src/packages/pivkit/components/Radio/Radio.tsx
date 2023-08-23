@@ -6,7 +6,7 @@ import { HTMLInputRadio, HTMLInputRadioProps } from './HTMLInputRadio'
 import { createRadioStyle } from './hooks/createRadioStyle'
 import { ValidController } from '../../piv/typeTools'
 import { Piv, PivProps } from '../../piv/Piv'
-import { KitProps, useKitProps } from '../../piv/createKit'
+import { KitProps, useKitProps } from '../../createKit'
 
 export interface RadioController {
   option: string

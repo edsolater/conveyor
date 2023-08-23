@@ -1,5 +1,4 @@
-import { KitProps, Piv, useKitProps } from '../packages/pivkit/piv'
-import { Box, Text } from '../packages/pivkit'
+import { Box, KitProps, Piv, Text, useKitProps } from '../packages/pivkit'
 
 export interface ExamplePanelProps {
   name?: string

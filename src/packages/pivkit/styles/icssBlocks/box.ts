@@ -1,5 +1,4 @@
-import { type CSSObject, type ICSSObject } from '../../piv'
-import { createICSS } from '../../piv/propHandlers'
+import { createICSS, CSSObject, ICSSObject } from '../../piv'
 import { cssColors } from '../cssColors'
 
 export type ICSSRowOption = {

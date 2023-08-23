@@ -1,6 +1,6 @@
 import { AnyObj, flap, MayArray, shakeNil } from '@edsolater/fnkit'
 import { createSignal } from 'solid-js'
-import { KitProps } from '../createKit'
+import { KitProps } from '../../createKit'
 import { PivProps } from '../Piv'
 import { ValidController } from '../typeTools'
 import { mergeProps } from '../utils/mergeProps'

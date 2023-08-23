@@ -12,19 +12,20 @@ import {
   List,
   Modal,
   ModalController,
+  Piv,
   Radio,
   Switch,
   Text,
   createIncresingAccessor,
   createIntervalEffect,
+  hoverPlugin,
   icssCol,
   icssRow,
   renderSwitchThumb,
   useCSSTransition,
+  useComponentController,
+  generatePopoverPlugins,
 } from '../packages/pivkit'
-import { Piv, useComponentController } from '../packages/pivkit/piv'
-import { generatePopoverPlugins } from '../packages/pivkit/plugins/generatePopoverPlugins'
-import { hoverPlugin } from '../packages/pivkit/plugins/hoverPlugin'
 
 export default function PlaygroundPage() {
   return (

@@ -1,7 +1,7 @@
 import { AnyObj, overwriteFunctionName } from '@edsolater/fnkit'
 import { Accessor } from 'solid-js'
 import { SettingsFunction, createSettingsFunction } from '../../../fnkit/createSettingsFunction'
-import { KitProps } from '../createKit'
+import { KitProps } from '../../createKit'
 import { ValidController, ValidProps } from '../typeTools'
 
 export type GetPluginParams<T> = T extends Plugin<infer Px1>

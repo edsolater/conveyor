@@ -4,7 +4,7 @@ import { Link } from '../components/Link'
 import { NavBar } from '../components/NavBar'
 import { SiteCardItem, linkCards } from '../configs/linkCards'
 import { useSearch } from '../packages/features/searchItems'
-import { ICSS, Piv } from '../packages/pivkit/piv'
+import { ICSS, Piv } from '../packages/pivkit'
 import {
   Box,
   GridBox,
