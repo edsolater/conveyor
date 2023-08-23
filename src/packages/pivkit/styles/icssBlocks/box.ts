@@ -1,4 +1,4 @@
-import { type CSSObject, type ICSSObject, } from '../../piv'
+import { type CSSObject, type ICSSObject } from '../../piv'
 import { createICSS } from '../../piv/propHandlers'
 import { cssColors } from '../cssColors'
 

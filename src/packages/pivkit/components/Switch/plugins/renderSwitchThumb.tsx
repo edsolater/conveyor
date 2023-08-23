@@ -1,5 +1,6 @@
 import { SwitchController, SwitchProps } from '..'
-import { Piv, PivChild, Plugin, createPlugin } from '../../../piv'
+import { createPlugin } from '../../../piv'
+import { PivChild } from '../../../piv/typeTools'
 
 /**
  * **Plugin** for Switch

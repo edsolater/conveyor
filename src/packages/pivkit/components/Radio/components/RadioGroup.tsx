@@ -1,12 +1,8 @@
-import { Accessor, createSignal } from 'solid-js'
-import { Piv } from '../../../piv/Piv'
+import { createSignal } from 'solid-js'
 import { KitProps, useKitProps } from '../../../piv/createKit'
-import { ValidController } from '../../../piv/types'
-import { createSyncSignal } from '../../../hooks'
-import { Label } from '../../Label'
-import { LabelBox } from '../../LabelBox'
+import { ValidController } from '../../../piv/typeTools'
+import { icssCol } from '../../../styles/icssBlocks'
 import { Box } from '../../Boxes/Box'
-import { icssCol, icssRow } from '../../../styles/icssBlocks'
 
 export interface RadioGroupController {
   name: string

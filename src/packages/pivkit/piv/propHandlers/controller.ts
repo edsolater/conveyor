@@ -1,6 +1,6 @@
 import { AnyFn, hasProperty, isArray, isFunction, shrinkFn } from '@edsolater/fnkit'
 import { KitProps } from '../createKit'
-import { ValidController } from '../types/tools'
+import { ValidController } from '../typeTools'
 import { JSXElement } from 'solid-js'
 
 export function loadPropsControllerRef<Controller extends ValidController | unknown>(

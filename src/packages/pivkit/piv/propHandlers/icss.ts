@@ -2,6 +2,7 @@ import {
   AnyFn,
   AnyObj,
   MayArray,
+  MayFn,
   filter,
   flap,
   flapDeep,
@@ -14,8 +15,9 @@ import {
 } from '@edsolater/fnkit'
 import { SettingsFunction, createSettingsFunction } from '../../../fnkit/createSettingsFunction'
 import { CSSAttribute, css } from 'solid-styled-components'
-import { ValidController, LoadController } from '../types'
 
+type ValidController = AnyObj
+type LoadController<Target, Controller extends ValidController | unknown = unknown> = MayFn<Target, [Controller]>
 export type ICSSObject<Controller extends ValidController | unknown = unknown> = LoadController<CSSObject, Controller> // rename  for ICSSObject may be a superset of CSSObject
 
 // export type CSSObject = JSX.CSSProperties & {

@@ -7,11 +7,11 @@ import { loadPropsControllerRef, toProxifyController } from './propHandlers/cont
 import { handlePluginProps } from './propHandlers/handlePluginProps'
 import { GetPluginParams, Plugin } from './propHandlers/plugin'
 import { handleShadowProps } from './propHandlers/shadowProps'
-import { CRef, PivProps } from './types/piv'
-import { HTMLTag, ValidController, ValidProps } from './types/tools'
+import { HTMLTag, ValidController, ValidProps } from './typeTools'
 import { mergeProps } from './utils'
 import { AddDefaultPivProps, addDefaultPivProps } from './utils/addDefaultProps'
 import { omit } from './utils/omit'
+import { CRef, PivProps } from './Piv'
 
 /**
  * - auto add `plugin` `shadowProps` `_promisePropsConfig` `controller` props

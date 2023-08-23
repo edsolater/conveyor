@@ -1,9 +1,10 @@
-import { HTMLTag, NativeProps, PivProps } from '..'
-import { parsePivProps } from '..'
+import { AnyObj } from '@edsolater/fnkit'
 import { JSX, Show } from 'solid-js'
 import { switchCase } from '../../../fnkit/switchCase'
-import { AnyObj, getKeys } from '@edsolater/fnkit'
+import { PivProps } from '../Piv'
+import { HTMLTag } from '../typeTools'
 import { domMap } from './domMap'
+import { NativeProps, parsePivProps } from './parsePivProps'
 
 function getSolidJSXNode(type: HTMLTag, parsedProps: NativeProps, additionalProps?: AnyObj): JSX.Element | undefined {
   return switchCase(type, domMap(parsedProps, additionalProps))?.()

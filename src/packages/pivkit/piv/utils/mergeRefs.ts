@@ -1,4 +1,4 @@
-import { CRef } from '../types/piv'
+import { CRef } from "../Piv"
 
 export function mergeRefs<T = any>(...refs: (CRef<T> | null | undefined)[]): CRef<T> {
   return ((el) => {

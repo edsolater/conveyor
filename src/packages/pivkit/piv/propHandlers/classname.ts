@@ -1,5 +1,5 @@
 import { flap, isObjectLike, isTruthy, MayDeepArray, MayFn, shrinkFn } from '@edsolater/fnkit'
-import { LoadController, ValidController } from '../types/tools'
+import { LoadController, ValidController } from '../typeTools'
 
 export type ClassName<Controller extends ValidController | unknown = unknown> = LoadController<
   any | { [classname: string]: LoadController<boolean, Controller> },

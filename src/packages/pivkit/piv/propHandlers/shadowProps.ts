@@ -1,6 +1,5 @@
 import { MayArray, isArray, isObject, shakeNil } from '@edsolater/fnkit'
-import { pivPropsNames } from '../Piv'
-import { PivProps } from '../types/piv'
+import { PivProps, pivPropsNames } from '../Piv'
 import { getPivPropsValue } from '../utils/mergeProps'
 import { omit } from '../utils'
 

@@ -1,7 +1,6 @@
 import { flap, pipe, shakeFalsy } from '@edsolater/fnkit'
 import { mutateByAdditionalObjectDescriptors } from '../../../fnkit'
-import { PivProps } from '../types/piv'
-import { ValidController } from '../types/tools'
+import { ValidController } from '../typeTools'
 import { mergeRefs } from '../utils/mergeRefs'
 import { classname } from './classname'
 import { parsePivChildren } from './controller'
@@ -12,6 +11,7 @@ import { parseOnClick } from './onClick'
 import { handlePluginProps } from './handlePluginProps'
 import { handleShadowProps } from './shadowProps'
 import { omit } from '../utils'
+import { PivProps } from '../Piv'
 
 export type NativeProps = ReturnType<typeof parsePivProps>['props']
 /**

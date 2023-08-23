@@ -1,5 +1,5 @@
 import { AnyFn, AnyObj, isFunction, isObject, isString } from '@edsolater/fnkit'
-import { ValidController } from '../piv'
+import { ValidController } from '../piv/typeTools'
 
 /**
  * propertyName start with 'on' or end with 'Fn' will treate as origin

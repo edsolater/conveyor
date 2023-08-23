@@ -1,5 +1,5 @@
 import { AnyObj, flap, shakeNil } from '@edsolater/fnkit'
-import { ValidProps } from '../types/tools'
+import { ValidProps } from '../typeTools'
 import { getKeys } from './getKeys'
 import { mergeRefs } from './mergeRefs'
 

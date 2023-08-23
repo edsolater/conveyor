@@ -1,6 +1,6 @@
 import { WeakerMap } from '@edsolater/fnkit'
 import { Subscribable } from '../../../fnkit'
-import { ValidController } from '../types/tools'
+import { ValidController } from '../typeTools'
 import { createEffect, onCleanup } from 'solid-js'
 
 const recordedControllers = new Subscribable<WeakerMap<string, ValidController | unknown>>()
