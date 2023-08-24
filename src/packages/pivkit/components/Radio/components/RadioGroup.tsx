@@ -51,5 +51,5 @@ export function RadioGroup(rawProps: RadioGroupProps) {
 
   lazyLoadController(radioGroupController)
 
-  return <Box class='RadioGroup' shadowProps={shadowProps} icss={icssCol()}></Box>
+  return <Box class='RadioGroup' shadowProps={shadowProps} icss={icssCol()}/>
 }

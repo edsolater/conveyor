@@ -12,5 +12,5 @@ export type ColBoxProps = KitProps<{
 export function ColBox(rawProps: ColBoxProps) {
   const { shadowProps } = useKitProps(rawProps, { name: 'ColBox' })
   /* ---------------------------------- props --------------------------------- */
-  return <Box class={'ColBox'} shadowProps={shadowProps} />
+  return <Box class='ColBox' shadowProps={shadowProps} />
 }

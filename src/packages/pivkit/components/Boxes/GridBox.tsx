@@ -19,7 +19,7 @@ export function GridBox(rawProps: GridBoxProps) {
   /* ---------------------------------- props --------------------------------- */
   return (
     <Box
-      class={'GridBox'}
+      class='GridBox'
       shadowProps={shadowProps}
       icss={[icssGrid(isObject(props['icss:grid']) ? props['icss:grid'] : {})]}
     />

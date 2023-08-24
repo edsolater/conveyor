@@ -304,15 +304,12 @@ function ListExample() {
   })
   return (
     <List of={data} initRenderCount={10} icss={[icssCol({ gap: '16px' }), { height: '30dvh' }]}>
-      {(d, idx) => {
-        // console.count(`render item from <Playground>, ${d.name}, ${d.count}`)
-        return (
-          <Box icss={[icssRow, { background: '#0001', width: '100%' }]}>
-            <Text>{d.name}</Text>
-            <Text>{d.count + increaseCount()}</Text>
-          </Box>
-        )
-      }}
+      {(d, idx) => (
+        <Box icss={[icssRow, { background: '#0001', width: '100%' }]}>
+          <Text>{d.name}</Text>
+          <Text>{d.count + increaseCount()}</Text>
+        </Box>
+      )}
     </List>
   )
 }

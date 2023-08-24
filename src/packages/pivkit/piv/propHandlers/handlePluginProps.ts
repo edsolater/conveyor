@@ -27,12 +27,19 @@ function sortPluginByPriority(plugins: Plugin<any>[]) {
   if (plugins.length <= 1) return plugins
   if (plugins.every((plugin) => plugin.priority)) return plugins
 
-  return [...plugins].sort((pluginA, pluginB) => {
-    const priorityA = pluginA.priority ?? 0
-    const priorityB = pluginB.priority ?? 0
-    return (priorityB ?? 0) - (priorityA ?? 0)
-  })
+  // judge whether need sort
+  let needSort = false
+  let firstPriority = plugins[0].priority
+  for (const plugin of plugins) {
+    if (plugin.priority !== firstPriority) {
+      needSort = true
+      break
+    }
+  }
+
+  return needSort ? [...plugins].sort((pluginA, pluginB) => (pluginB.priority ?? 0) - (pluginA.priority ?? 0)) : plugins
 }
+
 /**
  * merge additional props from plugin
  */

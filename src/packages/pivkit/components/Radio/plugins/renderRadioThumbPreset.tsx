@@ -17,7 +17,7 @@ export function renderRadioThumb(
         transition: '600ms',
         borderRadius: '999px',
       }}
-    ></Piv>
+    />
   )
 ): RadioProps['shadowProps'] {
   return {

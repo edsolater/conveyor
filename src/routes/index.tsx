@@ -69,7 +69,7 @@ function SiteItem(props: { item: SiteCardItem; level?: /* zero or undefined is t
 
       <Box icss={icssGridItem({ area: 'sub' })}>
         <Loop if={props.item.subreddits} of={props.item.subreddits} icss={icssGrid({ templateColumn: '1fr 1fr 1fr' })}>
-          {(subreddit) => <SiteSubItem item={subreddit} level={(props.level ?? 0) + 1}></SiteSubItem>}
+          {(subreddit) => <SiteSubItem item={subreddit} level={(props.level ?? 0) + 1} />}
         </Loop>
       </Box>
     </Piv>
@@ -101,7 +101,7 @@ function SiteSubItem(props: { item: SiteCardItem; level?: /* zero or undefined i
         </Loop>
       </GridItem>
 
-      <GridItem icss:area='sub'></GridItem>
+      <GridItem icss:area='sub' />
     </GridBox>
   )
 }
@@ -123,7 +123,7 @@ export default function Home() {
         </Box>
 
         <Loop of={links} icss={icssGrid({ gap: '32px' })}>
-          {(item) => <SiteItem item={item}></SiteItem>}
+          {(item) => <SiteItem item={item} />}
         </Loop>
       </Section>
     </Piv>
