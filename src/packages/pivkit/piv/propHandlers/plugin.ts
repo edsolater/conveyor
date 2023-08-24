@@ -2,6 +2,7 @@ import { AnyObj, overwriteFunctionName } from '@edsolater/fnkit'
 import { Accessor } from 'solid-js'
 import { SettingsFunction, createSettingsFunction } from '../../../fnkit/createSettingsFunction'
 import { KitProps } from '../../createKit'
+import { Accessify } from '../../utils'
 import { ValidController, ValidProps } from '../typeTools'
 
 export type GetPluginParams<T> = T extends Plugin<infer Px1>
@@ -30,7 +31,7 @@ export type Plugin<
       controller: Accessor<C>
       dom: Accessor<HTMLElement | undefined>
     }
-  ) => Partial<KitProps<T, C>> | undefined | void // TODO: should support 'plugin' and 'shadowProps' for easier compose
+  ) => Accessify<Partial<KitProps<T, C>>> | undefined | void // TODO: should support 'plugin' and 'shadowProps' for easier compose
   priority?: number
   pluginName?: string
 }>
@@ -48,7 +49,7 @@ export function createPlugin<
       controller: Accessor<Controller>
       dom: Accessor<HTMLElement | undefined>
     }
-  ) => Partial<Props>, // return a function , in this function can exist hooks
+  ) => Accessify<Partial<Props>>, // return a function , in this function can exist hooks
   options?: {
     defaultSettings?: Partial<Options>
     priority?: number // NOTE -1:  it should be render after final prop has determine

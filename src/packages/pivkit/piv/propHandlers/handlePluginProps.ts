@@ -1,4 +1,4 @@
-import { AnyObj, flap, MayArray, shakeNil } from '@edsolater/fnkit'
+import { AnyObj, flap, MayArray, shakeNil, shrinkFn } from '@edsolater/fnkit'
 import { createSignal } from 'solid-js'
 import { KitProps } from '../../createKit'
 import { PivProps } from '../Piv'
@@ -57,7 +57,7 @@ function invokePlugin(plugin: Plugin<any>, props: KitProps<any>) {
   const [controller, setController] = createSignal<ValidController>({})
   const [dom, setDom] = createSignal<HTMLElement>()
 
-  const pluginProps = plugin()(props, { controller, dom })
+  const pluginProps = shrinkFn(plugin()(props, { controller, dom }))
   const returnProps = mergeProps(props, pluginProps, { controllerRef: setController, domRef: setDom })
   return returnProps
 }
