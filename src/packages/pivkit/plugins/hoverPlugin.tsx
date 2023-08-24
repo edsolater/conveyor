@@ -16,5 +16,7 @@ export function hoverPlugin(options?: Partial<UseGestureHoverOptions>) {
 
   //TODO: plugin should can be both a hook and plugin
   const plugin = createPlugin(() => () => ({ domRef: setDom }))
+  // 💡 TODO: plugin should also can used like normal `const { state } = useHooks()` or `const { isHover } = usePlugin(hoverPlugin, options)`
   return { plugin, state }
 }
+

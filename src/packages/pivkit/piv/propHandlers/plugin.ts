@@ -19,11 +19,11 @@ export type GetPluginParams<T> = T extends Plugin<infer Px1>
   : unknown
 
 export type Plugin<
-  PluginSettings extends Record<string, any>,
+  PluginOptions extends Record<string, any>,
   T extends ValidProps = any,
-  C extends ValidController = ValidController,
+  C extends ValidController = ValidController
 > = SettingsFunction<{
-  (settings?: PluginSettings): (
+  (options?: PluginOptions): (
     props: T,
     utils: {
       /** only in component has controller, or will be an empty object*/
@@ -35,13 +35,14 @@ export type Plugin<
   pluginName?: string
 }>
 
+// 💡 TODO: plugin should also can used like normal `const { state } = useHooks()` or `const { isHover } = usePlugin(hoverPlugin, options)`
 /** plugin can only have one level */
 export function createPlugin<
-  Settings extends AnyObj,
+  Options extends AnyObj,
   Props extends ValidProps = ValidProps,
-  Controller extends ValidController = ValidController,
+  Controller extends ValidController = ValidController
 >(
-  createrFn: (settings: Settings) => (
+  createrFn: (options: Options) => (
     props: Props,
     utils: {
       controller: Accessor<Controller>
@@ -49,12 +50,12 @@ export function createPlugin<
     }
   ) => Partial<Props>, // return a function , in this function can exist hooks
   options?: {
-    defaultSettings?: Partial<Settings>
+    defaultSettings?: Partial<Options>
     priority?: number // NOTE -1:  it should be render after final prop has determine
     name?: string
   }
-): Plugin<Settings> {
-  const factory = createSettingsFunction((params: Settings) => createrFn(params), options?.defaultSettings)
+): Plugin<Options> {
+  const factory = createSettingsFunction((params: Options) => createrFn(params), options?.defaultSettings)
   Object.assign(factory, options)
   // rename
   const fn = options?.name ? overwriteFunctionName(factory, options.name) : factory
