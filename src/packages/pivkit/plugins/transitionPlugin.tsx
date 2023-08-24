@@ -17,34 +17,24 @@ export type TransitionController = {
   currentPhase: Accessor<TransitionPhase>
 }
 /**
- * it is used for open close
+ * detect by JS, drive by JS
  */
 export interface TransitionOptions {
   cssTransitionDurationMs?: number
   cssTransitionTimingFunction?: CSSObject['transitionTimingFunction']
 
-  // detect transition should be turn on
-  show?: boolean
   /** will trigger props:onBeforeEnter() if init props:show  */
   appear?: boolean
-
-  enterFromProps?: PivProps
-  duringEnterProps?: PivProps
-  enterToProps?: PivProps
-
-  leaveFromProps?: PivProps
-  duringLeaveProps?: PivProps
-  leaveToProps?: PivProps
 
   /** shortcut for both enterFrom and leaveTo */
   fromProps?: PivProps
   /** shortcut for both enterFrom and leaveTo */
   toProps?: PivProps
+  /** normaly don't use this, just from and to is enough */
+  duringMiddleProgressProps?: PivProps
 
-  onBeforeEnter?: (payload: { from: TransitionPhase; to: TransitionPhase } & TransitionController) => void
-  onAfterEnter?: (payload: { from: TransitionPhase; to: TransitionPhase } & TransitionController) => void
-  onBeforeLeave?: (payload: { from: TransitionPhase; to: TransitionPhase } & TransitionController) => void
-  onAfterLeave?: (payload: { from: TransitionPhase; to: TransitionPhase } & TransitionController) => void
+  onBeforeTransition?: (payload: { from: TransitionPhase; to: TransitionPhase } & TransitionController) => void
+  onAfterTransition?: (payload: { from: TransitionPhase; to: TransitionPhase } & TransitionController) => void
 
   presets?: MayArray<MayFn<Omit<TransitionOptions, 'presets'>>>
 }
@@ -56,24 +46,15 @@ export const transitionPlugin = createPlugin(
       cssTransitionDurationMs = 300,
       cssTransitionTimingFunction,
 
-      show,
       appear,
 
       fromProps,
       toProps,
+      /** normaly don't use this */
+      duringMiddleProgressProps,
 
-      enterFromProps = fromProps,
-      enterToProps = toProps,
-      duringEnterProps,
-
-      leaveFromProps = toProps,
-      leaveToProps = fromProps,
-      duringLeaveProps,
-
-      onBeforeEnter,
-      onAfterEnter,
-      onBeforeLeave,
-      onAfterLeave,
+      onBeforeTransition,
+      onAfterTransition,
 
       presets,
 
@@ -97,19 +78,7 @@ export const transitionPlugin = createPlugin(
             duringEnterProps,
             enterToProps,
             { style: baseTransitionICSS } as PivProps
-          ),
-          leaveFrom: mergeProps(
-            flap(presets).map((i) => shrinkFn(i)?.leaveFromProps),
-            duringLeaveProps,
-            leaveFromProps,
-            { style: baseTransitionICSS } as PivProps
-          ),
-          leaveTo: mergeProps(
-            flap(presets).map((i) => shrinkFn(i)?.leaveToProps),
-            duringLeaveProps,
-            leaveToProps,
-            { style: baseTransitionICSS } as PivProps
-          ),
+          )
         } as Record<TransitionApplyPropsTimeName, PivProps>
       })
 
@@ -169,7 +138,7 @@ export const transitionPlugin = createPlugin(
         const payload = Object.assign({ from: _currentPhase, to: _targetPhase }, controller)
         if (_currentPhase === 'shown' && _targetPhase === 'shown') {
           dom()?.clientHeight // force GPU render frame
-          onAfterEnter?.(payload)
+          onAfterTransition?.(payload)
         }
 
         if (_currentPhase === 'hidden' && _targetPhase === 'hidden') {
@@ -183,7 +152,7 @@ export const transitionPlugin = createPlugin(
           _targetPhase === 'shown'
         ) {
           dom()?.clientHeight // force GPU render frame
-          onBeforeEnter?.(payload)
+          onBeforeTransition?.(payload)
         }
 
         if (
