@@ -41,7 +41,7 @@ export function useAccessifiedProps<P extends AnyObj, Controller extends ValidCo
           const v = props[key]
           const isPreferUseOriginalValue =
             isString(key) &&
-            (!needAccessifyProps?.includes(key) ||
+            ((needAccessifyProps ? !needAccessifyProps?.includes(key) : false) ||
               key.startsWith('on') ||
               key === 'domRef' ||
               key === 'controllerRef' ||

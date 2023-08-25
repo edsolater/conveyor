@@ -1,12 +1,9 @@
 import { flap, MayArray, MayFn, shrinkFn } from '@edsolater/fnkit'
 import { createEffect, createMemo, createSignal, onCleanup } from 'solid-js'
 import { onEvent } from '../../domkit'
-import { mergeProps } from '../piv'
-import { CSSObject } from '../piv'
-import { PivProps } from '../piv'
-import { AccessifyProps, useAccessifiedProps } from '../utils/accessifyProps'
 import { createRef } from '../hooks/createRef'
-import { Accessify } from '../utils/accessifyProps'
+import { CSSObject, mergeProps, PivProps } from '../piv'
+import { Accessify, useAccessifiedProps } from '../utils/accessifyProps'
 
 const TransitionPhaseProcessIn = 'during-process'
 const TransitionPhaseShowing = 'shown' /* UI visiable and stable(not in transition) */
@@ -18,7 +15,7 @@ export type TransitionPhase =
   | typeof TransitionPhaseHidden
 
 type TransitionCurrentPhasePropsName = 'enterFrom' | 'enterTo' | 'leaveFrom' | 'leaveTo'
-type TransitionTargetPhase = typeof TransitionPhaseShowing | typeof TransitionPhaseHidden
+
 export type UseCSSTransactionOptions = {
   cssTransitionDurationMs?: Accessify<number | undefined, TransitionController>
   cssTransitionTimingFunction?: CSSObject['transitionTimingFunction']
@@ -28,15 +25,18 @@ export type UseCSSTransactionOptions = {
   /** will trigger props:onBeforeEnter() if init props:show  */
   appear?: Accessify<boolean | undefined, TransitionController>
 
+  enterProps?: PivProps<any, TransitionController>
+  leaveProps?: PivProps<any, TransitionController>
+
   enterFromProps?: PivProps<any, TransitionController>
-  duringEnterProps?: PivProps<any, TransitionController>
   enterToProps?: PivProps<any, TransitionController>
 
   leaveFromProps?: PivProps<any, TransitionController>
-  duringLeaveProps?: PivProps<any, TransitionController>
   leaveToProps?: PivProps<any, TransitionController>
 
+  /** enterFrom + leaveTo */
   fromProps?: PivProps<any, TransitionController> // shortcut for both enterFrom and leaveTo
+  /** enterTo + leaveFrom */
   toProps?: PivProps<any, TransitionController> // shortcut for both enterTo and leaveFrom
 
   onBeforeEnter?: (payloads: { el: HTMLElement | undefined; from: TransitionPhase; to: TransitionPhase }) => void
@@ -76,32 +76,33 @@ export const useCSSTransition = (additionalOpts: UseCSSTransactionOptions) => {
     return {
       enterFrom: mergeProps(
         presets.map((i) => shrinkFn(i)?.enterFromProps),
-        opts.duringEnterProps,
+        opts.enterProps,
         opts.enterFromProps || opts.fromProps,
         { style: baseTransitionICSS } as PivProps
       ),
       enterTo: mergeProps(
         presets.map((i) => shrinkFn(i)?.enterToProps),
-        opts.duringEnterProps,
+        opts.enterProps,
         opts.enterToProps || opts.toProps,
         { style: baseTransitionICSS } as PivProps
       ),
       leaveFrom: mergeProps(
         presets.map((i) => shrinkFn(i)?.leaveFromProps),
-        opts.duringLeaveProps,
+        opts.leaveProps,
         opts.leaveFromProps || opts.toProps,
         { style: baseTransitionICSS } as PivProps
       ),
       leaveTo: mergeProps(
         presets.map((i) => shrinkFn(i)?.leaveToProps),
-        opts.duringLeaveProps,
+        opts.leaveProps,
         opts.leaveToProps || opts.fromProps,
         { style: baseTransitionICSS } as PivProps
       ),
     } as Record<TransitionCurrentPhasePropsName, PivProps>
   })
+
   const [currentPhase, setCurrentPhase] = createSignal<TransitionPhase>(opts.show && !opts.appear ? 'shown' : 'hidden')
-  const targetPhase = () => (opts.show ? 'shown' : 'hidden') as TransitionTargetPhase
+  const targetPhase = createMemo(() => (opts.show ? 'shown' : 'hidden'))
   const isInnerVisiable = createMemo(
     () => currentPhase() === 'during-process' || currentPhase() === 'shown' || targetPhase() === 'shown'
   )
@@ -173,7 +174,7 @@ export const useCSSTransition = (additionalOpts: UseCSSTransactionOptions) => {
     }
   }, currentPhase())
 
-  const transitionProps = () => transitionPhaseProps()[currentPhasePropsName()]
+  const transitionProps = createMemo(() => transitionPhaseProps()[currentPhasePropsName()])
 
-  return { /** must set */ refSetter: setContentDivRef, /** must set */ transitionProps, isInnerVisiable }
+  return { refSetter: setContentDivRef, transitionProps, isInnerVisiable }
 }

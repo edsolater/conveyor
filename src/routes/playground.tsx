@@ -26,6 +26,7 @@ import {
   useComponentController,
   generatePopoverPlugins,
 } from '../packages/pivkit'
+import { transitionPlugin } from '../packages/pivkit/plugins/transitionPlugin'
 
 export default function PlaygroundPage() {
   return (
@@ -54,9 +55,9 @@ function PlaygoundList() {
         <DrawerExample />
       </ExamplePanel> */}
 
-      {/* <ExamplePanel name='CSSTransition'>
+      <ExamplePanel name='CSSTransition'>
         <CSSTransitionExample />
-      </ExamplePanel> */}
+      </ExamplePanel>
 
       <ExamplePanel name='Input'>
         <InputExample />
@@ -163,15 +164,9 @@ function CSSTransitionExample() {
     show,
     onAfterEnter() {},
     onBeforeEnter() {},
-    fromProps: { icss: { width: '100px' } },
-    toProps: { icss: { width: '200px' } },
+    fromProps: { icss: { height: '100px' } },
+    toProps: { icss: { height: '200px' } },
   })
-
-  // createEffect(() => {
-  //   // @ts-ignore
-  //   console.log('transitionProps: ', transitionProps().icss?.width)
-  //   console.log('show: ', show())
-  // })
 
   return (
     <>
@@ -179,7 +174,7 @@ function CSSTransitionExample() {
       <Piv
         domRef={refSetter}
         shadowProps={transitionProps()}
-        icss={{ backgroundColor: 'dodgerblue', height: '200', display: 'grid', placeItems: 'center' }}
+        icss={{ backgroundColor: 'dodgerblue', height: '120px', display: 'grid', placeItems: 'center' }}
       >
         <Box>hello</Box>
       </Piv>

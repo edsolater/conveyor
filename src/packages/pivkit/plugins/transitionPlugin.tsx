@@ -1,16 +1,9 @@
 import { MayArray, MayFn, flap, shrinkFn } from '@edsolater/fnkit'
-import { Accessor, createEffect, createMemo, createSignal } from 'solid-js'
+import { Accessor, createEffect, createMemo, createSignal, on, onCleanup } from 'solid-js'
 import { onEvent } from '../../domkit'
 import { CSSObject, PivProps, createPlugin, mergeProps } from '../piv'
 
-const TransitionPhaseProcessIn = 'during-process'
-const TransitionPhaseShowing = 'shown' /* UI visiable and stable(not in transition) */
-const TransitionPhaseHidden = 'hidden' /* UI invisiable */
-
-export type TransitionPhase =
-  | typeof TransitionPhaseProcessIn
-  | typeof TransitionPhaseShowing
-  | typeof TransitionPhaseHidden
+export type TransitionPhase = 'prepare-to-go' | 'on-going' | 'finish'
 
 export type TransitionController = {
   targetDom: Accessor<HTMLElement | undefined>
@@ -25,21 +18,20 @@ export interface TransitionOptions {
 
   /** will trigger props:onBeforeEnter() if init props:show  */
   appear?: boolean
+  currentIs?: 'from' | 'to'
 
   /** shortcut for both enterFrom and leaveTo */
   fromProps?: PivProps
   /** shortcut for both enterFrom and leaveTo */
   toProps?: PivProps
   /** normaly don't use this, just from and to is enough */
-  duringMiddleProgressProps?: PivProps
+  progressProps?: PivProps
 
   onBeforeTransition?: (payload: { from: TransitionPhase; to: TransitionPhase } & TransitionController) => void
   onAfterTransition?: (payload: { from: TransitionPhase; to: TransitionPhase } & TransitionController) => void
 
   presets?: MayArray<MayFn<Omit<TransitionOptions, 'presets'>>>
 }
-type TransitionApplyPropsTimeName = 'enterFrom' | 'enterTo' | 'leaveFrom' | 'leaveTo'
-type TransitionTargetPhase = typeof TransitionPhaseShowing | typeof TransitionPhaseHidden
 
 export const transitionPlugin = createPlugin(
   ({
@@ -47,18 +39,17 @@ export const transitionPlugin = createPlugin(
       cssTransitionTimingFunction,
 
       appear,
+      currentIs,
 
       fromProps,
       toProps,
       /** normaly don't use this */
-      duringMiddleProgressProps,
+      progressProps,
 
       onBeforeTransition,
       onAfterTransition,
 
       presets,
-
-      ...orginalDivProps
     }: TransitionOptions = {}) =>
     (props, { dom }) => {
       const transitionPhaseProps = createMemo(() => {
@@ -67,106 +58,60 @@ export const transitionPlugin = createPlugin(
           transitionTimingFunction: cssTransitionTimingFunction,
         }
         return {
-          enterFrom: mergeProps(
-            flap(presets).map((i) => shrinkFn(i)?.enterFromProps),
-            duringEnterProps,
-            enterFromProps,
+          from: mergeProps(
+            flap(presets).map((i) => shrinkFn(i)?.fromProps), // not readable
+            progressProps,
+            fromProps,
             { style: baseTransitionICSS } as PivProps
           ),
-          enterTo: mergeProps(
-            flap(presets).map((i) => shrinkFn(i)?.enterToProps),
-            duringEnterProps,
-            enterToProps,
+          to: mergeProps(
+            flap(presets).map((i) => shrinkFn(i)?.toProps), // not readable
+            progressProps,
+            toProps,
             { style: baseTransitionICSS } as PivProps
-          )
-        } as Record<TransitionApplyPropsTimeName, PivProps>
+          ),
+        } as Record<'from' | 'to', PivProps>
       })
 
-      const [currentPhase, setCurrentPhase] = createSignal<TransitionPhase>(show && !appear ? 'shown' : 'hidden')
-      const targetPhase = createMemo(() => (show ? 'shown' : 'hidden')) as Accessor<TransitionTargetPhase>
+      const [currentPhase, setCurrentPhase] = createSignal<TransitionPhase>(appear ? 'prepare-to-go' : 'finish')
+
       const controller: TransitionController = {
         targetDom: dom,
         currentPhase,
       }
-      const isInnerShow = createMemo(
-        () => currentPhase() === 'during-process' || currentPhase() === 'shown' || targetPhase() === 'shown'
-      )
-      const propsName = createMemo<TransitionApplyPropsTimeName>(() =>
-        targetPhase() === 'shown'
-          ? currentPhase() === 'hidden'
-            ? 'enterFrom'
-            : 'enterTo'
-          : currentPhase() === 'shown'
-          ? 'leaveFrom'
-          : 'leaveTo'
-      )
 
-      // set data-** to element for semantic
+      // set data-** to element DOM for semantic
       createEffect(() => {
         const el = dom()
         if (el) {
-          if (targetPhase() !== currentPhase()) {
-            el.dataset['to'] = targetPhase()
-          } else {
-            el.dataset['to'] = ''
-          }
+          el.dataset['phase'] = currentPhase()
         }
       })
 
-      // make inTransition during state sync with UI event
-      // const hasSetOnChangeCallback = useRef(false)
+      // make inTransition during state sync with CSS event
       createEffect(() => {
-        const el = dom()
-        if (el) {
-          onEvent(el, 'transitionend', () => setCurrentPhase(targetPhase()), {
-            onlyTargetIsSelf: true /* TODO - add feature: attach max one time  */,
-          }) // not event fired by bubbled
-        }
-      })
-
-      createEffect(() => {
-        if (targetPhase() !== currentPhase() && currentPhase() !== 'during-process') {
-          console.log('set')
-          setCurrentPhase('during-process')
-        }
+        const { abort } = onEvent(dom(), 'transitionend', () => setCurrentPhase('finish'), {
+          onlyTargetIsSelf: true /* TODO - add feature: attach max one time  */,
+        }) // not event fired by bubbled
+        onCleanup(abort)
       })
 
       // invoke callbacks
-      createEffect((prevCurrentPhase) => {
-        const _currentPhase = currentPhase()
-        const _targetPhase = targetPhase()
-        const payload = Object.assign({ from: _currentPhase, to: _targetPhase }, controller)
-        if (_currentPhase === 'shown' && _targetPhase === 'shown') {
-          dom()?.clientHeight // force GPU render frame
-          onAfterTransition?.(payload)
-        }
+      createEffect(
+        on(currentPhase, (currentPhase, prevPhase = 'finish') => {
+          const payload = Object.assign({ from: prevPhase, to: currentPhase }, controller)
+          if (prevPhase === 'on-going' && currentPhase === 'finish') {
+            dom()?.clientHeight // force GPU render frame
+            onAfterTransition?.(payload)
+          }
 
-        if (_currentPhase === 'hidden' && _targetPhase === 'hidden') {
-          dom()?.clientHeight // force GPU render frame
-          onAfterLeave?.(payload)
-        }
+          if (prevPhase === 'finish' && currentPhase === 'prepare-to-go') {
+            dom()?.clientHeight // force GPU render frame
+            onBeforeTransition?.(payload)
+          }
+        })
+      )
 
-        if (
-          (_currentPhase === 'hidden' ||
-            (_currentPhase === 'during-process' && prevCurrentPhase === 'during-process')) &&
-          _targetPhase === 'shown'
-        ) {
-          dom()?.clientHeight // force GPU render frame
-          onBeforeTransition?.(payload)
-        }
-
-        if (
-          (_currentPhase === 'shown' ||
-            (_currentPhase === 'during-process' && prevCurrentPhase === 'during-process')) &&
-          _targetPhase === 'hidden'
-        ) {
-          dom()?.clientHeight // force GPU render frame
-          onBeforeLeave?.(payload)
-        }
-
-        return _currentPhase
-      })
-
-      return () => mergeProps(orginalDivProps, transitionPhaseProps()[propsName()])
+      return createMemo(() => transitionPhaseProps()[currentPhase() === 'prepare-to-go' ? 'from' : 'to'])
     }
 )
