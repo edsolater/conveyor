@@ -37,7 +37,7 @@ function sortPluginByPriority(plugins: Plugin<any>[]) {
     }
   }
 
-  return needSort ? [...plugins].sort((pluginA, pluginB) => (pluginB.priority ?? 0) - (pluginA.priority ?? 0)) : plugins
+  return needSort ? plugins.toSorted((pluginA, pluginB) => (pluginB.priority ?? 0) - (pluginA.priority ?? 0)) : plugins
 }
 
 /**

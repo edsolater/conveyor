@@ -1,22 +1,18 @@
 import { flap, MayArray, MayFn, shrinkFn } from '@edsolater/fnkit'
-import { createEffect, createMemo, createSignal, onCleanup } from 'solid-js'
+import { Accessor, createEffect, createMemo, createSignal, onCleanup } from 'solid-js'
 import { onEvent } from '../../domkit'
 import { createRef } from '../hooks/createRef'
-import { CSSObject, mergeProps, PivProps } from '../piv'
+import { createPlugin, CSSObject, mergeProps, PivProps } from '../piv'
 import { Accessify, useAccessifiedProps } from '../utils/accessifyProps'
 
-const TransitionPhaseProcessIn = 'during-process'
-const TransitionPhaseShowing = 'shown' /* UI visiable and stable(not in transition) */
-const TransitionPhaseHidden = 'hidden' /* UI invisiable */
-
 export type TransitionPhase =
-  | typeof TransitionPhaseProcessIn
-  | typeof TransitionPhaseShowing
-  | typeof TransitionPhaseHidden
+  | 'hidden' /* UI invisiable */
+  | 'shown' /* UI visiable and stable(not in transition) */
+  | 'during-process'
 
 type TransitionCurrentPhasePropsName = 'enterFrom' | 'enterTo' | 'leaveFrom' | 'leaveTo'
 
-export type UseCSSTransactionOptions = {
+export interface CSSTransactionOptions {
   cssTransitionDurationMs?: Accessify<number | undefined, TransitionController>
   cssTransitionTimingFunction?: CSSObject['transitionTimingFunction']
 
@@ -44,16 +40,17 @@ export type UseCSSTransactionOptions = {
   onBeforeLeave?: (payloads: { el: HTMLElement | undefined; from: TransitionPhase; to: TransitionPhase }) => void
   onAfterLeave?: (payloads: { el: HTMLElement | undefined; from: TransitionPhase; to: TransitionPhase }) => void
 
-  presets?: MayArray<MayFn<Omit<UseCSSTransactionOptions, 'presets'>>> //🤔 is it plugin? No, pluginHook can't have plugin prop
+  presets?: MayArray<MayFn<Omit<CSSTransactionOptions, 'presets'>>> //🤔 is it plugin? No, pluginHook can't have plugin prop
   // children?: ReactNode | ((state: { phase: TransitionPhase }) => ReactNode)
 }
+
 interface TransitionController {
-  contentRef?: HTMLElement
+  targetDom: Accessor<HTMLElement | undefined>
   from: TransitionPhase
   to: TransitionPhase
 }
 
-export const useCSSTransition = (additionalOpts: UseCSSTransactionOptions) => {
+export const useCSSTransition = (additionalOpts: CSSTransactionOptions = {}) => {
   const controller: TransitionController = {
     get from() {
       return currentPhase()
@@ -61,12 +58,12 @@ export const useCSSTransition = (additionalOpts: UseCSSTransactionOptions) => {
     get to() {
       return targetPhase()
     },
-    get contentRef() {
-      return contentDivRef()
+    get targetDom() {
+      return contentDom
     },
   }
   const opts = useAccessifiedProps(additionalOpts, controller)
-  const [contentDivRef, setContentDivRef] = createRef<HTMLElement>()
+  const [contentDom, setContentDom] = createRef<HTMLElement>()
   const transitionPhaseProps = createMemo(() => {
     const baseTransitionICSS = {
       transition: `${opts.cssTransitionDurationMs ?? 250}ms`,
@@ -118,7 +115,7 @@ export const useCSSTransition = (additionalOpts: UseCSSTransactionOptions) => {
 
   // set data-** to element for semantic
   createEffect(() => {
-    const el = contentDivRef()
+    const el = contentDom()
     if (el) {
       el.dataset['from'] = currentPhase()
       el.dataset['to'] = targetPhase()
@@ -128,7 +125,7 @@ export const useCSSTransition = (additionalOpts: UseCSSTransactionOptions) => {
   // make inTransition during state sync with UI event
   // const hasSetOnChangeCallback = useRef(false)
   createEffect(() => {
-    const el = contentDivRef()
+    const el = contentDom()
     if (!el) return
     const subscription = onEvent(el, 'transitionend', () => setCurrentPhase(targetPhase()), {
       onlyTargetIsSelf: true, // not event fired by bubbled
@@ -145,15 +142,15 @@ export const useCSSTransition = (additionalOpts: UseCSSTransactionOptions) => {
 
   // invoke callbacks
   createEffect((prevCurrentPhase: TransitionPhase | void) => {
-    const el = contentDivRef()
+    const el = contentDom()
 
     if (currentPhase() === 'shown' && targetPhase() === 'shown') {
-      contentDivRef()?.clientHeight // force GPU render frame
+      contentDom()?.clientHeight // force GPU render frame
       opts.onAfterEnter?.({ el, from: 'shown', to: 'shown' })
     }
 
     if (currentPhase() === 'hidden' && targetPhase() === 'hidden') {
-      contentDivRef()?.clientHeight // force GPU render frame
+      contentDom()?.clientHeight // force GPU render frame
       opts.onAfterLeave?.({ el, from: 'hidden', to: 'hidden' })
     }
 
@@ -161,7 +158,7 @@ export const useCSSTransition = (additionalOpts: UseCSSTransactionOptions) => {
       (currentPhase() === 'hidden' || (currentPhase() === 'during-process' && prevCurrentPhase === 'during-process')) &&
       targetPhase() === 'shown'
     ) {
-      contentDivRef()?.clientHeight // force GPU render frame
+      contentDom()?.clientHeight // force GPU render frame
       opts.onBeforeEnter?.({ el, to: 'shown', from: currentPhase() })
     }
 
@@ -169,12 +166,21 @@ export const useCSSTransition = (additionalOpts: UseCSSTransactionOptions) => {
       (currentPhase() === 'shown' || (currentPhase() === 'during-process' && prevCurrentPhase === 'during-process')) &&
       targetPhase() === 'hidden'
     ) {
-      contentDivRef()?.clientHeight // force GPU render frame
+      contentDom()?.clientHeight // force GPU render frame
       opts.onBeforeLeave?.({ el, to: 'hidden', from: currentPhase() })
     }
   }, currentPhase())
 
   const transitionProps = createMemo(() => transitionPhaseProps()[currentPhasePropsName()])
 
-  return { refSetter: setContentDivRef, transitionProps, isInnerVisiable }
+  return { refSetter: setContentDom, transitionProps, isInnerVisiable }
 }
+
+const cssTransitionPlugin = createPlugin<CSSTransactionOptions>((options: CSSTransactionOptions = {}) => () => {
+  const { refSetter, transitionProps, isInnerVisiable } = useCSSTransition(options)
+  return {
+    ref: refSetter,
+    ...transitionProps,
+    show: isInnerVisiable,
+  }
+})
