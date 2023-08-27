@@ -1,9 +1,12 @@
-import { threeGridSlotBoxICSS } from '../icssBlocks/threeGridSlotBoxICSS'
-import { Box, Icon, Piv, icssRow, renderHTMLDOM } from '../packages/pivkit'
-import { Link } from './Link'
+import { threeGridSlotBoxICSS } from '../../icssBlocks/threeGridSlotBoxICSS'
+import { Box, Icon, Piv, icssRow, renderHTMLDOM } from '../../packages/pivkit'
+import { useGlobalConfigContext } from '../../root'
+import { Link } from '../Link'
 
 export interface TopMenuBarProps {
-  title?: string
+  menuItems?: { name: string; href: string }[]
+  /** pass to DOM's <title> */
+  documentTitle?: string
 }
 
 /**
@@ -11,6 +14,9 @@ export interface TopMenuBarProps {
  */
 
 export function TopMenuBar(props: TopMenuBarProps) {
+  // TODO: all should be getters like props
+  const config = useGlobalConfigContext()
+  console.log('config.todo: ', config.todo)
   return (
     <Piv<'nav'>
       icss={[

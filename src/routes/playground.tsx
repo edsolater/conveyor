@@ -1,7 +1,7 @@
 import { createEffect, createSignal, onCleanup } from 'solid-js'
 import { CircularProgress } from '../components/CircularProgress'
 import { ExamplePanel } from '../components/ExamplePanel'
-import { NavBar } from '../components/NavBar'
+import { NavBox } from '../components/NavBox'
 import { useLoopPercent } from '../hooks/useLoopPercent'
 import {
   Box,
@@ -27,11 +27,28 @@ import {
   generatePopoverPlugins,
 } from '../packages/pivkit'
 import { transitionPlugin } from '../packages/pivkit/plugins/transitionPlugin'
+import { setStoredGlobalConfig } from '../root'
+
 
 export default function PlaygroundPage() {
+  setStoredGlobalConfig({
+    navBox: {
+      menuItems: [
+        {
+          name: 'Home',
+          href: '/',
+        },
+        {
+          name: 'Playground',
+          href: '/playground',
+        },
+      ],
+      documentTitle: 'Playground',
+    },
+  })
   return (
     <Piv>
-      <NavBar title='Playground' />
+      <NavBox />
       <PlaygoundList />
     </Piv>
   )
@@ -338,4 +355,7 @@ function PopoverExample() {
       </Box>
     </>
   )
+}
+function loadConfig(arg0: {}) {
+  throw new Error('Function not implemented.')
 }

@@ -1,7 +1,7 @@
 import { DeMayArray, MayFn, flap, isObject, isString, shrinkFn } from '@edsolater/fnkit'
 import { createEffect, createSignal } from 'solid-js'
 import { Link } from '../components/Link'
-import { NavBar } from '../components/NavBar'
+import { NavBox } from '../components/NavBox'
 import { SiteCardItem, linkCards } from '../configs/linkCards'
 import { useSearch } from '../packages/features/searchItems'
 import { ICSS, Piv } from '../packages/pivkit'
@@ -19,6 +19,30 @@ import {
   icssGridItem,
   icssRow,
 } from '../packages/pivkit'
+
+export default function Home() {
+  const [searchText, setSearchText] = createSignal<string>()
+
+  const { searchedItems: links } = useSearch(linkCards, searchText, {
+    matchConfigs: [(i) => i.name, (i) => i.keywords],
+  })
+  return (
+    <Piv>
+      <NavBox documentTitle='Home' />
+
+      <Section name='content' icss={{ display: 'grid', padding: '32px' }}>
+        <Box icss={[icssRow({ gap: '4px' }), { marginBottom: '8px', fontSize: '2em' }]}>
+          <Text>search tags:</Text>
+          <Input icss={{ border: 'solid' }} onUserInput={({ text }) => setSearchText(text)} />
+        </Box>
+
+        <Loop of={links} icss={icssGrid({ gap: '32px' })}>
+          {(item) => <SiteItem item={item} />}
+        </Loop>
+      </Section>
+    </Piv>
+  )
+}
 
 function SiteItem(props: { item: SiteCardItem; level?: /* zero or undefined is the top */ number }) {
   // const {gridContainerICSS, gridItemICSS} = useICSS('Grid')
@@ -103,30 +127,6 @@ function SiteSubItem(props: { item: SiteCardItem; level?: /* zero or undefined i
 
       <GridItem icss:area='sub' />
     </GridBox>
-  )
-}
-
-export default function Home() {
-  const [searchText, setSearchText] = createSignal<string>()
-
-  const { searchedItems: links } = useSearch(linkCards, searchText, {
-    matchConfigs: [(i) => i.name, (i) => i.keywords],
-  })
-  return (
-    <Piv>
-      <NavBar title='Home' />
-
-      <Section name='content' icss={{ display: 'grid', padding: '32px' }}>
-        <Box icss={[icssRow({ gap: '4px' }), { marginBottom: '8px', fontSize: '2em' }]}>
-          <Text>search tags:</Text>
-          <Input icss={{ border: 'solid' }} onUserInput={({ text }) => setSearchText(text)} />
-        </Box>
-
-        <Loop of={links} icss={icssGrid({ gap: '32px' })}>
-          {(item) => <SiteItem item={item} />}
-        </Loop>
-      </Section>
-    </Piv>
   )
 }
 

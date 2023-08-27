@@ -4,6 +4,7 @@ import { KitProps, Piv, renderHTMLDOM, useKitProps } from '../packages/pivkit'
 export interface LinkProps {
   href?: string
   boxWrapper?: boolean
+  /** render <span> instead of <a> */
   innerRoute?: boolean
 }
 
