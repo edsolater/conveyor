@@ -1,4 +1,4 @@
-import { AnyObj, flap, MayArray, shakeNil, shrinkFn } from '@edsolater/fnkit'
+import { AnyObj, flap, hasProperty, MayArray, shakeNil, shrinkFn } from '@edsolater/fnkit'
 import { createSignal } from 'solid-js'
 import { KitProps } from '../../createKit'
 import { PivProps } from '../Piv'
@@ -7,18 +7,19 @@ import { mergeProps } from '../utils/mergeProps'
 import { omit } from '../utils/omit'
 import { Plugin } from './plugin'
 
-//
+export const pluginSymbol = Symbol('plugin')
+
 // TODO2: not accessify yet
 export function handlePluginProps<P extends AnyObj>(
   props: P,
   getPlugin: (props: PivProps) => PivProps['plugin'] = (props) => props.plugin,
-  checkHasPlugin: (props: PivProps) => boolean = (props) => 'plugin' in props
+  checkHasPluginProps: (props: PivProps) => boolean = (props) => hasProperty(props, 'plugin')
 ) {
   if (!props) return props
-  if (!checkHasPlugin(props)) return props
+  if (!checkHasPluginProps(props)) return props
   const plugin = getPlugin(props)
   if (!plugin) return omit(props, 'plugin')
-  const flated = flap(plugin).map((i) => ('plugin' in i ? i.plugin : i))
+  const flated = flap(plugin).map((i) => (Reflect.has(i, pluginSymbol) ? Reflect.get(i, pluginSymbol) : i))
   const parsed = omit(mergePluginReturnedProps({ plugins: sortPluginByPriority(flated), props }), 'plugin')
   return parsed
 }

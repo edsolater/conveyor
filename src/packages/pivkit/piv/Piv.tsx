@@ -5,6 +5,7 @@ import { renderHTMLDOM } from './propHandlers/renderHTMLDOM'
 import { HTMLTag, PivChild, ValidController } from './typeTools'
 import { omit } from './utils'
 import { ClassName, ICSS, IStyle, HTMLProps, Plugin } from './propHandlers'
+import { pluginSymbol } from './propHandlers/handlePluginProps'
 
 type Boollike = any
 
@@ -83,7 +84,7 @@ export interface PivProps<TagName extends HTMLTag = HTMLTag, Controller extends 
    * auto merge by shadowProps
    * special: every kit baseon <Piv> should support this prop
    */
-  plugin?: MayArray<Plugin<any> | { plugin: Plugin<any> }>
+  plugin?: MayArray<Plugin<any> | { [pluginSymbol]: Plugin<any> }>
 
   // -------- special prop --------
 

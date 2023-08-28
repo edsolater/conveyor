@@ -25,6 +25,7 @@ import {
   useCSSTransition,
   useComponentController,
   generatePopoverPlugins,
+  pluginSymbol,
 } from '../packages/pivkit'
 import { transitionPlugin } from '../packages/pivkit/plugins/transitionPlugin'
 import { setStoredGlobalConfig } from '../root'
@@ -337,15 +338,19 @@ function RadioExample() {
 const { popoverButtonPlugin, popoverPanelPlugin } = generatePopoverPlugins({ placement: 'top' })
 
 function PopoverExample() {
+  const { [pluginSymbol]: plugin, state } = hoverPlugin({ onHover: () => console.log('hover') })
+  createEffect(() => {
+    console.log('isHover: ', state.isHover())
+  })
   return (
     <>
       <Button
         plugin={[
           popoverButtonPlugin,
-          // plugin need to be deep function (icssBlock also)
-          hoverPlugin({
-            onHover: () => console.log('hover'),
-          }),
+          // hoverPlugin({
+          //   onHover: () => console.log('hover'),
+          // }),
+          plugin,
         ]}
       >
         💬popover
