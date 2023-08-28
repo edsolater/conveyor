@@ -11,13 +11,13 @@
   "devDependencies": {
     "@types/babel__core": "^7.20.1",
     "@types/debug": "^4.1.8",
-    "@types/node": "^20.5.6",
+    "@types/node": "^20.5.7",
     "solid-start-node": "^0.3.4",
     "typescript": "^5.2.2",
     "vite": "^4.4.9"
   },
   "dependencies": {
-    "@edsolater/fnkit": "^0.1.41",
+    "@edsolater/fnkit": "^0.1.42",
     "@solidjs/meta": "^0.28.6",
     "@solidjs/router": "^0.8.3",
     "solid-js": "^1.7.11",
