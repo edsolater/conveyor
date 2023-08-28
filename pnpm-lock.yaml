@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@edsolater/fnkit':
-    specifier: ^0.1.42
-    version: 0.1.42
+    specifier: ^0.1.43
+    version: 0.1.43
   '@solidjs/meta':
     specifier: ^0.28.6
     version: 0.28.6(solid-js@1.7.11)
@@ -1156,8 +1156,8 @@ packages:
       '@babel/helper-validator-identifier': 7.22.5
       to-fast-properties: 2.0.0
 
-  /@edsolater/fnkit@0.1.42:
-    resolution: {integrity: sha512-wVRzv9AC7X6ImQAV6lTuFQR7duOyaE6Vdp8Fmx8ADdq2TRWfzUCsjVpPFvu40aOUBbRinolZUlR92Y78hNtLSA==}
+  /@edsolater/fnkit@0.1.43:
+    resolution: {integrity: sha512-DBXHQ8dmwQDJ1taoX9ZFp5nw5ZemX4UCFYEXiQ3mYt9h94GX6A/2qVfbERG+V/8/M5jm2w9SnYb41LPxYPvGrA==}
     dev: false
 
   /@esbuild/android-arm64@0.17.19:

@@ -14,6 +14,7 @@ export function gettersProps<T extends object>(props: T): GettersProps<T> {
     Reflect.ownKeys(props).reduce((acc, key) => {
       acc[key] = {
         enumerable: true,
+        configurable: true,
         get() {
           //@ts-expect-error no need type check
           const v = props[key]

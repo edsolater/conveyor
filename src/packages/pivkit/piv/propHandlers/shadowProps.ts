@@ -11,6 +11,7 @@ export function handleShadowProps<P extends Partial<PivProps<any>>>(
   props: P,
   additionalShadowPropNames?: string[]
 ): Omit<P, 'shadowProps'> {
+  console.log('props.children: ', Object.getOwnPropertyDescriptor(props, 'children'))
   if (!('shadowProps' in props)) return props
   const keys = getMergedKeys(props).concat(additionalShadowPropNames ?? [])
   const merged = Object.defineProperties(
