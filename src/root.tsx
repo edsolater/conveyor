@@ -2,6 +2,7 @@
 import { Suspense } from 'solid-js'
 import { Body, ErrorBoundary, FileRoutes, Head, Html, Link, Meta, Routes, Scripts, Title } from 'solid-start'
 import { createGlobalStyles } from 'solid-styled-components'
+import { appConfig } from './configs/appConfig'
 import { createGlobalConfigContext } from './packages/pivkit/hooks/createGlobalConfigContext'
 
 const GlobalStyles = createGlobalStyles`
@@ -50,7 +51,7 @@ const GlobalStyles = createGlobalStyles`
   `
 
 export const { setStoredGlobalConfig, useGlobalConfigContext, storedGlobalConfig, GlobalConfigProvider } =
-  createGlobalConfigContext()
+  createGlobalConfigContext(appConfig)
 
 export default function Root() {
   return (

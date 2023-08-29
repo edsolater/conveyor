@@ -1,7 +1,7 @@
 import { DeMayArray, MayFn, flap, isObject, isString, shrinkFn } from '@edsolater/fnkit'
 import { createEffect, createSignal } from 'solid-js'
 import { Link } from '../components/Link'
-import { NavBox } from '../components/NavBox'
+import { NavigatorWindowBox } from '../components/NavBox'
 import { SiteCardItem, linkCards } from '../configs/linkCards'
 import { useSearch } from '../packages/features/searchItems'
 import { ICSS, Piv } from '../packages/pivkit'
@@ -28,7 +28,7 @@ export default function Home() {
   })
   return (
     <Piv>
-      <NavBox documentTitle='Home' />
+      <NavigatorWindowBox documentTitle='Home' />
 
       <Section name='content' icss={{ display: 'grid', padding: '32px' }}>
         <Box icss={[icssRow({ gap: '4px' }), { marginBottom: '8px', fontSize: '2em' }]}>

@@ -1,10 +1,10 @@
 import { TopMenuBar, TopMenuBarProps } from './TopMenuBar'
 
-export type NavBoxProps = TopMenuBarProps
+export type NavigatorWindowBoxProps = TopMenuBarProps
 
 /**
  * 
  */
-export function NavBox(props: NavBoxProps) {
+export function NavigatorWindowBox(props: NavigatorWindowBoxProps) {
   return <TopMenuBar {...props} />
 }

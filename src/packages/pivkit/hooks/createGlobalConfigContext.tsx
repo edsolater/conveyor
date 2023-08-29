@@ -1,19 +1,15 @@
+import { AnyObj } from '@edsolater/fnkit'
 import { createContext, useContext } from 'solid-js'
 import { createStore } from 'solid-js/store'
 
-interface GlobalConfig {
-  todo?: string
-}
-const defaultGlobalConfig: GlobalConfig = { todo: 'imply global config store' }
-
-export function createGlobalConfigContext() {
-  const [storedGlobalConfig, setStoredGlobalConfig] = createStore<GlobalConfig>(defaultGlobalConfig)
+export function createGlobalConfigContext<Config extends AnyObj>(defaultGlobalConfig: Config) {
+  const [storedGlobalConfig, setStoredGlobalConfig] = createStore<Config>(defaultGlobalConfig as any)
   // let set: ((config: GlobalConfig) => void) | undefined = undefined
   const context = createContext(defaultGlobalConfig)
 
   function useGlobalConfigContext() {
-    const config = useContext(context)
-    return config
+    const appConfig = useContext(context)
+    return { appConfig, setAppConfig: setStoredGlobalConfig }
   }
 
   function GlobalConfigProvider(props: { children?: any }) {

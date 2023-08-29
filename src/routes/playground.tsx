@@ -1,7 +1,7 @@
 import { createEffect, createSignal, onCleanup } from 'solid-js'
 import { CircularProgress } from '../components/CircularProgress'
 import { ExamplePanel } from '../components/ExamplePanel'
-import { NavBox } from '../components/NavBox'
+import { NavigatorWindowBox } from '../components/NavBox'
 import { useLoopPercent } from '../hooks/useLoopPercent'
 import {
   Box,
@@ -18,38 +18,20 @@ import {
   Text,
   createIncresingAccessor,
   createIntervalEffect,
+  generatePopoverPlugins,
   hoverPlugin,
   icssCol,
   icssRow,
+  pluginSymbol,
   renderSwitchThumb,
   useCSSTransition,
   useComponentController,
-  generatePopoverPlugins,
-  pluginSymbol,
 } from '../packages/pivkit'
-import { transitionPlugin } from '../packages/pivkit/plugins/transitionPlugin'
-import { setStoredGlobalConfig } from '../root'
-
 
 export default function PlaygroundPage() {
-  setStoredGlobalConfig({
-    navBox: {
-      menuItems: [
-        {
-          name: 'Home',
-          href: '/',
-        },
-        {
-          name: 'Playground',
-          href: '/playground',
-        },
-      ],
-      documentTitle: 'Playground',
-    },
-  })
   return (
     <Piv>
-      <NavBox />
+      <NavigatorWindowBox />
       <PlaygoundList />
     </Piv>
   )
