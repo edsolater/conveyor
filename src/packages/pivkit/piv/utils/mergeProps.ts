@@ -26,7 +26,6 @@ export function mergeProps<P extends ValidProps | undefined>(...propsObjs: P[]):
     getKeys(trimedProps).reduce((acc: any, key: any) => {
       acc[key] = {
         enumerable: true,
-        configurable: true,
         get() {
           return getPivPropsValue(trimedProps, key)
         },

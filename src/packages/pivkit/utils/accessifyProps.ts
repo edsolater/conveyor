@@ -37,7 +37,6 @@ export function useAccessifiedProps<P extends AnyObj, Controller extends ValidCo
     Reflect.ownKeys(props).reduce((acc: any, key) => {
       acc[key] = {
         enumerable: true,
-        configurable: true,
         get() {
           const v = props[key]
           const isPreferUseOriginalValue =
