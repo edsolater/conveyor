@@ -1,9 +1,9 @@
-import { MayFn, flap, shrinkFn } from '@edsolater/fnkit'
+import { MayFn, shrinkFn } from '@edsolater/fnkit'
 import { Accessor, For, JSXElement, Show, createContext, createEffect, createMemo, createSignal, on } from 'solid-js'
-import { KitProps, Piv, useKitProps } from '../../piv'
 import { createRef } from '../../hooks/createRef'
 import { ObserveFn, useIntersectionObserver } from '../../hooks/useIntersectionObserver'
 import { useScrollDegreeDetector } from '../../hooks/useScrollDegreeDetector'
+import { KitProps, Piv, useKitProps } from '../../piv'
 import { ListItem } from './ListItem'
 
 export interface ListController {}
@@ -55,7 +55,7 @@ export function List<T>(rawProps: ListProps<T>) {
   })
 
   // [configs]
-  const allItems = createMemo(() => flap([...(shrinkFn(props.of) ?? [])]))
+  const allItems = createMemo(() => Array.from(shrinkFn(props.of ?? [])))
   const increaseRenderCount = createMemo(
     () => props.increaseRenderCount ?? Math.min(Math.floor(allItems().length / 10), 30)
   )
