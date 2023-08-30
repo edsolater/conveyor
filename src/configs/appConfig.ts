@@ -1,13 +1,5 @@
-export type GlobalConfig = {
-  navigator: {
-    navButtons?: {
-      name: string
-      path: string
-    }[]
-    documentTitle?: string
-  }
-}
-export const appConfig: GlobalConfig = {
+export const appConfig = {
+  appName: 'conveyor',
   navigator: {
     navButtons: [
       {
@@ -19,6 +11,7 @@ export const appConfig: GlobalConfig = {
         path: '/playground',
       },
     ],
-    documentTitle: 'conveyor',
   },
 }
+
+export type GlobalConfig = typeof appConfig

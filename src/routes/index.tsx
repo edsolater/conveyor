@@ -28,7 +28,7 @@ export default function Home() {
   })
   return (
     <Piv>
-      <NavigatorWindowBox documentTitle='Home' />
+      <NavigatorWindowBox />
 
       <Section name='content' icss={{ display: 'grid', padding: '32px' }}>
         <Box icss={[icssRow({ gap: '4px' }), { marginBottom: '8px', fontSize: '2em' }]}>

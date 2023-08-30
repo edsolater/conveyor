@@ -1,15 +1,12 @@
-import { createEffect } from 'solid-js'
+import { createEffect, createMemo } from 'solid-js'
+import { useLocation } from 'solid-start'
 import { threeGridSlotBoxICSS } from '../../icssBlocks/threeGridSlotBoxICSS'
 import { Box, Icon, Loop, Piv, icssRow, renderHTMLDOM } from '../../packages/pivkit'
 import { useGlobalConfigContext } from '../../root'
 import { Link } from '../Link'
-import { produce } from 'solid-js/store'
 
-export interface TopMenuBarProps {
-  menuItems?: { name: string; href: string }[]
-  /** pass to DOM's <title> */
-  documentTitle?: string
-}
+/** use appConfig */
+export interface TopMenuBarProps {}
 
 function setMetaTitle(title?: string) {
   if (title) {
@@ -19,14 +16,18 @@ function setMetaTitle(title?: string) {
 
 /**
  * have navbar(route bar) toggle button and wallet connect button
+ *
+ * parse `appConfig.navigator` to render nav buttons
  */
-
 export function TopMenuBar(props: TopMenuBarProps) {
   // TODO: all should be getters like props
   const { appConfig, setAppConfig: setConfig } = useGlobalConfigContext()
+  const { pathname } = useLocation()
+
+  const currentNavButton = createMemo(() => appConfig.navigator.navButtons.find((i) => i.path === pathname))
+
   createEffect(() => {
-    setConfig(produce((s) => (s.navigator.documentTitle = props.documentTitle)))
-    setMetaTitle(props.documentTitle)
+    setMetaTitle(currentNavButton()?.name)
   })
 
   return (
@@ -47,7 +48,7 @@ export function TopMenuBar(props: TopMenuBarProps) {
 
       {/* tabs */}
       <Box icss={{ display: 'flex', gap: '16px' }}>
-        <Loop of={appConfig.navigator.navButtons}>
+        <Loop of={appConfig.navigator.navButtons} icss={{ display: 'flex', gap: '8px' }}>
           {({ name, path }) => (
             <Link href={path} innerRoute>
               {name}
