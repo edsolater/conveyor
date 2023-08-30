@@ -1,4 +1,4 @@
-import { AnyObj, overwriteFunctionName } from '@edsolater/fnkit'
+import { AnyObj, mergeObjects, overwriteFunctionName } from '@edsolater/fnkit'
 import { Accessor } from 'solid-js'
 import { SettingsFunction, createSettingsFunction } from '../../../fnkit/createSettingsFunction'
 import { KitProps } from '../../createKit'
@@ -40,10 +40,14 @@ export type Plugin<
 /** plugin can only have one level */
 export function createPlugin<
   Options extends AnyObj,
+  State extends AnyObj = any,
   Props extends ValidProps = ValidProps,
   Controller extends ValidController = ValidController
 >(
-  createrFn: (options: Options) => (
+  createrFn: (
+    options: Options,
+    addHookState: (state: Partial<State>) => void
+  ) => (
     props: Props,
     utils: {
       controller: Accessor<Controller>
@@ -56,7 +60,11 @@ export function createPlugin<
     name?: string
   }
 ): Plugin<Options> {
-  const factory = createSettingsFunction((params: Options) => createrFn(params), options?.defaultSettings)
+  const status = {} as State
+  function setStatus(state: Partial<State>) {
+    mergeObjects(status, state)
+  }
+  const factory = createSettingsFunction((params: Options) => createrFn(params, setStatus), options?.defaultSettings)
   Object.assign(factory, options)
   // rename
   const fn = options?.name ? overwriteFunctionName(factory, options.name) : factory
