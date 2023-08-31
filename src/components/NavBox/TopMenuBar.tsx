@@ -54,9 +54,6 @@ export function TopMenuBar(rawProps: KitProps) {
       {/* tabs */}
       <Box
         icss={{ display: 'flex', gap: '16px' }}
-        onClick={() => {
-          setAppConfig(produce((s) => (s.appName = 'New name')))
-        }}
       >
         <Loop of={appConfig.navigator.navButtons} icss={{ display: 'flex', gap: '8px' }}>
           {({ name, path }) => (
