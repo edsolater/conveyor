@@ -1,8 +1,20 @@
+export type GlobalConfig = {
+  appName: string
+  navigator: {
+    navButtons: {
+      name: string
+      path: string
+      isHome?: boolean
+    }[]
+  }
+}
+
 export const appConfig = {
-  appName: 'conveyor',
+  appName: 'Conveyor',
   navigator: {
     navButtons: [
       {
+        isHome: true,
         name: 'Home',
         path: '/',
       },
@@ -12,6 +24,4 @@ export const appConfig = {
       },
     ],
   },
-}
-
-export type GlobalConfig = typeof appConfig
+} satisfies GlobalConfig
