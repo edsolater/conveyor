@@ -3,7 +3,7 @@
 import { Accessor, createEffect, onCleanup } from 'solid-js'
 import { createToggle } from './createToggle'
 
-export interface UseGestureHoverOptions {
+export interface GestureHoverOptions {
   el: Accessor<HTMLElement | undefined | null>
   triggerDelay?: number
   disable?: boolean
@@ -11,8 +11,11 @@ export interface UseGestureHoverOptions {
   onHoverEnd?: (info: { ev: PointerEvent }) => void
   onHover?: (info: { ev: PointerEvent; is: 'start' | 'end' }) => void
 }
+export interface GestureHoverStates {
+  isHover: Accessor<boolean>
+}
 
-export function useGestureHover(options: UseGestureHoverOptions) {
+export function useGestureHover(options: GestureHoverOptions): GestureHoverStates {
   const [isHover, { on: turnonHover, off: turnoffHover }] = createToggle()
 
   createEffect(() => {

@@ -2,7 +2,7 @@ import { createEffect, onCleanup } from 'solid-js'
 import { createRef } from '..'
 import { onEvent } from '../../domkit'
 import { createTriggerController } from '../hooks/utils/createTriggerController'
-import { PivProps, Plugin, createPlugin } from '../piv'
+import { PivProps, createPlugin } from '../piv'
 import { PopoverLocationHookOptions, usePopoverLocation } from '../pluginComponents/popover/usePopoverLocation'
 
 /**
@@ -31,10 +31,8 @@ export function generatePopoverPlugins(
     createEffect(() => {
       try {
         if (isTriggerOn()) {
-          // @ts-expect-error ts dom not ready yet
           panelDom()?.showPopover?.()
         } else {
-          // @ts-expect-error ts dom not ready yet
           panelDom()?.hidePopover?.()
         }
       } catch (error) {

@@ -1,2 +1,2 @@
 export * from './generatePopoverPlugins'
-export * from './hoverPlugin'
+export * from './withHover'

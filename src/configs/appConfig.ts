@@ -1,4 +1,4 @@
-export type GlobalConfig = {
+export type AppConfig = {
   appName: string
   navigator: {
     navButtons: {
@@ -9,7 +9,7 @@ export type GlobalConfig = {
   }
 }
 
-export const appConfig = {
+export const appConfig: AppConfig = {
   appName: 'Conveyor',
   navigator: {
     navButtons: [
@@ -24,4 +24,4 @@ export const appConfig = {
       },
     ],
   },
-} satisfies GlobalConfig
+}

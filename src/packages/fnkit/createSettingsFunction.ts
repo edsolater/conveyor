@@ -2,17 +2,17 @@ import { AnyFn, isObject, mergeObjects } from '@edsolater/fnkit'
 
 export type SettingsFunction<F extends AnyFn = AnyFn> = F & {
   /** inject params */
-  in(): F
-  in(...args: [Partial<Parameters<F>[0]>]): F
-  in(...args: [Partial<Parameters<F>[0]>, Partial<Parameters<F>[1]>]): F
-  in(...args: [Partial<Parameters<F>[0]>, Partial<Parameters<F>[1]>, Partial<Parameters<F>[2]>]): F
-  in(...args: [Partial<Parameters<F>[0]>, Partial<Parameters<F>[1]>, Partial<Parameters<F>[2]>, ...any[]]): F
-  in(...args: any[]): F
+  addParam(): F
+  addParam(...args: [Partial<Parameters<F>[0]>]): F
+  addParam(...args: [Partial<Parameters<F>[0]>, Partial<Parameters<F>[1]>]): F
+  addParam(...args: [Partial<Parameters<F>[0]>, Partial<Parameters<F>[1]>, Partial<Parameters<F>[2]>]): F
+  addParam(...args: [Partial<Parameters<F>[0]>, Partial<Parameters<F>[1]>, Partial<Parameters<F>[2]>, ...any[]]): F
+  addParam(...args: any[]): F
 }
 
 /**
  * creator
- * will auto-merge parameters according to their index
+ * can add parameter without invoke
  */
 export function createSettingsFunction<F extends AnyFn>(
   coreFn: F,
@@ -32,7 +32,7 @@ export function createSettingsFunction<F extends AnyFn>(
       return Reflect.apply(target, thisArg, innerParameters)
     },
     get(target, p, receiver) {
-      if (p === 'in') {
+      if (p === 'addParam') {
         return (...additionalSettings: any[]) => {
           for (const [idx, param] of additionalSettings.entries()) {
             if (param === undefined) continue
@@ -55,5 +55,5 @@ export function createSettingsFunction<F extends AnyFn>(
 }
 
 export function isSettingsFunction(v: any): v is SettingsFunction {
-  return Reflect.has(v, 'in')
+  return Reflect.has(v, 'addParam')
 }

@@ -4,7 +4,6 @@ import { threeGridSlotBoxICSS } from '../../icssBlocks/threeGridSlotBoxICSS'
 import { Box, Icon, KitProps, Loop, Piv, icssRow, renderHTMLDOM, useKitProps } from '../../packages/pivkit'
 import { useGlobalConfigContext } from '../../root'
 import { Link } from '../Link'
-import { produce } from 'solid-js/store'
 
 /**
  * set document title
@@ -18,9 +17,7 @@ function setMetaTitle(title?: string) {
 }
 
 /**
- * have navbar(route bar) toggle button and wallet connect button
- *
- * parse `appConfig.navigator` to render nav buttons
+ * {@link appConfig.navigator}
  */
 export function TopMenuBar(rawProps: KitProps) {
   const { shadowProps } = useKitProps(rawProps)
@@ -52,9 +49,7 @@ export function TopMenuBar(rawProps: KitProps) {
       </Box>
 
       {/* tabs */}
-      <Box
-        icss={{ display: 'flex', gap: '16px' }}
-      >
+      <Box icss={{ display: 'flex', gap: '16px' }}>
         <Loop of={appConfig.navigator.navButtons} icss={{ display: 'flex', gap: '8px' }}>
           {({ name, path }) => (
             <Link href={path} innerRoute>

@@ -4,8 +4,8 @@ import { makePipline } from '../../fnkit/makePipline'
 import { renderHTMLDOM } from './propHandlers/renderHTMLDOM'
 import { HTMLTag, PivChild, ValidController } from './typeTools'
 import { omit } from './utils'
-import { ClassName, ICSS, IStyle, HTMLProps, Plugin } from './propHandlers'
-import { pluginSymbol } from './propHandlers/handlePluginProps'
+import { ClassName, ICSS, IStyle, HTMLProps, Plugin, PluginCoreFn } from './propHandlers'
+import { pluginCoreSymbol } from './propHandlers/handlePluginProps'
 
 type Boollike = any
 
@@ -84,7 +84,7 @@ export interface PivProps<TagName extends HTMLTag = HTMLTag, Controller extends 
    * auto merge by shadowProps
    * special: every kit baseon <Piv> should support this prop
    */
-  plugin?: MayArray<Plugin<any> | { [pluginSymbol]: Plugin<any> }>
+  plugin?: MayArray<Plugin<any>>
 
   // -------- special prop --------
 

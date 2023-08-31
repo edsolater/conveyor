@@ -19,10 +19,10 @@ import {
   createIncresingAccessor,
   createIntervalEffect,
   generatePopoverPlugins,
-  hoverPlugin,
+  withHover,
   icssCol,
   icssRow,
-  pluginSymbol,
+  plugin,
   renderSwitchThumb,
   useCSSTransition,
   useComponentController,
@@ -320,9 +320,12 @@ function RadioExample() {
 const { popoverButtonPlugin, popoverPanelPlugin } = generatePopoverPlugins({ placement: 'top' })
 
 function PopoverExample() {
-  const { [pluginSymbol]: plugin, state } = hoverPlugin({ onHover: () => console.log('hover') })
+  const {
+    plugin,
+    state: { isHover },
+  } = withHover({ onHover: () => console.log('hover') })
   createEffect(() => {
-    console.log('isHover: ', state.isHover())
+    console.log('isHover: ', isHover())
   })
   return (
     <>
@@ -342,7 +345,4 @@ function PopoverExample() {
       </Box>
     </>
   )
-}
-function loadConfig(arg0: {}) {
-  throw new Error('Function not implemented.')
 }

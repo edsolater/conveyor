@@ -5,9 +5,9 @@ import { PivProps } from '../Piv'
 import { ValidController } from '../typeTools'
 import { mergeProps } from '../utils/mergeProps'
 import { omit } from '../utils/omit'
-import { Plugin } from './plugin'
+import { extractPluginCore, isPluginObj, Plugin } from './plugin'
 
-export const pluginSymbol = Symbol('plugin')
+export const pluginCoreSymbol = Symbol('pluginCore')
 
 // TODO2: not accessify yet
 export function handlePluginProps<P extends AnyObj>(
@@ -19,26 +19,33 @@ export function handlePluginProps<P extends AnyObj>(
   if (!checkHasPluginProps(props)) return props
   const plugin = getPlugin(props)
   if (!plugin) return omit(props, 'plugin')
-  const flated = flap(plugin).map((i) => (Reflect.has(i, pluginSymbol) ? Reflect.get(i, pluginSymbol) : i))
-  const parsed = omit(mergePluginReturnedProps({ plugins: sortPluginByPriority(flated), props }), 'plugin')
-  return parsed
+  const sortedPluginObjs = omit(
+    mergePluginReturnedProps({ plugins: sortPluginByPriority(flap(plugin)), props }),
+    'plugin'
+  )
+  return sortedPluginObjs
 }
 
 function sortPluginByPriority(plugins: Plugin<any>[]) {
+  function getPluginPriority(plugin: Plugin<any>) {
+    return isPluginObj(plugin) ? plugin.priority ?? 0 : 0
+  }
   if (plugins.length <= 1) return plugins
-  if (plugins.every((plugin) => plugin.priority)) return plugins
+  if (plugins.every((plugin) => getPluginPriority(plugin))) return plugins
 
   // judge whether need sort
   let needSort = false
-  let firstPriority = plugins[0].priority
+  let firstPriority = getPluginPriority(plugins[0])
   for (const plugin of plugins) {
-    if (plugin.priority !== firstPriority) {
+    if (getPluginPriority(plugin) !== firstPriority) {
       needSort = true
       break
     }
   }
 
-  return needSort ? plugins.toSorted((pluginA, pluginB) => (pluginB.priority ?? 0) - (pluginA.priority ?? 0)) : plugins
+  return needSort
+    ? plugins.toSorted((pluginA, pluginB) => getPluginPriority(pluginB) - getPluginPriority(pluginA))
+    : plugins
 }
 
 /**
@@ -65,7 +72,7 @@ function invokePlugin(plugin: Plugin<any>, props: KitProps<any>) {
   const [controller, setController] = createSignal<ValidController>({})
   const [dom, setDom] = createSignal<HTMLElement>()
 
-  const pluginProps = shrinkFn(plugin()(props, { controller, dom }))
+  const pluginProps = shrinkFn(extractPluginCore(plugin)(props, { controller, dom }))
   const returnProps = mergeProps(props, pluginProps, { controllerRef: setController, domRef: setDom })
   return returnProps
 }
