@@ -4,7 +4,7 @@ import { Link } from '../components/Link'
 import { NavigatorWindowBox } from '../components/NavBox'
 import { SiteCardItem, linkCards } from '../configs/linkCards'
 import { useSearch } from '../packages/features/searchItems'
-import { ICSS, Piv } from '../packages/pivkit'
+import { Button, ICSS, Piv } from '../packages/pivkit'
 import {
   Box,
   GridBox,
@@ -19,6 +19,7 @@ import {
   icssGridItem,
   icssRow,
 } from '../packages/pivkit'
+import { jFetch } from '../packages/jFetch'
 
 export default function Home() {
   const [searchText, setSearchText] = createSignal<string>()
@@ -26,11 +27,17 @@ export default function Home() {
   const { searchedItems: links } = useSearch(linkCards, searchText, {
     matchConfigs: [(i) => i.name, (i) => i.keywords],
   })
+
+  const loadBilibiliPopular = async () => {
+    const clientRes = await fetch('api/bilibili/popular').then((i) => i.json())
+    console.log('clientRes: ', clientRes)
+  }
   return (
     <Piv>
       <NavigatorWindowBox />
 
       <Section name='content' icss={{ display: 'grid', padding: '32px' }}>
+        <Button onClick={loadBilibiliPopular}>popular</Button>
         <Box icss={[icssRow({ gap: '4px' }), { marginBottom: '8px', fontSize: '2em' }]}>
           <Text>search tags:</Text>
           <Input icss={{ border: 'solid' }} onUserInput={({ text }) => setSearchText(text)} />
