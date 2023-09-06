@@ -1,6 +1,7 @@
-import { APIEvent, json } from 'solid-start'
+import { APIEvent } from 'solid-start'
+import { wrapToNewResponse } from '../../../packages/networkkit/wrapToNewResponse'
 
 export async function GET({ params }: APIEvent) {
-  const r2 = await globalThis.fetch('https://api.bilibili.com/x/web-interface/popular').then((res) => res.json())
-  return json(r2)
+  const res = fetch('https://api.bilibili.com/x/web-interface/popular')
+  return wrapToNewResponse(res)
 }

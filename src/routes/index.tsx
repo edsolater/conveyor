@@ -1,17 +1,19 @@
 import { DeMayArray, MayFn, flap, isObject, isString, shrinkFn } from '@edsolater/fnkit'
-import { createEffect, createSignal } from 'solid-js'
+import { createSignal } from 'solid-js'
 import { Link } from '../components/Link'
 import { NavigatorWindowBox } from '../components/NavBox'
 import { SiteCardItem, linkCards } from '../configs/linkCards'
 import { useSearch } from '../packages/features/searchItems'
-import { Button, ICSS, Piv } from '../packages/pivkit'
 import {
   Box,
+  Button,
   GridBox,
   GridItem,
+  ICSS,
   Image,
   Input,
   Loop,
+  Piv,
   Section,
   Text,
   icssCard,
@@ -19,7 +21,7 @@ import {
   icssGridItem,
   icssRow,
 } from '../packages/pivkit'
-import { jFetch } from '../packages/jFetch'
+import { PostBodyData } from './api/mock-from-server'
 
 export default function Home() {
   const [searchText, setSearchText] = createSignal<string>()
@@ -32,12 +34,26 @@ export default function Home() {
     const clientRes = await fetch('api/bilibili/popular').then((i) => i.json())
     console.log('clientRes: ', clientRes)
   }
+
+  const mock = async () => {
+    fetch('api/mock-from-server', {
+      method: 'POST', // *GET, POST, PUT, DELETE, etc.
+      headers: {
+        'Content-Type': 'application/json',
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: JSON.stringify({
+        simulateUrl: 'https://api.bilibili.com/x/web-interface/popular',
+      } as PostBodyData), // body data type must match "Content-Type" header
+    }).then((i) => i.json())
+  }
   return (
     <Piv>
       <NavigatorWindowBox />
 
       <Section name='content' icss={{ display: 'grid', padding: '32px' }}>
         <Button onClick={loadBilibiliPopular}>popular</Button>
+        <Button onClick={mock}>mock</Button>
         <Box icss={[icssRow({ gap: '4px' }), { marginBottom: '8px', fontSize: '2em' }]}>
           <Text>search tags:</Text>
           <Input icss={{ border: 'solid' }} onUserInput={({ text }) => setSearchText(text)} />
