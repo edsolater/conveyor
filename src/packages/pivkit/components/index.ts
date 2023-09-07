@@ -17,3 +17,5 @@ export * from './Section'
 export * from './Switch'
 export * from './Text'
 export * from './Loop'
+
+export * from './ComponentFatory'

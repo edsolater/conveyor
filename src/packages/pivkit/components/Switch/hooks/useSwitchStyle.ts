@@ -8,7 +8,14 @@ import { SwitchProps } from '../Switch'
  */
 export function useSwitchStyle(params: { props: DeKitProps<SwitchProps> }) {
   const wrapperLabelStyleProps = {
-    icss: { width: '4em', height: '2em', background: '#cbd5e0', borderRadius: '999em', padding: '4px' },
+    icss: {
+      display: 'block',
+      width: '4em',
+      height: '2em',
+      background: '#cbd5e0',
+      borderRadius: '999em',
+      padding: '4px',
+    },
   } satisfies Partial<LabelProps>
 
   const htmlCheckboxStyleProps = {

@@ -26,7 +26,10 @@ import {
   renderSwitchThumb,
   useCSSTransition,
   useComponentController,
+  ComponentFatory,
 } from '../packages/pivkit'
+import { switchCase } from '../packages/fnkit'
+import { createStore } from 'solid-js/store'
 
 export default function PlaygroundPage() {
   return (
@@ -67,17 +70,17 @@ function PlaygoundList() {
         <TextExample />
       </ExamplePanel>
 
-      {/* <ExamplePanel name='Modal'>
+      <ExamplePanel name='Modal'>
         <ModalExample />
-      </ExamplePanel> */}
+      </ExamplePanel>
 
       <ExamplePanel name='List'>
         <ListExample />
       </ExamplePanel>
 
-      {/* <ExamplePanel name='Switch'>
+      <ExamplePanel name='Switch'>
         <SwitchExample />
-      </ExamplePanel> */}
+      </ExamplePanel>
 
       <ExamplePanel name='Radio'>
         <RadioExample />
@@ -85,6 +88,10 @@ function PlaygoundList() {
 
       <ExamplePanel name='Popover'>
         <PopoverExample />
+      </ExamplePanel>
+
+      <ExamplePanel name='ComponentFactory'>
+        <ComponentFactoryExample />
       </ExamplePanel>
 
       {/* <Foo /> */}
@@ -315,6 +322,28 @@ function RadioExample() {
     setChecked((b) => !b)
   }, 1200)
   return <Radio option='gender' isChecked={checked()} />
+}
+
+function ComponentFactoryExample() {
+  const data = {
+    isOpen: false,
+  }
+  const [store, setStore] = createStore(data)
+  createEffect(() => {
+    setInterval(() => {
+      setStore('isOpen', (b) => !b)
+    }, 10000)
+  })
+  return (
+    <ComponentFatory
+      data={store}
+      widgetCreateRule={(value) =>
+        switchCase(typeof value, {
+          'boolean': (v: boolean) => <Switch isChecked={v} />,
+        }) ?? value
+      }
+    />
+  )
 }
 
 const { popoverButtonPlugin, popoverPanelPlugin } = generatePopoverPlugins({ placement: 'top' })
