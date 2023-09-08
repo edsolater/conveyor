@@ -1,4 +1,4 @@
-import { createEffect, createSignal, onCleanup } from 'solid-js'
+import { Accessor, createEffect, createSignal, onCleanup } from 'solid-js'
 import { CircularProgress } from '../components/CircularProgress'
 import { ExamplePanel } from '../components/ExamplePanel'
 import { NavigatorWindowBox } from '../components/NavBox'
@@ -332,17 +332,23 @@ function ComponentFactoryExample() {
   createEffect(() => {
     setInterval(() => {
       setStore('isOpen', (b) => !b)
-    }, 10000)
+    }, 1000)
   })
   return (
-    <ComponentFatory
-      data={store}
-      widgetCreateRule={(value) =>
-        switchCase(typeof value, {
-          'boolean': (v: boolean) => <Switch isChecked={v} />,
-        }) ?? value
-      }
-    />
+    <>
+      <ComponentFatory
+        data={store}
+        widgetCreateRule={(value) => {
+          console.log('value: ', value)
+          return (
+            switchCase(typeof value, {
+              'boolean': (v: Accessor<boolean>) => <Switch isChecked={v} />,
+            }) ?? value
+          )
+        }}
+      />
+      <Switch isChecked={store.isOpen} />
+    </>
   )
 }
 
