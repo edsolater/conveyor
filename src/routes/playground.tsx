@@ -1,11 +1,14 @@
 import { Accessor, createEffect, createSignal, onCleanup } from 'solid-js'
+import { createStore } from 'solid-js/store'
 import { CircularProgress } from '../components/CircularProgress'
 import { ExamplePanel } from '../components/ExamplePanel'
 import { NavigatorWindowBox } from '../components/NavBox'
 import { useLoopPercent } from '../hooks/useLoopPercent'
+import { switchCase } from '../packages/fnkit'
 import {
   Box,
   Button,
+  ComponentFatory,
   Drawer,
   DrawerController,
   Input,
@@ -19,17 +22,13 @@ import {
   createIncresingAccessor,
   createIntervalEffect,
   generatePopoverPlugins,
-  withHover,
   icssCol,
   icssRow,
-  plugin,
   renderSwitchThumb,
   useCSSTransition,
   useComponentController,
-  ComponentFatory,
+  withHover
 } from '../packages/pivkit'
-import { switchCase } from '../packages/fnkit'
-import { createStore } from 'solid-js/store'
 
 export default function PlaygroundPage() {
   return (
@@ -334,18 +333,15 @@ function ComponentFactoryExample() {
       setStore('isOpen', (b) => !b)
     }, 1000)
   })
-  return (
+  return (  
     <>
       <ComponentFatory
         data={store}
-        widgetCreateRule={(value) => {
-          console.log('value: ', value)
-          return (
-            switchCase(typeof value, {
-              'boolean': (v: Accessor<boolean>) => <Switch isChecked={v} />,
-            }) ?? value
-          )
-        }}
+        widgetCreateRule={(value) =>
+          switchCase(typeof value, {
+            'boolean': (storeValue: Accessor<boolean>) => <Switch isChecked={storeValue} />,
+          }) ?? value
+        }
       />
       <Switch isChecked={store.isOpen} />
     </>

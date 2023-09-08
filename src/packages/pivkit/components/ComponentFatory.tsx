@@ -1,7 +1,7 @@
-import { isFunction, isObject, map } from '@edsolater/fnkit'
-import { JSX, createEffect, createMemo, mapArray } from 'solid-js'
-import { Box } from './Boxes'
+import { isFunction, isObject } from '@edsolater/fnkit'
+import { JSX } from 'solid-js'
 import { unwrap } from 'solid-js/store'
+import { Box } from './Boxes'
 
 /** a special component for creating element tree by pure js data
  *
@@ -25,7 +25,6 @@ export function ComponentFatory(props: {
     mapFn: (value: any, key: string | number | symbol | undefined) => JSX.Element | any /* value */ | undefined | void,
     currentPath: (string | number | symbol)[] = []
   ) {
-    console.log('t: ', Reflect.get(['hello'], '0'))
     const currentTarget = getByPath(unwrapedStore, currentPath)
     const currentKey = currentPath.at(-1)
     const mayComponent = mapFn(currentTarget, currentKey)
@@ -39,21 +38,6 @@ export function ComponentFatory(props: {
     }
   }
 
-  function generateComponentByValue(
-    value: any,
-    key: string | number | symbol | undefined,
-    mapFn: (value: any, key: string | number | symbol | undefined) => JSX.Element | any /* value */ | undefined | void
-  ) {
-    return mapFn?.(value, key)
-  }
-
-  const tree = createMemo(() => parseData(props.widgetCreateRule))
-  createEffect(() => {
-    console.log('props.data: ', props.data)
-  })
-  createEffect(() => {
-    console.log('props.widgetCreateRule: ', props.widgetCreateRule)
-  })
   return <>{parseData(props.widgetCreateRule)}</>
 }
 

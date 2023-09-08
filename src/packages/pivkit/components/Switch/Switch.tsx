@@ -79,7 +79,7 @@ export function Switch(rawProps: SwitchProps) {
   lazyLoadController(switchController)
 
   return (
-    <LabelBox shadowProps={[wrapperLabelStyleProps, shadowProps, props['anatomy:ContainerBox']]}>
+    <LabelBox  innerController={switchController} shadowProps={[wrapperLabelStyleProps, shadowProps, props['anatomy:ContainerBox']]}>
       <HTMLCheckbox
         shadowProps={[htmlCheckboxStyleProps, props['anatomy:HTMLCheckbox']]}
         innerController={switchController}
