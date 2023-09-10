@@ -22,6 +22,7 @@ export const appConfig: AppConfig = {
         name: 'Playground',
         path: '/playground',
       },
+      { name: 'Links', path: '/thumbnails' },
     ],
   },
 }

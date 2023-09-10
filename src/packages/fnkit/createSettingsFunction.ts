@@ -18,40 +18,38 @@ export function createSettingsFunction<F extends AnyFn>(
   coreFn: F,
   settings?: { defaultParams?: any[]; label?: symbol }
 ): SettingsFunction<F> {
-  let innerParameters = settings?.defaultParams ?? ([] as unknown as Parameters<F>)
-  const settingsFunction = new Proxy(coreFn, {
-    apply(target, thisArg, argArray) {
-      for (const [idx, param] of argArray.entries()) {
-        if (param === undefined) continue
-        if (isObject(param) && isObject(innerParameters[idx])) {
-          innerParameters[idx] = mergeObjects(innerParameters[idx], param)
-        } else {
-          innerParameters[idx] = param
-        }
-      }
-      return Reflect.apply(target, thisArg, innerParameters)
-    },
-    get(target, p, receiver) {
-      if (p === 'addParam') {
-        return (...additionalSettings: any[]) => {
-          for (const [idx, param] of additionalSettings.entries()) {
-            if (param === undefined) continue
-            if (isObject(param) && isObject(innerParameters[idx])) {
-              innerParameters[idx] = mergeObjects(innerParameters[idx], param)
-            } else {
-              innerParameters[idx] = param
-            }
-          }
-          return settingsFunction
-        }
-      }
-      return Reflect.get(target, p, receiver)
-    },
-  }) as SettingsFunction<F>
+  /**
+   * to without effect old params
+   */
+  function mergeParams(oldParams: any[], newParams: any[]) {
+    const params = Array.from({ length: Math.max(oldParams.length, newParams.length) })
+    for (let i = 0; i < params.length; i++) {
+      params[i] =
+        isObject(oldParams[i]) && isObject(newParams[i]) ? mergeObjects(oldParams[i], newParams[i]) : newParams[i]
+    }
+    return params
+  }
 
-  if (settings?.label) Reflect.set(settingsFunction, settings.label, true)
+  /**
+   *
+   * @param cachedParameters cached params
+   * @returns proxied settings function
+   */
+  function createProxyWithCache(cachedParameters: any[]) {
+    const settingsFunction = new Proxy(coreFn, {
+      apply: (target, thisArg, argArray) => Reflect.apply(target, thisArg, mergeParams(cachedParameters, argArray)),
+      get: (target, p, receiver) =>
+        p === 'addParam'
+          ? (...additionalParams: any[]) => createProxyWithCache(mergeParams(cachedParameters, additionalParams))
+          : Reflect.get(target, p, receiver),
+    }) as SettingsFunction<F>
 
-  return settingsFunction
+    if (settings?.label) Reflect.set(settingsFunction, settings.label, true)
+
+    return settingsFunction
+  }
+
+  return createProxyWithCache(settings?.defaultParams?.slice() ?? [])
 }
 
 export function isSettingsFunction(v: any): v is SettingsFunction {

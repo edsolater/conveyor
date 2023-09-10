@@ -68,10 +68,13 @@ export default function Root() {
         <Suspense>
           <ErrorBoundary>
             <GlobalConfigProvider>
-              <NavBox />
-              <Routes>
-                <FileRoutes />
-              </Routes>
+              <NavBox
+                content={
+                  <Routes>
+                    <FileRoutes />
+                  </Routes>
+                }
+              />
             </GlobalConfigProvider>
           </ErrorBoundary>
         </Suspense>
