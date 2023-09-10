@@ -1,14 +1,14 @@
-import { Accessor, createEffect, createSignal, onCleanup } from 'solid-js'
+import { Accessor, JSX, createEffect, createSignal, onCleanup } from 'solid-js'
 import { createStore } from 'solid-js/store'
 import { CircularProgress } from '../components/CircularProgress'
 import { ExamplePanel } from '../components/ExamplePanel'
-import { NavigatorWindowBox } from '../components/NavBox'
+import { NavBox } from '../components/NavBox'
 import { useLoopPercent } from '../hooks/useLoopPercent'
 import { switchCase } from '../packages/fnkit'
 import {
   Box,
   Button,
-  ComponentFatory,
+  RenderFactory,
   Drawer,
   DrawerController,
   Input,
@@ -27,13 +27,12 @@ import {
   renderSwitchThumb,
   useCSSTransition,
   useComponentController,
-  withHover
+  withHover,
 } from '../packages/pivkit'
 
 export default function PlaygroundPage() {
   return (
     <Piv>
-      <NavigatorWindowBox />
       <PlaygoundList />
     </Piv>
   )
@@ -326,6 +325,7 @@ function RadioExample() {
 function ComponentFactoryExample() {
   const data = {
     isOpen: false,
+    text: 'hello world',
   }
   const [store, setStore] = createStore(data)
   createEffect(() => {
@@ -333,17 +333,17 @@ function ComponentFactoryExample() {
       setStore('isOpen', (b) => !b)
     }, 1000)
   })
-  return (  
+  return (
     <>
-      <ComponentFatory
+      <RenderFactory
         data={store}
         widgetCreateRule={(value) =>
-          switchCase(typeof value, {
-            'boolean': (storeValue: Accessor<boolean>) => <Switch isChecked={storeValue} />,
-          }) ?? value
+          switchCase<any, any>(value, [
+            [(v) => typeof v === 'boolean', (storeValue: Accessor<boolean>) => <Switch isChecked={storeValue} />],
+            [(v) => typeof v === 'string', (storeValue: Accessor<string>) => <Input value={storeValue} />],
+          ]) ?? value
         }
       />
-      <Switch isChecked={store.isOpen} />
     </>
   )
 }

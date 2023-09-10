@@ -10,18 +10,18 @@ export function useSwitchStyle(params: { props: DeKitProps<SwitchProps> }) {
     icss: ({ isChecked }) => ({
       '@layer defaults': {
         '--accent-color': '#4982ca',
-        '--size': '2em',
+        '--switch-width': '2em',
         '--slot-bg-active': 'color-mix(in srgb, var(--accent-color), #fff 80%)',
         '--slot-bg-inactive': 'color-mix(in srgb, color-mix(in srgb, var(--accent-color), #fff 80%), #ddd 90%)',
         '--thumb-bg-active': 'var(--accent-color)',
         '--thumb-bg-inactive': '#fff',
       },
       display: 'block',
-      width: 'var(--size)',
-      height: 'calc(var(--size) / 2)',
+      width: 'var(--switch-width)',
+      height: 'calc(var(--switch-width) / 2)',
       background: isChecked() ? 'var(--slot-bg-active)' : 'var(--slot-bg-inactive)',
       borderRadius: '999em',
-      padding: 'calc(var(--size) / 9) ',
+      padding: 'calc(var(--switch-width) / 9) ',
       transition: 'background 300ms',
     }),
   } satisfies Partial<SwitchProps>

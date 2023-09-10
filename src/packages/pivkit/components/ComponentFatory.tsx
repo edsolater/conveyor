@@ -7,7 +7,7 @@ import { Box } from './Boxes'
  *
  * @todo: how to turn pure object tree to component tree ?
  */
-export function ComponentFatory(props: {
+export function RenderFactory(props: {
   data: object
   /**
    * JSXElement ----> render a JSXElement \

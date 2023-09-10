@@ -4,6 +4,7 @@ import { Body, ErrorBoundary, FileRoutes, Head, Html, Link, Meta, Routes, Script
 import { createGlobalStyles } from 'solid-styled-components'
 import { appConfig } from './configs/appConfig'
 import { createGlobalConfigContext } from './packages/pivkit/hooks/createGlobalConfigContext'
+import { NavBox } from './components/NavBox'
 
 const GlobalStyles = createGlobalStyles`
     body {
@@ -67,6 +68,7 @@ export default function Root() {
         <Suspense>
           <ErrorBoundary>
             <GlobalConfigProvider>
+              <NavBox />
               <Routes>
                 <FileRoutes />
               </Routes>

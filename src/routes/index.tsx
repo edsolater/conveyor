@@ -1,7 +1,7 @@
 import { DeMayArray, MayFn, flap, isObject, isString, shrinkFn } from '@edsolater/fnkit'
 import { createSignal } from 'solid-js'
 import { Link } from '../components/Link'
-import { NavigatorWindowBox } from '../components/NavBox'
+import { NavBox } from '../components/NavBox'
 import { SiteCardItem, linkCards } from '../configs/linkCards'
 import { useSearch } from '../packages/features/searchItems'
 import {
@@ -21,7 +21,7 @@ import {
   icssGridItem,
   icssRow,
 } from '../packages/pivkit'
-import { PostBodyData } from './api/mock-from-server'
+import { PostBodyData } from './api/server-fetch'
 
 export default function Home() {
   const [searchText, setSearchText] = createSignal<string>()
@@ -49,8 +49,6 @@ export default function Home() {
   }
   return (
     <Piv>
-      <NavigatorWindowBox />
-
       <Section name='content' icss={{ display: 'grid', padding: '32px' }}>
         <Button onClick={loadBilibiliPopular}>popular</Button>
         <Button onClick={mock}>mock</Button>

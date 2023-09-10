@@ -1,5 +1,5 @@
 import { TopMenuBar } from './TopMenuBar'
 
-export function NavigatorWindowBox() {
+export function NavBox() {
   return <TopMenuBar />
 }
