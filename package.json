@@ -9,9 +9,9 @@
   },
   "type": "module",
   "devDependencies": {
-    "@types/babel__core": "^7.20.1",
+    "@types/babel__core": "^7.20.2",
     "@types/debug": "^4.1.8",
-    "@types/node": "^20.5.9",
+    "@types/node": "^20.6.2",
     "solid-start-node": "^0.3.5",
     "typescript": "^5.2.2",
     "vite": "^4.4.9"
@@ -20,10 +20,10 @@
     "@edsolater/fnkit": "^0.1.46",
     "@solidjs/meta": "^0.28.6",
     "@solidjs/router": "^0.8.3",
-    "solid-js": "^1.7.11",
+    "solid-js": "^1.7.12",
     "solid-start": "^0.3.5",
     "solid-styled-components": "^0.28.5",
-    "undici": "^5.23.0"
+    "undici": "^5.24.0"
   },
   "engines": {
     "node": ">=16"

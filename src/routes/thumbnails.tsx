@@ -1,7 +1,6 @@
 import { DeMayArray, MayFn, flap, isObject, isString, shrinkFn } from '@edsolater/fnkit'
 import { createSignal } from 'solid-js'
 import { Link } from '../components/Link'
-import { NavBox } from '../components/NavBox'
 import { SiteCardItem, linkCards } from '../configs/linkCards'
 import { useSearch } from '../packages/features/searchItems'
 import {
@@ -22,11 +21,12 @@ import {
   icssRow,
 } from '../packages/pivkit'
 import { PostBodyData } from './api/server-fetch'
+import { links } from '../configs/links'
 
-export default function SiteThumbnails() {
+export default function LinksPage() {
   const [searchText, setSearchText] = createSignal<string>()
 
-  const { searchedItems: links } = useSearch(linkCards, searchText, {
+  const { searchedItems: searchedLinks } = useSearch(linkCards, searchText, {
     matchConfigs: [(i) => i.name, (i) => i.keywords],
   })
 
@@ -37,7 +37,7 @@ export default function SiteThumbnails() {
 
   const mock = async () => {
     fetch('api/mock-from-server', {
-      method: 'POST', // *GET, POST, PUT, DELETE, etc.
+      method: 'POST', // GET, POST, PUT, DELETE, etc.
       headers: {
         'Content-Type': 'application/json',
         // 'Content-Type': 'application/x-www-form-urlencoded',
@@ -47,6 +47,8 @@ export default function SiteThumbnails() {
       } as PostBodyData), // body data type must match "Content-Type" header
     }).then((i) => i.json())
   }
+
+  console.log('links: ', links)
   return (
     <Piv>
       <Section name='content' icss={{ display: 'grid', padding: '32px' }}>
@@ -57,7 +59,7 @@ export default function SiteThumbnails() {
           <Input icss={{ border: 'solid' }} onUserInput={({ text }) => setSearchText(text)} />
         </Box>
 
-        <Loop of={links} icss={icssGrid({ gap: '24px' })}>
+        <Loop of={searchedLinks} icss={icssGrid({ gap: '24px' })}>
           {(item) => <SiteItem item={item} />}
         </Loop>
       </Section>

@@ -1,4 +1,5 @@
 import { JSX } from 'solid-js'
+import favourites from '../configs/browser_favorites.json'
 
 type Url = string
 type Base64Image = `data:image/${string};base64,${string}`
@@ -9,6 +10,7 @@ export type LinkItem = {
   name: string
   url?: Url
 
+  icon?: Base64Image | string
   rating?: RatingNumber
   tags?: string[]
   description?: string
@@ -23,14 +25,7 @@ export type LinkItem = {
 
   updateAt?: Date
   createAt?: Date
+  date?: number | string // (s)
 }
 
-export const links: LinkItem[] = [
-  {
-    name: 'bilibili',
-    url: 'https://www.bilibili.com/',
-    tags: ['video'],
-    description: 'bilibili web site',
-    keywords: ['video', 'anime', 'game'],
-  },
-]
+export const links: LinkItem[] = favourites
