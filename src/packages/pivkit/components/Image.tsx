@@ -1,11 +1,9 @@
-import { shakeNil } from '@edsolater/fnkit'
 import { createEffect, createSignal, onCleanup } from 'solid-js'
-import { renderHTMLDOM } from '../piv/propHandlers/renderHTMLDOM'
 import { onEvent as addEventListener } from '../../domkit'
-import { Piv, UIKit, useKitProps } from '../piv'
 import { createRef } from '../hooks'
+import { Piv, UIKit, useKitProps } from '../piv'
+import { renderHTMLDOM } from '../piv/propHandlers/renderHTMLDOM'
 import { Accessify } from '../utils/accessifyProps'
-import { Box } from './Boxes'
 
 export interface ImageProps extends UIKit<{ controller: ImageController }> {
   /**

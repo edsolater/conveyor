@@ -1,10 +1,12 @@
-import { JSX } from 'solid-js'
-import favourites from '../configs/browser_favorites.json'
-
 type Url = string
-type Base64Image = `data:image/${string};base64,${string}`
-type Image = Url | JSX.Element | Base64Image
+type Base64Image = `data:image/${string}`
+type Image = Url | Base64Image
 type RatingNumber = number /* 1 ~ 5 */
+
+export type LinkItemScreenshot = {
+  src: Image
+  url?: Url
+}
 
 export type LinkItem = {
   name: string
@@ -17,15 +19,27 @@ export type LinkItem = {
   keywords?: string[]
 
   // auto-detect by script
-  images?: {
-    headerLogo?: Image
-    icon?: Image
-    screenshots?: Image[]
-  }
+  headerLogo?: Image
+  screenshots?: LinkItemScreenshot[]
 
   updateAt?: Date
   createAt?: Date
   date?: number | string // (s)
 }
 
-export const links: LinkItem[] = favourites
+export const links: LinkItem[] = [
+  {
+    name: 'bilibili',
+    url: 'https://www.bilibili.com/',
+    tags: ['video'],
+    description: 'bilibili web site',
+    keywords: ['video', 'anime', 'game'],
+  },
+  {
+    name: 'youtube',
+    url: 'https://www.youtube.com/',
+    tags: ['video'],
+    description: 'youtube web site',
+    keywords: ['video', 'music', 'game'],
+  },
+]

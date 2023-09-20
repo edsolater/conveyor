@@ -1,11 +1,10 @@
 import { DeMayArray, MayFn, flap, isObject, isString, shrinkFn } from '@edsolater/fnkit'
 import { createSignal } from 'solid-js'
 import { Link } from '../components/Link'
-import { SiteCardItem, linkCards } from '../configs/linkCards'
+import { LinkItem, LinkItemScreenshot, links } from '../configs/links'
 import { useSearch } from '../packages/features/searchItems'
 import {
   Box,
-  Button,
   GridBox,
   GridItem,
   ICSS,
@@ -21,12 +20,11 @@ import {
   icssRow,
 } from '../packages/pivkit'
 import { PostBodyData } from './api/server-fetch'
-import { links } from '../configs/links'
 
 export default function LinksPage() {
   const [searchText, setSearchText] = createSignal<string>()
 
-  const { searchedItems: searchedLinks } = useSearch(linkCards, searchText, {
+  const { searchedItems: searchedLinks } = useSearch(links, searchText, {
     matchConfigs: [(i) => i.name, (i) => i.keywords],
   })
 
@@ -52,8 +50,6 @@ export default function LinksPage() {
   return (
     <Piv>
       <Section name='content' icss={{ display: 'grid', padding: '32px' }}>
-        <Button onClick={loadBilibiliPopular}>popular</Button>
-        <Button onClick={mock}>mock</Button>
         <Box icss={[icssRow({ gap: '4px' }), { marginBottom: '8px', fontSize: '2em' }]}>
           <Text>search tags:</Text>
           <Input icss={{ border: 'solid' }} onUserInput={({ text }) => setSearchText(text)} />
@@ -67,7 +63,7 @@ export default function LinksPage() {
   )
 }
 
-function SiteItem(props: { item: SiteCardItem; level?: /* zero or undefined is the top */ number }) {
+function SiteItem(props: { item: LinkItem; level?: /* zero or undefined is the top */ number }) {
   // const {gridContainerICSS, gridItemICSS} = useICSS('Grid')
   return (
     <Piv
@@ -97,10 +93,7 @@ function SiteItem(props: { item: SiteCardItem; level?: /* zero or undefined is t
                   placeItems: 'center',
                 }}
               >
-                <Image
-                  src={props.item.headerLogo}
-                  icss={{ maxWidth: 'calc(100% - 16px)', maxHeight: 'calc(100% - 16px)' }}
-                />
+                <Image src={props.item.icon} icss={{ maxWidth: 'calc(100% - 16px)', maxHeight: 'calc(100% - 16px)' }} />
               </Piv>
               <Text icss={{ fontSize: '2em', fontWeight: 'bold' }}>{props.item.name}</Text>
             </Box>
@@ -109,21 +102,21 @@ function SiteItem(props: { item: SiteCardItem; level?: /* zero or undefined is t
             {(keyword) => <Text icss={{ fontSize: '1em' }}>{keyword}</Text>}
           </Loop>
         </Box>
-        <Loop of={flap(props.item.screenshot)}>
-          {(screenshotItem) => <Screenshot siteUrl={props.item.url} item={screenshotItem} />}
+        <Loop of={flap(props.item.screenshots)}>
+          {(screenshotItem) => <Screenshot siteUrl={screenshotItem?.url} item={screenshotItem} />}
         </Loop>
       </Box>
 
-      <Box icss={icssGridItem({ area: 'sub' })}>
+      {/* <Box icss={icssGridItem({ area: 'sub' })}>
         <Loop if={props.item.subreddits} of={props.item.subreddits} icss={icssGrid({ templateColumn: '1fr 1fr 1fr' })}>
           {(subreddit) => <SiteSubItem item={subreddit} level={(props.level ?? 0) + 1} />}
         </Loop>
-      </Box>
+      </Box> */}
     </Piv>
   )
 }
 
-function SiteSubItem(props: { item: SiteCardItem; level?: /* zero or undefined is the top */ number }) {
+function SiteSubItem(props: { item: LinkItem; level?: /* zero or undefined is the top */ number }) {
   return (
     <GridBox
       icss:grid={{
@@ -143,7 +136,7 @@ function SiteSubItem(props: { item: SiteCardItem; level?: /* zero or undefined i
         <Loop icss={icssRow({ gap: '.5em' })} of={props.item.keywords}>
           {(keyword) => <Text icss={{ fontSize: '1em' }}>{keyword}</Text>}
         </Loop>
-        <Loop of={flap(props.item.screenshot)}>
+        <Loop of={flap(props.item.screenshots)}>
           {(screenshotItem) => <Screenshot siteUrl={props.item.url} item={screenshotItem} />}
         </Loop>
       </GridItem>
@@ -153,9 +146,9 @@ function SiteSubItem(props: { item: SiteCardItem; level?: /* zero or undefined i
   )
 }
 
-function Screenshot(props: { item?: DeMayArray<SiteCardItem['screenshot']>; siteUrl: SiteCardItem['url'] }) {
+function Screenshot(props: { item?: DeMayArray<LinkItemScreenshot>; siteUrl: LinkItem['url'] }) {
   const src = () => (isString(props.item) ? props.item : props.item?.src)
-  const detectedLinkAddress = () => (isObject(props.item) ? props.item?.linkAddress : undefined)
+  const detectedLinkAddress = () => (isObject(props.item) ? props.item?.url : undefined)
   const href = () => detectedLinkAddress() ?? props.siteUrl
   const hasLink = () => !!href()
   return (
