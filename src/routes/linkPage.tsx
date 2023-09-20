@@ -5,6 +5,7 @@ import { LinkItem, LinkItemScreenshot, links } from '../configs/links'
 import { useSearch } from '../packages/features/searchItems'
 import {
   Box,
+  Button,
   GridBox,
   GridItem,
   ICSS,
@@ -28,25 +29,26 @@ export default function LinksPage() {
     matchConfigs: [(i) => i.name, (i) => i.keywords],
   })
 
-  const loadBilibiliPopular = async () => {
-    const clientRes = await fetch('api/bilibili/popular').then((i) => i.json())
-    console.log('clientRes: ', clientRes)
-  }
+  const visiableLinks = searchedLinks
 
-  const mock = async () => {
-    fetch('api/mock-from-server', {
-      method: 'POST', // GET, POST, PUT, DELETE, etc.
-      headers: {
-        'Content-Type': 'application/json',
-        // 'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: JSON.stringify({
-        simulateUrl: 'https://api.bilibili.com/x/web-interface/popular',
-      } as PostBodyData), // body data type must match "Content-Type" header
-    }).then((i) => i.json())
-  }
+  // const loadBilibiliPopular = async () => {
+  //   const clientRes = await fetch('api/bilibili/popular').then((i) => i.json())
+  //   console.log('clientRes: ', clientRes)
+  // }
 
-  console.log('links: ', links)
+  // const mock = async () => {
+  //   fetch('api/mock-from-server', {
+  //     method: 'POST', // GET, POST, PUT, DELETE, etc.
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //       // 'Content-Type': 'application/x-www-form-urlencoded',
+  //     },
+  //     body: JSON.stringify({
+  //       simulateUrl: 'https://api.bilibili.com/x/web-interface/popular',
+  //     } as PostBodyData), // body data type must match "Content-Type" header
+  //   }).then((i) => i.json())
+  // }
+
   return (
     <Piv>
       <Section name='content' icss={{ display: 'grid', padding: '32px' }}>
@@ -55,12 +57,18 @@ export default function LinksPage() {
           <Input icss={{ border: 'solid' }} onUserInput={({ text }) => setSearchText(text)} />
         </Box>
 
-        <Loop of={searchedLinks} icss={icssGrid({ gap: '24px' })}>
+        <Loop of={visiableLinks} icss={icssGrid({ gap: '24px' })}>
           {(item) => <SiteItem item={item} />}
         </Loop>
       </Section>
     </Piv>
   )
+}
+
+/** get info from site url */
+function parseUrl(url: string) {
+  const res = fetch('api/parse-site-url', { method: 'POST', body: JSON.stringify({ url }) }).then((i) => i.json())
+  res.then((i) => console.log('i: ', i))
 }
 
 function SiteItem(props: { item: LinkItem; level?: /* zero or undefined is the top */ number }) {
@@ -101,6 +109,7 @@ function SiteItem(props: { item: LinkItem; level?: /* zero or undefined is the t
           <Loop of={props.item.keywords} icss={icssRow({ gap: '.5em' })}>
             {(keyword) => <Text icss={{ fontSize: '1em' }}>{keyword}</Text>}
           </Loop>
+          <Button onClick={() => props.item.url && parseUrl(props.item.url)}>fetch</Button>
         </Box>
         <Loop of={flap(props.item.screenshots)}>
           {(screenshotItem) => <Screenshot siteUrl={screenshotItem?.url} item={screenshotItem} />}

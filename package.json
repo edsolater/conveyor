@@ -1,7 +1,7 @@
 {
   "name": "conveyor",
   "scripts": {
-    "dev": "solid-start dev --port 3001 --host",
+    "dev": "solid-start dev --port 3001 --host --inspect",
     "build": "solid-start build",
     "start": "solid-start start",
     "type-check": "tsc --skipLibCheck --pretty --noEmit",
@@ -22,8 +22,7 @@
     "@solidjs/router": "^0.8.3",
     "solid-js": "^1.7.12",
     "solid-start": "^0.3.5",
-    "solid-styled-components": "^0.28.5",
-    "undici": "^5.24.0"
+    "solid-styled-components": "^0.28.5"
   },
   "engines": {
     "node": ">=16"
