@@ -4,6 +4,7 @@ import { SettingsFunction, createSettingsFunction } from '../../../fnkit/createS
 import { KitProps } from '../../createKit'
 import { Accessify } from '../../utils'
 import { ValidController, ValidProps } from '../typeTools'
+import { PivProps } from '../Piv'
 
 export type GetPluginParams<T> = T extends Plugin<infer Px1>
   ? Px1
@@ -55,7 +56,7 @@ export const isPluginObjSymbol = Symbol('isPlugin')
 export function createPlugin<
   PluginOptions extends AnyObj,
   PluginState extends Record<string, any> = any,
-  Props extends ValidProps = ValidProps,
+  Props extends ValidProps = PivProps,
   Controller extends ValidController = ValidController
 >(
   createrFn: (options: PluginOptions) =>

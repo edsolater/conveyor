@@ -28,6 +28,7 @@ import {
   useCSSTransition,
   useComponentController,
   withHover,
+  createPlugin,
 } from '../packages/pivkit'
 
 export default function PlaygroundPage() {
@@ -90,6 +91,10 @@ function PlaygoundList() {
 
       <ExamplePanel name='ComponentFactory'>
         <ComponentFactoryExample />
+      </ExamplePanel>
+
+      <ExamplePanel name='upload'>
+        <UploadExample />
       </ExamplePanel>
 
       {/* <Foo /> */}
@@ -376,4 +381,24 @@ function PopoverExample() {
       </Box>
     </>
   )
+}
+
+function UploadExample() {
+  const { buttonPlugin } = useHTMLUpload()
+  return (
+    <>
+      <Button plugin={[buttonPlugin]}>picker</Button>
+    </>
+  )
+}
+/**
+ * hook for upload file by html input
+ */
+function useHTMLUpload() {
+  const buttonPlugin = createPlugin(() => () => ({
+    onClick: ({ el }) => {
+      console.log('click')
+    },
+  }))
+  return { buttonPlugin }
 }
