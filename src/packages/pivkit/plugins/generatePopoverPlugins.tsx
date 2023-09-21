@@ -75,8 +75,8 @@ export function generatePopoverPlugins(
       get style() {
         return panelStyle()
       },
-      // @ts-expect-error lack of correct html type
-      htmlProps: { popover: 'manual' },
+
+      htmlProps: { popover: 'manual' } as any, //  lack of correct html type,
     } satisfies Partial<PivProps>
   })
 
