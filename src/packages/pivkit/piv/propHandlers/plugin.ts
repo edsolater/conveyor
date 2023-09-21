@@ -47,7 +47,7 @@ export type PluginCoreFn<T extends ValidProps = any, C extends ValidController =
     controller: Accessor<C>
     dom: Accessor<HTMLElement | undefined>
   }
-) => Accessify<Partial<KitProps<T, C>>> | undefined | void // TODO: should support 'plugin' and 'shadowProps' for easier compose
+) => Accessify<Partial<KitProps<T, { controller: C }>>> | undefined | void // TODO: should support 'plugin' and 'shadowProps' for easier compose
 
 export const plugin = Symbol('pluginCore')
 export const isPluginObjSymbol = Symbol('isPlugin')
