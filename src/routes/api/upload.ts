@@ -1,6 +1,10 @@
 import { APIEvent } from 'solid-start'
 
 export async function POST({ request }: APIEvent) {
-  const postBodyData = request.body
-  console.log('postBodyData: ', postBodyData)
+  const formDataPromise = request.formData()
+  const fd = formDataPromise.then((fd) => {
+    fd.forEach((value, key) => {
+      console.log(key, value)
+    })
+  })
 }

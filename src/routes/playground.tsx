@@ -46,7 +46,7 @@ function PlaygoundList() {
         display: 'grid',
         gridTemplateColumns: 'repeat(auto-fill, minmax(400px, 1fr))',
         padding: '16px 32px 0',
-        gap: '64px',
+        gap: '4vw',
       }}
     >
       <ExamplePanel name='IntervalCircle'>
@@ -416,8 +416,8 @@ function useHTMLUpload() {
 
 function postFiles(files: MayPromise<File[]>) {
   Promise.resolve(files).then((files) => {
-    const data = files.reduce((formData, file) => {
-      formData.append('files', file)
+    const data = files.reduce((formData, file, idx) => {
+      formData.append(`image-${idx}`, file)
       return formData
     }, new FormData())
 
