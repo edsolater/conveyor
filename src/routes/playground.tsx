@@ -1,14 +1,13 @@
-import { Accessor, JSX, createEffect, createSignal, onCleanup } from 'solid-js'
+import { MayPromise } from '@edsolater/fnkit'
+import { Accessor, createEffect, createSignal, onCleanup } from 'solid-js'
 import { createStore } from 'solid-js/store'
 import { CircularProgress } from '../components/CircularProgress'
 import { ExamplePanel } from '../components/ExamplePanel'
-import { NavBox } from '../components/NavBox'
 import { useLoopPercent } from '../hooks/useLoopPercent'
 import { switchCase } from '../packages/fnkit'
 import {
   Box,
   Button,
-  RenderFactory,
   Drawer,
   DrawerController,
   Input,
@@ -17,10 +16,12 @@ import {
   ModalController,
   Piv,
   Radio,
+  RenderFactory,
   Switch,
   Text,
   createIncresingAccessor,
   createIntervalEffect,
+  createPlugin,
   generatePopoverPlugins,
   icssCol,
   icssRow,
@@ -28,7 +29,6 @@ import {
   useCSSTransition,
   useComponentController,
   withHover,
-  createPlugin,
 } from '../packages/pivkit'
 
 export default function PlaygroundPage() {
@@ -46,7 +46,7 @@ function PlaygoundList() {
         display: 'grid',
         gridTemplateColumns: 'repeat(auto-fill, minmax(400px, 1fr))',
         padding: '16px 32px 0',
-        gap: '16px',
+        gap: '64px',
       }}
     >
       <ExamplePanel name='IntervalCircle'>
@@ -397,7 +397,7 @@ function UploadExample() {
 function useHTMLUpload() {
   const buttonPlugin = createPlugin(() => () => ({
     onClick: ({ el }) => {
-      const r = showOpenFilePicker({
+      const fileHandles = showOpenFilePicker({
         types: [
           {
             description: 'Images',
@@ -406,9 +406,28 @@ function useHTMLUpload() {
             },
           },
         ],
+        multiple: true,
       })
-      r.then((re) => console.log('re: ', re))
+      postFiles(getFilesFromHandles(fileHandles))
     },
   }))
   return { buttonPlugin }
+}
+
+function postFiles(files: MayPromise<File[]>) {
+  Promise.resolve(files).then((files) => {
+    const data = files.reduce((formData, file) => {
+      formData.append('files', file)
+      return formData
+    }, new FormData())
+
+    fetch('api/upload', { method: 'POST', body: data })
+  })
+}
+/**
+ * since dom [FileSystemFileHandler](https://developer.mozilla.org/en-US/docs/Web/API/FileSystemFileHandle) is complicated, so provide a helper function to get file from it
+ */
+async function getFilesFromHandles(fileHandles: MayPromise<FileSystemFileHandle[]>) {
+  const handles = await Promise.resolve(fileHandles)
+  return Promise.all(handles.map((handle) => handle.getFile()))
 }

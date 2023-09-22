@@ -1,5 +1,5 @@
 import { APIEvent } from 'solid-start'
-import { getPostData } from '../../packages/networkkit/getPostBodyFromData'
+import { getPostJSONData } from '../../packages/networkkit/getPostBodyFromData'
 import { createNewResponse } from '../../packages/networkkit/wrapToNewResponse'
 
 export type PostBodyData = {
@@ -7,7 +7,7 @@ export type PostBodyData = {
 }
 
 export async function POST({ request }: APIEvent) {
-  const postBodyData = (await getPostData(request)) as PostBodyData
+  const postBodyData = (await getPostJSONData(request)) as PostBodyData
   const url = postBodyData.url
 
   const res = fetch(url)

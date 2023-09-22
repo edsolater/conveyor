@@ -20,7 +20,6 @@ import {
   icssGridItem,
   icssRow,
 } from '../packages/pivkit'
-import { PostBodyData } from './api/server-fetch'
 
 export default function LinksPage() {
   const [searchText, setSearchText] = createSignal<string>()
