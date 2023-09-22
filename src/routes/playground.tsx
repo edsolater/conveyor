@@ -397,7 +397,17 @@ function UploadExample() {
 function useHTMLUpload() {
   const buttonPlugin = createPlugin(() => () => ({
     onClick: ({ el }) => {
-      console.log('click')
+      const r = showOpenFilePicker({
+        types: [
+          {
+            description: 'Images',
+            accept: {
+              'image/*': ['.png', '.gif', '.jpeg', '.jpg'],
+            },
+          },
+        ],
+      })
+      r.then((re) => console.log('re: ', re))
     },
   }))
   return { buttonPlugin }
