@@ -391,33 +391,49 @@ function UploadExample() {
     </>
   )
 }
+
 /**
  * hook for upload file by html input
  */
 function useHTMLUpload() {
   const buttonPlugin = createPlugin(() => () => ({
     onClick: ({ el }) => {
-      const fileHandles = showOpenFilePicker({
-        types: [
-          {
-            description: 'Images',
-            accept: {
-              'image/*': ['.png', '.gif', '.jpeg', '.jpg'],
-            },
-          },
-        ],
-        multiple: true,
-      })
-      postFiles(getFilesFromHandles(fileHandles))
+      const images = pickImages()
+      postToSercer(images)
     },
   }))
   return { buttonPlugin }
+
+  /**
+   * utils
+   */
+  function pickImages() {
+    const fileHandles = showOpenFilePicker({
+      types: [
+        {
+          description: 'Images',
+          accept: {
+            'image/*': ['.png', '.gif', '.jpeg', '.jpg'],
+          },
+        },
+      ],
+      multiple: true,
+    })
+    return fileHandles
+  }
+
+  /**
+   * utils
+   */
+  function postToSercer(fileHandles: Promise<FileSystemFileHandle[]>) {
+    postFiles(getFilesFromHandles(fileHandles))
+  }
 }
 
 function postFiles(files: MayPromise<File[]>) {
   Promise.resolve(files).then((files) => {
     const data = files.reduce((formData, file, idx) => {
-      formData.append(`image-${idx}`, file)
+      formData.append(`image.${idx}`, file)
       return formData
     }, new FormData())
 
