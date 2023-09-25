@@ -1,7 +1,6 @@
-import { AnyFn, addItem, groupArrayBySize, isNumber } from "@edsolater/fnkit"
+import { AnyFn, addItem, groupArrayBySize, isNumber, mergeObjects } from '@edsolater/fnkit'
 
-
-const cache = new Map<string, (LazyMapSettings<any, any> & { idleId: number })[]>()
+const taskCache = new Map<string, LazyMapSettings<any, any> & { idleId: number }>()
 
 type LazyMapSettings<T, U> = {
   source: T[]
@@ -37,28 +36,32 @@ type LazyMapSettings<T, U> = {
  */
 export function lazyMap<T, U>(setting: LazyMapSettings<T, U>): Promise<U[]> {
   return new Promise((resolve) => {
-    const idleId = requestIdleCallback(async () => {
+    const newTaskIdleId = requestIdleCallback(async () => {
       cancelUnresolvedIdles(setting.loopTaskName)
       const result = await lazyMapCoreMap(setting)
       resolve(result)
     })
 
     // re-invoke will auto cancel the last idle callback, and record new setting
-    const lastIdleId = cache.get(setting.loopTaskName)?.at(-1)?.idleId
-    if (lastIdleId) cancelIdleCallback(lastIdleId)
+    cancelOldSameNameTask()
+    recordNewNamedTask()
 
-    cache.set(
-      setting.loopTaskName,
-      addItem(cache.get(setting.loopTaskName) ?? [], { ...setting, idleId })
-    )
+    function recordNewNamedTask() {
+      taskCache.set(setting.loopTaskName, mergeObjects(setting, { idleId: newTaskIdleId }))
+    }
+
+    function cancelOldSameNameTask() {
+      const lastIdleId = taskCache.get(setting.loopTaskName)?.idleId
+      if (lastIdleId) cancelIdleCallback(lastIdleId)
+    }
   })
 }
 
-const subTaskIdleIds: Record<string /* task name */, number[]> = {}
+const taskGroupsIdleIds: Record<string /* task name */, number[]> = {}
 
 function cancelUnresolvedIdles(loopTaskName: string) {
-  subTaskIdleIds[loopTaskName]?.forEach((id) => cancelIdleCallback(id))
-  subTaskIdleIds[loopTaskName] = []
+  taskGroupsIdleIds[loopTaskName]?.forEach((id) => cancelIdleCallback(id))
+  taskGroupsIdleIds[loopTaskName] = []
 }
 
 // for sub task
@@ -67,7 +70,7 @@ async function lazyMapCoreMap<T, U>({
   loopTaskName,
   options,
   loopFn,
-  method: coreMethod
+  method: coreMethod,
 }: LazyMapSettings<T, U>): Promise<U[]> {
   const needFallbackToOldWay =
     isNumber(options?.oneGroupTasksSize) || !canUseIdleCallback() || coreMethod === 'hurrier-settimeout'
@@ -90,8 +93,11 @@ async function lazyMapCoreMap<T, U>({
   } else {
     if (source.length === 0) return []
     // console.time(`lazy load ${loopTaskName}`)
-    const taskResults = await loadTasks(
-      source.map((item, index) => () => loopFn(item, index, source)),
+    const taskResults = await runTasks(
+      source.map((item, index) => () => {
+        const task = loopFn(item, index, source)
+        return task
+      }),
       loopTaskName,
       options
     )
@@ -100,8 +106,8 @@ async function lazyMapCoreMap<T, U>({
   }
 }
 
-async function loadTasks<F extends () => any>(
-  tasks: F[],
+async function runTasks<F extends () => any>(
+  tasksQueue: F[],
   loopTaskName: LazyMapSettings<any, any>['loopTaskName'],
   options?: LazyMapSettings<any, any>['options']
 ): Promise<ReturnType<F>[]> {
@@ -111,19 +117,20 @@ async function loadTasks<F extends () => any>(
     const subTaskIdleId = requestIdleCallback(
       (deadline) => {
         let currentTaskIndex = 0
-        while (deadline.timeRemaining() > testLeastRemainTime) {
-          if (currentTaskIndex < tasks.length) {
-            const taskResult = tasks[currentTaskIndex]()
+        const stillHaveTimeToRun = deadline.timeRemaining() > testLeastRemainTime
+        while (stillHaveTimeToRun) {
+          if (currentTaskIndex < tasksQueue.length) {
+            const taskResult = tasksQueue[currentTaskIndex]()
             wholeResult.push(taskResult)
             currentTaskIndex += 1
           } else {
             resolve(wholeResult)
           }
         }
-        const stillHaveTask = currentTaskIndex < tasks.length
+        const stillHaveTask = currentTaskIndex < tasksQueue.length
         if (stillHaveTask) {
-          const restTasks = tasks.slice(currentTaskIndex)
-          loadTasks(restTasks, loopTaskName, options).then((restResult) =>
+          const restTasks = tasksQueue.slice(currentTaskIndex)
+          runTasks(restTasks, loopTaskName, options).then((restResult) =>
             resolve(wholeResult.concat(restResult as ReturnType<F>[]))
           )
         } else {
@@ -132,13 +139,17 @@ async function loadTasks<F extends () => any>(
       },
       { timeout: options?.idleTimeout ?? 1000 }
     )
-    if (!subTaskIdleIds[loopTaskName]) {
-      subTaskIdleIds[loopTaskName] = []
-    }
-    subTaskIdleIds[loopTaskName].push(subTaskIdleId)
+    recordSubTaskIdleId(subTaskIdleId)
   })
 
   return fragmentResults
+
+  function recordSubTaskIdleId(subTaskIdleId: number) {
+    if (!taskGroupsIdleIds[loopTaskName]) {
+      taskGroupsIdleIds[loopTaskName] = []
+    }
+    taskGroupsIdleIds[loopTaskName].push(subTaskIdleId)
+  }
 }
 
 function canUseIdleCallback(): boolean {
