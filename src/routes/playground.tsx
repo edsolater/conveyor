@@ -1,5 +1,5 @@
 import { MayPromise } from '@edsolater/fnkit'
-import { Accessor, createEffect, createSignal, onCleanup } from 'solid-js'
+import { Accessor, JSX, JSXElement, createContext, createEffect, createSignal, onCleanup } from 'solid-js'
 import { createStore } from 'solid-js/store'
 import { CircularProgress } from '../components/CircularProgress'
 import { ExamplePanel } from '../components/ExamplePanel'
@@ -15,6 +15,7 @@ import {
   Modal,
   ModalController,
   Piv,
+  PluginObj,
   Radio,
   RenderFactory,
   Switch,
@@ -447,3 +448,30 @@ async function getFilesFromHandles(fileHandles: MayPromise<FileSystemFileHandle[
   const handles = await Promise.resolve(fileHandles)
   return Promise.all(handles.map((handle) => handle.getFile()))
 }
+
+/**
+ * for specific tab item
+ */
+type TabPluginOption = {
+  value: string
+}
+
+/** make some element to be gouped like: tabs */
+function useTabs() {
+  const [activeTab, setActiveTab] = createSignal(0)
+
+  const TabsContext = createContext()
+
+  function TabsContextProvider(props: { children?: JSXElement }) {
+    return <TabsContext.Provider value={{ activeTab }}>{props.children}</TabsContext.Provider>
+  }
+
+  const tabPlugin = createPlugin<TabPluginOption>(({ value }) => () => ({ onClick: ({ el }) => {} }))
+
+  return { TabsContextProvider }
+}
+
+/**
+ * should can strightforward get plugin's core function\state\etc.
+ */
+function usePlugin(plugin: PluginObj<object>) {}
