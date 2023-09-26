@@ -1,0 +1,71 @@
+import { DeKitProps } from '../../../piv'
+import { LabelProps } from '../../Label'
+import { HTMLInputTabsProps } from '../HTMLInputTabs'
+import { TabsProps } from '../Tabs'
+
+/** {@link TabsProps} should extends this  */
+export type TabsStyleProps = {}
+
+/**
+ * hook for tabs's **style**
+ */
+export function createTabsStyle(params: { props: DeKitProps<TabsProps> }) {
+  const containerBoxStyleProps = {
+    icss: {
+      display: 'flex',
+      gap: '.25em',
+      alignItems: 'center',
+      '&:hover': {
+        filter: 'brightness(1.1)',
+      },
+      '&:active': {
+        filter: 'brightness(1.2)',
+      },
+      transition: '300ms',
+    },
+  } satisfies Partial<LabelProps>
+
+  const htmlCheckboxStyleProps = {
+    icss: {
+      position: 'absolute',
+      border: '0px',
+      outline: 'none',
+      opacity: 0,
+      width: '1px',
+      height: '1px',
+      margin: '-1px',
+      overflow: 'hidden',
+    },
+  } satisfies Partial<HTMLInputTabsProps>
+
+  // FIXME: why not a createMemo is ok ?
+  const tabsCheckboxStyleProps = {
+    icss: ({ isChecked }) => ({
+      position: 'relative',
+      display: 'grid',
+      placeItems: 'center',
+      height: '60%',
+      aspectRatio: '1',
+      borderRadius: '999em',
+      borderStyle: 'solid',
+
+      borderColor: isChecked() ? 'dodgerblue' : '#e3e8ef',
+      background: isChecked() ? 'dodgerblue' : 'white',
+      '&::before': {
+        content: '""',
+        display: 'block',
+        position: 'absolute',
+        width: '45%',
+        aspectRatio: '1',
+        borderRadius: '999em',
+        backgroundColor: 'white',
+      },
+    }),
+  } satisfies Partial<TabsProps>
+
+  const tabsLabelStyleProps = {
+    icss: {},
+  } satisfies Partial<LabelProps>
+
+  return { containerBoxStyleProps, htmlCheckboxStyleProps, tabsCheckboxStyleProps, tabsLabelStyleProps }
+}

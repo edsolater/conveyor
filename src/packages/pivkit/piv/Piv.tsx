@@ -10,11 +10,6 @@ import { pluginCoreSymbol } from './propHandlers/handlePluginProps'
 type Boollike = any
 
 export interface PivProps<TagName extends HTMLTag = HTMLTag, Controller extends ValidController | unknown = unknown> {
-  /** @example
-   * const Button = () => <Piv as={(parsedPivProps) => <button {...parsedPivProps} />} />
-   */
-  'render:self'?: (selfProps: PivProps<any, any>) => JSX.Element // assume a function return ReactNode is a Component
-
   /** if is settled and is flase , only it's children will render */
   if?: Boollike
   /** if is settled and is flase , only it's children will render */
@@ -91,12 +86,19 @@ export interface PivProps<TagName extends HTMLTag = HTMLTag, Controller extends 
   /** only passed in parent component */
   innerController?: Controller
 
+  /** @example
+   * const Button = () => <Piv as={(parsedPivProps) => <button {...parsedPivProps} />} />
+   */
+  'render:self'?: (selfProps: PivProps<any, any>) => JSX.Element // assume a function return ReactNode is a Component
+
   /**
    * auto merge by shadowProps
    * change outter wrapper element
    */
   'render:outWrapper'?: MayArray<DangerousWrapperNodeFn>
+
   'render:firstChild'?: MayArray<PivChild<Controller>>
+  
   'render:lastChild'?: MayArray<PivChild<Controller>>
 }
 
