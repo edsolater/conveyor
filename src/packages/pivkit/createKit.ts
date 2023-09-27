@@ -3,7 +3,7 @@ import { AccessifyProps, DeAccessifyProps, useAccessifiedProps } from '.'
 import { Faker } from '../fnkit'
 import { createUUID, UUID } from './hooks/utils/createUUID'
 import { registerControllerInCreateKit } from './piv/hooks/useComponentController'
-import { loadPropsControllerRef, toProxifyController } from './piv/propHandlers/controller'
+import { loadPropsControllerRef, toProxifyController } from './piv/propHandlers/children'
 import { handlePluginProps } from './piv/propHandlers/handlePluginProps'
 import { GetPluginParams, Plugin } from './piv/propHandlers/plugin'
 import { handleShadowProps } from './piv/propHandlers/shadowProps'
@@ -103,8 +103,8 @@ export type KitPropsOptions<
   /** by default, all will check to Accessify */
   needAccessify?: string[]
   /**
-   * detect which props is shadowProps
-   * not selfProps means it's shadowProps,
+   * detect which props is shadowProps\
+   * not selfProps means it's shadowProps\
    * by default, all props are shadowProps(which can pass to shadowProps="")
    */
   selfProps?: string[]

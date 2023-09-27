@@ -10,8 +10,8 @@
   "type": "module",
   "devDependencies": {
     "@types/babel__core": "^7.20.2",
-    "@types/debug": "^4.1.8",
-    "@types/node": "^20.6.3",
+    "@types/debug": "^4.1.9",
+    "@types/node": "^20.7.0",
     "solid-start-node": "^0.3.6",
     "typescript": "^5.2.2",
     "vite": "^4.4.9"

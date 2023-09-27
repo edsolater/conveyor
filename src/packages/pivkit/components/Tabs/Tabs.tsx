@@ -1,4 +1,4 @@
-import { Accessor } from 'solid-js'
+import { Accessor, JSXElement, createContext, createMemo, createSignal } from 'solid-js'
 import { createSyncSignal } from '../../hooks/createSyncSignal'
 import { Label, LabelProps } from '../Label'
 import { LabelBox, LabelBoxProps } from '../LabelBox'
@@ -9,88 +9,89 @@ import { Piv, PivProps } from '../../piv/Piv'
 import { KitProps, useKitProps } from '../../createKit'
 
 export interface TabsController {
-  option: string
-  isChecked: Accessor<boolean>
-  check: () => void
-  uncheck: () => void
+  groupName: Accessor<string | undefined>
+  tabValues: Accessor<string[]>
 }
 
 export type TabsProps<Controller extends ValidController = TabsController> = KitProps<
   {
-    option: string
-    isChecked?: boolean
-    onChange?(utils: { option: string; isChecked: boolean }): void
-    'anatomy:ContainerBox'?: LabelBoxProps
-    'anatomy:HTMLTabs'?: HTMLInputTabsProps
-    'anatomy:Checkbox'?: PivProps<'div', Controller>
-    'anatomy:Option'?: LabelProps
+    /** recommand  */
+    groupName?: string
+
+    activeIndex?: number
+    defaultActiveIndex?: number
+
+    /** only works when target tab name can match */
+    activeValue?: string
+    /** only works when target tab name can match */
+    defaultActiveValue?: string
+
+    onChange?(utils: { tabIndex: number; tabValue?: Accessor<string | undefined> }): void
   },
   { controller: Controller }
 >
 
-const selfProps = ['isChecked', 'option', 'onChange'] satisfies (keyof TabsProps)[]
+const TabsContext = createContext<{ activeTabIndex: Accessor<number> }>({ activeTabIndex: () => 0 })
 
-export type TabsDefaultTabsProps = typeof defaultProps
-
-const defaultProps = {
-  isChecked: false,
-} satisfies Partial<TabsProps>
+function TabsContextProvider(props: { activeTabIndex: Accessor<number>; children?: JSXElement }) {
+  return <TabsContext.Provider value={{ activeTabIndex: props.activeTabIndex }}>{props.children}</TabsContext.Provider>
+}
 
 /**
  * Tabs can illustrate a boolean value
  */
 export function Tabs(rawProps: TabsProps) {
-  const { props, shadowProps, lazyLoadController } = useKitProps(rawProps, {
-    defaultProps,
-    selfProps: selfProps,
-  })
+  const { props, shadowProps, lazyLoadController } = useKitProps(rawProps)
 
-  const [isChecked, setIsChecked] = createSyncSignal({
-    get: () => props.isChecked,
-    set(value) {
-      props.onChange?.({ isChecked: value, option: props.option ?? '' })
+  const getTabItemIndexByValues = (value: string) => tabItemValues().findIndex((v) => v === value)
+
+  const [tabItemValues, setTabItemValues] = createSignal<string[]>([])
+
+  function addTabValue(tabValue: string) {
+    setTabItemValues((prev) => [...prev, tabValue])
+  }
+
+  const [activeTabIndex, setActiveTabIndex] = createSyncSignal({
+    defaultValue: () =>
+      'defaultActiveIndex' in props && props.defaultActiveIndex != null
+        ? props.defaultActiveIndex
+        : 0 /* defaultly focus on first one */,
+    getValueFromOutside: () =>
+      'activeIndex' in props
+        ? props.activeIndex
+        : 'activeValue' in props && props.activeValue
+        ? getTabItemIndexByValues(props.activeValue) ?? undefined
+        : undefined /* defaultly focus on first one */,
+    onInvokeSetter(value) {
+      props.onChange?.({ tabIndex: value, tabValue: () => tabItemValues().at(value) })
     },
   })
 
-  const check = () => setIsChecked(true)
-  const uncheck = () => setIsChecked(false)
+  // const check = () => setIsChecked(true)
+  // const uncheck = () => setIsChecked(false)
 
-  const { containerBoxStyleProps, htmlCheckboxStyleProps, tabsCheckboxStyleProps, tabsLabelStyleProps } =
-    createTabsStyle({ props })
+  // const { containerBoxStyleProps, htmlCheckboxStyleProps, tabsCheckboxStyleProps, tabsLabelStyleProps } =
+  //   createTabsStyle({ props })
 
-  const tabsController = {
-    isChecked,
-    check,
-    uncheck,
-    get option() {
-      return props.option
-    },
+  const tabsController: TabsController = {
+    groupName: createMemo(() => props.groupName),
+    tabValues: tabItemValues,
   }
 
   lazyLoadController(tabsController)
 
   return (
-    <LabelBox shadowProps={[containerBoxStyleProps, shadowProps, props['anatomy:ContainerBox']]}>
-      <HTMLInputTabs
-        shadowProps={[htmlCheckboxStyleProps, props['anatomy:HTMLTabs']]}
-        innerController={tabsController}
-        label={props.option}
-        defaultChecked={props.isChecked}
-        onClick={() => {
-          setIsChecked((b) => !b)
-        }}
-      />
-
-      {/* Tabs Checkbox */}
-      <Piv
-        shadowProps={[tabsCheckboxStyleProps, props['anatomy:Checkbox']]}
-        innerController={tabsController}
-        class='TabsCheckbox'
-        icss={[{ display: 'grid', placeContent: 'center' }]}
-      />
-
-      {/* Tabs Label */}
-      <Label shadowProps={[tabsLabelStyleProps, props['anatomy:Option']]}>{props.option}</Label>
-    </LabelBox>
+    <TabsContext.Provider value={{ activeTabIndex: activeTabIndex }}>
+      <Piv class='Tabs'>{props.children}</Piv>
+    </TabsContext.Provider>
   )
+}
+
+export interface TabController {
+  /** tab value */
+  value: string
+
+  active: Accessor<boolean>
+  /** make this tab item to be active  */
+  check: () => void
 }

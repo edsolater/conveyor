@@ -62,8 +62,8 @@ export function Switch(rawProps: SwitchProps) {
   })
 
   const [isChecked, setIsChecked] = createSyncSignal({
-    get: () => props.isChecked ?? props.isDefaultChecked,
-    set(value) {
+    getValueFromOutside: () => props.isChecked ?? props.isDefaultChecked,
+    onInvokeSetter(value) {
       props.onChange?.({ isChecked: value })
     },
   })
@@ -79,7 +79,10 @@ export function Switch(rawProps: SwitchProps) {
   lazyLoadController(switchController)
 
   return (
-    <LabelBox  innerController={switchController} shadowProps={[wrapperLabelStyleProps, shadowProps, props['anatomy:ContainerBox']]}>
+    <LabelBox
+      innerController={switchController}
+      shadowProps={[wrapperLabelStyleProps, shadowProps, props['anatomy:ContainerBox']]}
+    >
       <HTMLCheckbox
         shadowProps={[htmlCheckboxStyleProps, props['anatomy:HTMLCheckbox']]}
         innerController={switchController}

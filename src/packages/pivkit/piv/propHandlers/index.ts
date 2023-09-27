@@ -1,5 +1,5 @@
 export * from './classname'
-export * from './controller'
+export * from './children'
 export * from './htmlProps'
 export * from './icss'
 export * from './istyle'

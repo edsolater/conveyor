@@ -441,6 +441,7 @@ function postFiles(files: MayPromise<File[]>) {
     fetch('api/upload', { method: 'POST', body: data })
   })
 }
+
 /**
  * since dom [FileSystemFileHandler](https://developer.mozilla.org/en-US/docs/Web/API/FileSystemFileHandle) is complicated, so provide a helper function to get file from it
  */
@@ -456,7 +457,10 @@ type TabPluginOption = {
   value: string
 }
 
-/** make some element to be gouped like: tabs */
+/** 
+ * make some element to be gouped like: tabs 
+ * ui kit creator hook
+ */
 function useTabs() {
   const [activeTab, setActiveTab] = createSignal(0)
 
