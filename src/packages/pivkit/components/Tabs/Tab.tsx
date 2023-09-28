@@ -55,7 +55,7 @@ export function Tab(rawProps: TabProps) {
 
   const selectThisTab = () => {
     const idx = currentIndex()
-    if (isNumber(idx)) tabsController.setSelectedTabIndex(idx)
+    if (isNumber(idx)) tabsController.selectTabByIndex(idx)
   }
 
   // invoke onSelect and onUnselect

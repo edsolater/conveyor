@@ -20,13 +20,13 @@ export interface TabsController {
   /**
    * method
    */
-  setSelectedTabIndex(index: number): void
+  selectTabByIndex(index: number): void
 
   /**
    * method
    * only works when target tab name can match
    */
-  setSelectedTabValue(value: string): void
+  selectTabByValue(value: string): void
 
   /**
    * inner method
@@ -65,8 +65,8 @@ const TabsControllerContextDefaultValue: TabsController = {
   tabIndex: () => 0,
   tabValues: () => [],
   tabValue: () => undefined,
-  setSelectedTabIndex: () => {},
-  setSelectedTabValue: () => {},
+  selectTabByIndex: () => {},
+  selectTabByValue: () => {},
   _addTabValue: () => {},
   _onChange: () => ({ unregister: () => {} }),
 }
@@ -103,7 +103,7 @@ export function Tabs(rawProps: TabsProps) {
     setTabItemValues((prev) => [...prev, tabValue])
   }
 
-  const [selectedTabIndex, setActiveTabIndex] = createSyncSignal({
+  const [selectedTabIndex, selectTabByIndex] = createSyncSignal({
     defaultValue: () =>
       'defaultSelectedIndex' in props && props.defaultSelectedIndex != null
         ? props.defaultSelectedIndex
@@ -128,9 +128,9 @@ export function Tabs(rawProps: TabsProps) {
   }
 
   // an alertive of `setActiveTabIndex`
-  function setActiveTabValue(value: string) {
+  function selectTabByValue(value: string) {
     const idx = getTabItemIndexByValues(value)
-    if (isNumber(idx)) setActiveTabIndex(idx)
+    if (isNumber(idx)) selectTabByIndex(idx)
   }
 
   const registOnChangeCallbacks = (cb: (controller: TabsController) => void) => {
@@ -147,8 +147,8 @@ export function Tabs(rawProps: TabsProps) {
     tabValues: tabItemValues,
     tabIndex: selectedTabIndex,
     tabValue: selectedTabValue,
-    setSelectedTabIndex: setActiveTabIndex,
-    setSelectedTabValue: setActiveTabValue,
+    selectTabByIndex,
+    selectTabByValue,
     _addTabValue: addTabValue,
     _onChange: registOnChangeCallbacks,
   }
