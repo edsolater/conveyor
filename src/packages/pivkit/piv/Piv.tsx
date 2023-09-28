@@ -89,6 +89,7 @@ export interface PivProps<TagName extends HTMLTag = HTMLTag, Controller extends 
   /** @example
    * const Button = () => <Piv as={(parsedPivProps) => <button {...parsedPivProps} />} />
    */
+  as?: any // TODO: imply it // 💡soft `render-self`, props will merge other than cover
   'render:self'?: (selfProps: PivProps<any, any>) => JSX.Element // assume a function return ReactNode is a Component
 
   /**
@@ -98,7 +99,7 @@ export interface PivProps<TagName extends HTMLTag = HTMLTag, Controller extends 
   'render:outWrapper'?: MayArray<DangerousWrapperNodeFn>
 
   'render:firstChild'?: MayArray<PivChild<Controller>>
-  
+
   'render:lastChild'?: MayArray<PivChild<Controller>>
 }
 

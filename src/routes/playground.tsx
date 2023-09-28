@@ -19,6 +19,7 @@ import {
   Radio,
   RenderFactory,
   Switch,
+  Tabs,
   Text,
   createIncresingAccessor,
   createIntervalEffect,
@@ -58,7 +59,7 @@ function PlaygoundList() {
         <DrawerExample />
       </ExamplePanel> */}
 
-      <ExamplePanel name='CSSTransition'>
+      {/* <ExamplePanel name='CSSTransition'>
         <CSSTransitionExample />
       </ExamplePanel>
 
@@ -92,10 +93,14 @@ function PlaygoundList() {
 
       <ExamplePanel name='ComponentFactory'>
         <ComponentFactoryExample />
-      </ExamplePanel>
+      </ExamplePanel> */}
 
       <ExamplePanel name='upload'>
         <UploadExample />
+      </ExamplePanel>
+
+      <ExamplePanel name='Tabs'>
+        <TabsExample />
       </ExamplePanel>
 
       {/* <Foo /> */}
@@ -384,6 +389,18 @@ function PopoverExample() {
   )
 }
 
+function TabsExample() {
+  return (
+    <Tabs>
+      <Tabs.List>
+        <Tabs.Tab>{({ selected }) => (selected() ? '🟢' : '🔴')} Tab1</Tabs.Tab>
+        <Tabs.Tab>{({ selected }) => (selected() ? '🟢' : '🔴')} Tab2</Tabs.Tab>
+        <Tabs.Tab>{({ selected }) => (selected() ? '🟢' : '🔴')} Tab3</Tabs.Tab>
+      </Tabs.List>
+    </Tabs>
+  )
+}
+
 function UploadExample() {
   const { buttonPlugin } = useHTMLUpload()
   return (
@@ -457,8 +474,8 @@ type TabPluginOption = {
   value: string
 }
 
-/** 
- * make some element to be gouped like: tabs 
+/**
+ * make some element to be gouped like: tabs
  * ui kit creator hook
  */
 function useTabs() {

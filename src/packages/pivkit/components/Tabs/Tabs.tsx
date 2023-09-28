@@ -1,16 +1,34 @@
-import { Accessor, JSXElement, createContext, createMemo, createSignal } from 'solid-js'
-import { createSyncSignal } from '../../hooks/createSyncSignal'
-import { Label, LabelProps } from '../Label'
-import { LabelBox, LabelBoxProps } from '../LabelBox'
-import { HTMLInputTabs, HTMLInputTabsProps } from './HTMLInputTabs'
-import { createTabsStyle } from './hooks/createTabsStyle'
-import { ValidController } from '../../piv/typeTools'
-import { Piv, PivProps } from '../../piv/Piv'
+import { isNumber } from '@edsolater/fnkit'
+import { Accessor, createContext, createMemo, createSignal } from 'solid-js'
 import { KitProps, useKitProps } from '../../createKit'
+import { createSyncSignal } from '../../hooks/createSyncSignal'
+import { Piv } from '../../piv/Piv'
+import { ValidController } from '../../piv/typeTools'
+import { TabList } from './TabList'
+import { Tab } from './Tab'
 
 export interface TabsController {
   groupName: Accessor<string | undefined>
+  selectedTabIndex: Accessor<number>
+  /** only works when target tab name can match */
+  selectedTabValue: Accessor<string | undefined>
   tabValues: Accessor<string[]>
+
+  /**
+   * method
+   */
+  setSelectedTabIndex(index: number): void
+  /**
+   * method
+   * only works when target tab name can match
+   */
+  setSelectedTabValue(value: string): void
+
+  /**
+   * inner method
+   * invoked by `Tab` component
+   */
+  _addTabValue(value: string): void
 }
 
 export type TabsProps<Controller extends ValidController = TabsController> = KitProps<
@@ -18,27 +36,44 @@ export type TabsProps<Controller extends ValidController = TabsController> = Kit
     /** recommand  */
     groupName?: string
 
-    activeIndex?: number
-    defaultActiveIndex?: number
+    selectedIndex?: number
+    defaultSelectedIndex?: number
 
     /** only works when target tab name can match */
-    activeValue?: string
+    selectedValue?: string
     /** only works when target tab name can match */
-    defaultActiveValue?: string
+    defaultSelectedValue?: string
 
     onChange?(utils: { tabIndex: number; tabValue?: Accessor<string | undefined> }): void
   },
   { controller: Controller }
 >
 
-const TabsContext = createContext<{ activeTabIndex: Accessor<number> }>({ activeTabIndex: () => 0 })
-
-function TabsContextProvider(props: { activeTabIndex: Accessor<number>; children?: JSXElement }) {
-  return <TabsContext.Provider value={{ activeTabIndex: props.activeTabIndex }}>{props.children}</TabsContext.Provider>
+const TabsControllerContextDefaultValue :TabsController= {
+  groupName: () => undefined,
+  selectedTabIndex: () => 0,
+  tabValues: () => [],
+  selectedTabValue: () => undefined,
+  setSelectedTabIndex: () => {},
+  setSelectedTabValue: () => {},
+  _addTabValue: () => {},
 }
+export const TabsControllerContext = createContext<TabsController>(TabsControllerContextDefaultValue)
 
 /**
- * Tabs can illustrate a boolean value
+ * @example
+ * <Tabs>
+ *   <Tab.List>
+ *     <Tab>Tab 1</Tab>
+ *     <Tab>Tab 2</Tab>
+ *     <Tab>Tab 3</Tab>
+ *   </Tab.List>
+ *   <Tab.Panels>
+ *     <Tab.Panel>Content 1</Tab.Panel>
+ *     <Tab.Panel>Content 2</Tab.Panel>
+ *     <Tab.Panel>Content 3</Tab.Panel>
+ *   </Tab.Panels>
+ * </Tabs>
  */
 export function Tabs(rawProps: TabsProps) {
   const { props, shadowProps, lazyLoadController } = useKitProps(rawProps)
@@ -53,19 +88,27 @@ export function Tabs(rawProps: TabsProps) {
 
   const [activeTabIndex, setActiveTabIndex] = createSyncSignal({
     defaultValue: () =>
-      'defaultActiveIndex' in props && props.defaultActiveIndex != null
-        ? props.defaultActiveIndex
+      'defaultSelectedIndex' in props && props.defaultSelectedIndex != null
+        ? props.defaultSelectedIndex
         : 0 /* defaultly focus on first one */,
     getValueFromOutside: () =>
-      'activeIndex' in props
-        ? props.activeIndex
-        : 'activeValue' in props && props.activeValue
-        ? getTabItemIndexByValues(props.activeValue) ?? undefined
+      'selectedIndex' in props
+        ? props.selectedIndex
+        : 'selectedValue' in props && props.selectedValue
+        ? getTabItemIndexByValues(props.selectedValue) ?? undefined
         : undefined /* defaultly focus on first one */,
     onInvokeSetter(value) {
       props.onChange?.({ tabIndex: value, tabValue: () => tabItemValues().at(value) })
     },
   })
+
+  // an alertive of `activeTabIndex`
+  const activeTabValue = createMemo(() => tabItemValues().at(activeTabIndex()))
+  // an alertive of `setActiveTabIndex`
+  function setActiveTabValue(value: string) {
+    const idx = getTabItemIndexByValues(value)
+    if (isNumber(idx)) setActiveTabIndex(idx)
+  }
 
   // const check = () => setIsChecked(true)
   // const uncheck = () => setIsChecked(false)
@@ -76,22 +119,23 @@ export function Tabs(rawProps: TabsProps) {
   const tabsController: TabsController = {
     groupName: createMemo(() => props.groupName),
     tabValues: tabItemValues,
+    selectedTabIndex: activeTabIndex,
+    selectedTabValue: activeTabValue,
+    setSelectedTabIndex: setActiveTabIndex,
+    setSelectedTabValue: setActiveTabValue,
+    _addTabValue: addTabValue,
   }
 
   lazyLoadController(tabsController)
 
   return (
-    <TabsContext.Provider value={{ activeTabIndex: activeTabIndex }}>
-      <Piv class='Tabs'>{props.children}</Piv>
-    </TabsContext.Provider>
+    <TabsControllerContext.Provider value={tabsController}>
+      <Piv class='Tabs' shadowProps={shadowProps}>
+        {props.children}
+      </Piv>
+    </TabsControllerContext.Provider>
   )
 }
 
-export interface TabController {
-  /** tab value */
-  value: string
-
-  active: Accessor<boolean>
-  /** make this tab item to be active  */
-  check: () => void
-}
+Tabs.List = TabList
+Tabs.Tab = Tab
