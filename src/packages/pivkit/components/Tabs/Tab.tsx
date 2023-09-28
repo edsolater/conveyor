@@ -1,18 +1,25 @@
+import { isNumber } from '@edsolater/fnkit'
 import { Accessor, createEffect, createMemo, createSignal, useContext } from 'solid-js'
 import { KitProps, useKitProps } from '../../createKit'
 import { createDomRef } from '../../hooks'
 import { Piv } from '../../piv/Piv'
 import { ValidController } from '../../piv/typeTools'
 import { TabsControllerContext } from './Tabs'
-import { isNumber } from '@edsolater/fnkit'
 
 export interface TabController {
+  value: Accessor<string | undefined>
+
   selected: Accessor<boolean>
+
+  /** method:select this tab */
+  select(): void
 }
 
 export type TabProps<Controller extends ValidController = TabController> = KitProps<
   {
     value?: string
+    onSelect?(controller: TabController): void
+    onUnselect?(controller: TabController): void
   },
   { controller: Controller }
 >
@@ -25,10 +32,7 @@ export function Tab(rawProps: TabProps) {
   const { dom, setDom } = createDomRef()
   const { props, shadowProps, lazyLoadController } = useKitProps(rawProps)
   const tabsController = useContext(TabsControllerContext)
-  const selected = createMemo(() => tabsController.selectedTabIndex() === currentIndex())
-
-  const tabController: TabController = { selected }
-  lazyLoadController(tabController)
+  const selected = createMemo(() => tabsController.tabIndex() === currentIndex())
 
   // add tab value to `Tabs` controller
   createEffect(() => {
@@ -49,14 +53,27 @@ export function Tab(rawProps: TabProps) {
     setCurrentIndex(currentIndexOfParentNode)
   })
 
+  const selectThisTab = () => {
+    const idx = currentIndex()
+    if (isNumber(idx)) tabsController.setSelectedTabIndex(idx)
+  }
+
+  // invoke onSelect and onUnselect
+  createEffect(() => {
+    if (selected()) {
+      props.onSelect?.(tabController)
+    } else {
+      props.onUnselect?.(tabController)
+    }
+  })
+
+  const tabController: TabController = { value: () => props.value, selected, select: selectThisTab }
+  lazyLoadController(tabController)
   return (
     <Piv
       class='Tabs-Tab'
       shadowProps={shadowProps}
-      onClick={() => {
-        const idx = currentIndex()
-        if (isNumber(idx)) tabsController.setSelectedTabIndex(idx)
-      }}
+      onClick={selectThisTab}
       icss={{ cursor: 'pointer' }}
       domRef={setDom}
     >
