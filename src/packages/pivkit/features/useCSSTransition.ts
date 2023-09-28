@@ -2,7 +2,7 @@ import { flap, MayArray, MayFn, shrinkFn } from '@edsolater/fnkit'
 import { Accessor, createEffect, createMemo, createSignal, onCleanup } from 'solid-js'
 import { onEvent } from '../../domkit'
 import { createRef } from '../hooks/createRef'
-import { createPlugin, CSSObject, mergeProps, PivProps } from '../piv'
+import { CSSObject, mergeProps, PivProps } from '../piv'
 import { Accessify, useAccessifiedProps } from '../utils/accessifyProps'
 
 export type TransitionPhase =
@@ -176,11 +176,11 @@ export const useCSSTransition = (additionalOpts: CSSTransactionOptions = {}) => 
   return { refSetter: setContentDom, transitionProps, isInnerVisiable }
 }
 
-const cssTransitionPlugin = createPlugin<CSSTransactionOptions>((options: CSSTransactionOptions = {}) => () => {
-  const { refSetter, transitionProps, isInnerVisiable } = useCSSTransition(options)
-  return {
-    ref: refSetter,
-    ...transitionProps,
-    show: isInnerVisiable,
-  }
-})
+// const cssTransitionPlugin = createPlugin<CSSTransactionOptions, any, any>((options: CSSTransactionOptions = {}) => () => {
+//   const { refSetter, transitionProps, isInnerVisiable } = useCSSTransition(options)
+//   return {
+//     ref: refSetter,
+//     ...transitionProps,
+//     show: isInnerVisiable,
+//   }
+// })
