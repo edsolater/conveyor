@@ -32,12 +32,13 @@ export function Tab(rawProps: TabProps) {
   const { dom, setDom } = createDomRef()
   const { props, shadowProps, lazyLoadController } = useKitProps(rawProps)
   const tabsController = useContext(TabsControllerContext)
-  const selected = createMemo(() => tabsController.tabIndex() === currentIndex())
+  const selected = createMemo(() => tabsController.selectedIndex() === currentIndex())
 
   // add tab value to `Tabs` controller
   createEffect(() => {
     if (props.value) {
-      tabsController._addTabValue(props.value)
+      const idx = currentIndex()
+      if (isNumber(idx)) tabsController._addTabValue(idx, props.value)
     }
   })
 

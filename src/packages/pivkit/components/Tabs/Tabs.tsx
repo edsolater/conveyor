@@ -13,9 +13,9 @@ export interface TabsController {
   /** all tab items */
   tabValues: Accessor<string[]>
 
-  tabIndex: Accessor<number>
+  selectedIndex: Accessor<number>
   /** only works when target tab name can match */
-  tabValue: Accessor<string | undefined>
+  selectedValue: Accessor<string | undefined>
 
   /**
    * method
@@ -32,7 +32,7 @@ export interface TabsController {
    * inner method
    * invoked by `Tab` component
    */
-  _addTabValue(value: string): void
+  _addTabValue(idx: number, value: string): void
 
   /**
    * inner method
@@ -44,7 +44,7 @@ export interface TabsController {
 
 export type TabsProps<Controller extends ValidController = TabsController> = KitProps<
   {
-    /** recommand  */
+    /** recommand to set, so can flat ui state to pure js object  */
     groupName?: string
 
     selectedIndex?: number
@@ -62,9 +62,9 @@ export type TabsProps<Controller extends ValidController = TabsController> = Kit
 
 const TabsControllerContextDefaultValue: TabsController = {
   groupName: () => undefined,
-  tabIndex: () => 0,
+  selectedIndex: () => 0,
   tabValues: () => [],
-  tabValue: () => undefined,
+  selectedValue: () => undefined,
   selectTabByIndex: () => {},
   selectTabByValue: () => {},
   _addTabValue: () => {},
@@ -75,8 +75,8 @@ export const TabsControllerContext = createContext<TabsController>(TabsControlle
 /**
  * abilities:
  * - select tab2 will auto unselect tab1
- * 
- * 
+ *
+ *
  * @example
  * <Tabs>
  *   <Tab.List>
@@ -95,12 +95,12 @@ export function Tabs(rawProps: TabsProps) {
   const registedOnChangeCallbacks: Set<(controller: TabsController) => void> = new Set()
   const { props, shadowProps, lazyLoadController } = useKitProps(rawProps)
 
-  const getTabItemIndexByValues = (value: string) => tabItemValues().findIndex((v) => v === value)
+  const [allTabValues, setAllTabValues] = createSignal<string[]>([])
 
-  const [tabItemValues, setTabItemValues] = createSignal<string[]>([])
+  const getTabItemIndexByValues = (value: string) => allTabValues().findIndex((v) => v === value)
 
-  function addTabValue(tabValue: string) {
-    setTabItemValues((prev) => [...prev, tabValue])
+  function addTabValue(tabIndex: number, tabValue: string) {
+    setAllTabValues((prev) => [...prev, tabValue])
   }
 
   const [selectedTabIndex, selectTabByIndex] = createSyncSignal({
@@ -120,7 +120,7 @@ export function Tabs(rawProps: TabsProps) {
   })
 
   // an alertive of `activeTabIndex`
-  const selectedTabValue = createMemo(() => tabItemValues().at(selectedTabIndex()))
+  const selectedTabValue = createMemo(() => allTabValues().at(selectedTabIndex()))
 
   function invokeOnChangeCallbacks() {
     registedOnChangeCallbacks.forEach((cb) => cb(tabsController))
@@ -144,9 +144,9 @@ export function Tabs(rawProps: TabsProps) {
 
   const tabsController: TabsController = {
     groupName: () => props.groupName,
-    tabValues: tabItemValues,
-    tabIndex: selectedTabIndex,
-    tabValue: selectedTabValue,
+    tabValues: allTabValues,
+    selectedIndex: selectedTabIndex,
+    selectedValue: selectedTabValue,
     selectTabByIndex,
     selectTabByValue,
     _addTabValue: addTabValue,
