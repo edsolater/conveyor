@@ -1,38 +1,25 @@
-import { isNumber } from '@edsolater/fnkit'
-import { Accessor, createContext, createMemo, createSignal } from 'solid-js'
+import { Accessor, createContext } from 'solid-js'
 import { KitProps, useKitProps } from '../../createKit'
 import { createSyncSignal } from '../../hooks/createSyncSignal'
 import { Piv } from '../../piv/Piv'
 import { ValidController } from '../../piv/typeTools'
-import { TabList } from './TabList'
 import { Tab } from './Tab'
+import { TabList } from './TabList'
+import {
+  TabsControllerWithTabValue,
+  TabsPropsWithTabValue,
+  useAbilityFeature_TabValue,
+} from './features/TabsControllerWithTabValue'
+import { mergeObjects } from '@edsolater/fnkit'
 
-export interface TabsController {
+export type TabsController = {
   /** tabs group name */
   groupName: Accessor<string | undefined>
-  /** all tab items */
-  tabValues: Accessor<string[]>
-
   selectedIndex: Accessor<number>
-  /** only works when target tab name can match */
-  selectedValue: Accessor<string | undefined>
-
   /**
    * method
    */
   selectTabByIndex(index: number): void
-
-  /**
-   * method
-   * only works when target tab name can match
-   */
-  selectTabByValue(value: string): void
-
-  /**
-   * inner method
-   * invoked by `Tab` component
-   */
-  _addTabValue(idx: number, value: string): void
 
   /**
    * inner method
@@ -40,23 +27,18 @@ export interface TabsController {
    * register method
    */
   _onChange(cb: (controller: TabsController) => void): { unregister(): void }
-}
+} & TabsControllerWithTabValue
+
+export type CoreTabProps = {
+  /** recommand to set, so can flat ui state to pure js object  */
+  groupName?: string
+  selectedIndex?: number
+  defaultSelectedIndex?: number
+  onChange?(controller: TabsController): void
+} & TabsPropsWithTabValue
 
 export type TabsProps<Controller extends ValidController = TabsController> = KitProps<
-  {
-    /** recommand to set, so can flat ui state to pure js object  */
-    groupName?: string
-
-    selectedIndex?: number
-    defaultSelectedIndex?: number
-
-    /** only works when target tab name can match */
-    selectedValue?: string
-    /** only works when target tab name can match */
-    defaultSelectedValue?: string
-
-    onChange?(controller: TabsController): void
-  },
+  CoreTabProps,
   { controller: Controller }
 >
 
@@ -74,8 +56,7 @@ export const TabsControllerContext = createContext<TabsController>(TabsControlle
 
 /**
  * abilities:
- * - select tab2 will auto unselect tab1
- *
+ * - select tab 2️⃣ will auto unselect tab 1️⃣
  *
  * @example
  * <Tabs>
@@ -93,45 +74,31 @@ export const TabsControllerContext = createContext<TabsController>(TabsControlle
  */
 export function Tabs(rawProps: TabsProps) {
   const registedOnChangeCallbacks: Set<(controller: TabsController) => void> = new Set()
-  const { props, shadowProps, lazyLoadController } = useKitProps(rawProps)
 
-  const [allTabValues, setAllTabValues] = createSignal<string[]>([])
+  const { props, shadowProps, lazyLoadController } = useKitProps(rawProps, { name: 'Tabs' })
 
-  const getTabItemIndexByValues = (value: string) => allTabValues().findIndex((v) => v === value)
-
-  function addTabValue(tabIndex: number, tabValue: string) {
-    setAllTabValues((prev) => [...prev, tabValue])
-  }
-
-  const [selectedTabIndex, selectTabByIndex] = createSyncSignal({
-    defaultValue: () =>
-      'defaultSelectedIndex' in props && props.defaultSelectedIndex != null
-        ? props.defaultSelectedIndex
-        : 0 /* defaultly focus on first one */,
-    getValueFromOutside: () =>
-      'selectedIndex' in props
-        ? props.selectedIndex
-        : 'selectedValue' in props && props.selectedValue
-        ? getTabItemIndexByValues(props.selectedValue) ?? undefined
-        : undefined /* defaultly focus on first one */,
-    onInvokeSetter(value) {
-      invokeOnChangeCallbacks()
-    },
+  const {
+    calculateVariables: { defaultIndex: getDefaultIndexByValue, index: getIndexByValue },
+    additionalController,
+  } = useAbilityFeature_TabValue({
+    props,
+    currentIndex: () => selectedIndex(),
+    setIndex: (...args) => selectTabByIndex(...args),
   })
 
-  // an alertive of `activeTabIndex`
-  const selectedTabValue = createMemo(() => allTabValues().at(selectedTabIndex()))
+  const getDefaultIndex = () =>
+    'defaultSelectedIndex' in props && props.defaultSelectedIndex != null ? props.defaultSelectedIndex : undefined
+  const getIndex = () => ('selectedIndex' in props ? props.selectedIndex : undefined)
 
-  function invokeOnChangeCallbacks() {
-    registedOnChangeCallbacks.forEach((cb) => cb(tabsController))
-    props.onChange?.(tabsController)
-  }
-
-  // an alertive of `setActiveTabIndex`
-  function selectTabByValue(value: string) {
-    const idx = getTabItemIndexByValues(value)
-    if (isNumber(idx)) selectTabByIndex(idx)
-  }
+  const [selectedIndex, selectTabByIndex] = createSyncSignal({
+    defaultValue: () => getDefaultIndex() ?? getDefaultIndexByValue() ?? 0 /* defaultly focus on first one */,
+    getValueFromOutside: () => getIndex() ?? getIndexByValue() ?? undefined /* defaultly focus on first one */,
+    onInvokeSetter(value) {
+      // Invokes all registered onChange callbacks with the current tabs controller.
+      registedOnChangeCallbacks.forEach((cb) => cb(tabsController))
+      props.onChange?.(tabsController)
+    },
+  })
 
   const registOnChangeCallbacks = (cb: (controller: TabsController) => void) => {
     registedOnChangeCallbacks.add(cb)
@@ -142,16 +109,12 @@ export function Tabs(rawProps: TabsProps) {
     }
   }
 
-  const tabsController: TabsController = {
+  const tabsController: TabsController = mergeObjects(additionalController, {
     groupName: () => props.groupName,
-    tabValues: allTabValues,
-    selectedIndex: selectedTabIndex,
-    selectedValue: selectedTabValue,
+    selectedIndex,
     selectTabByIndex,
-    selectTabByValue,
-    _addTabValue: addTabValue,
     _onChange: registOnChangeCallbacks,
-  }
+  })
 
   lazyLoadController(tabsController)
   return (

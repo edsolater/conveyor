@@ -2,7 +2,7 @@ import { hasProperty, MayArray, MayDeepArray, pipe } from '@edsolater/fnkit'
 import { AccessifyProps, DeAccessifyProps, useAccessifiedProps } from '.'
 import { Faker } from '../fnkit'
 import { createUUID, UUID } from './hooks/utils/createUUID'
-import { recordController } from './piv/hooks/useComponentController'
+import { registerControllerInCreateKit } from './piv/hooks/useComponentController'
 import { loadPropsControllerRef, toProxifyController } from './piv/propHandlers/children'
 import { handlePluginProps } from './piv/propHandlers/handlePluginProps'
 import { GetPluginParams, Plugin } from './piv/propHandlers/plugin'
@@ -164,7 +164,7 @@ function getParsedKitProps<
   // load controller
   if (options?.controller) loadPropsControllerRef(mergedGettersProps, proxyController)
 
-  recordController(proxyController, props.id)
+  registerControllerInCreateKit(proxyController, props.id)
 
   return mergedGettersProps
 }
