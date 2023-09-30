@@ -31,7 +31,7 @@ export type TabsControllerWithTabValue = {
 /**
  * ability hook
  * tab can handle both value or index */
-export function useAbilityFeature_TabValue(opts: {
+export function useAbilityFeature_TabValue_Tabs(opts: {
   props: CoreTabProps
   currentIndex: Accessor<number>
   setIndex: (v: number) => void

@@ -1,4 +1,6 @@
+import { mergeObjects } from '@edsolater/fnkit'
 import { Accessor, createContext } from 'solid-js'
+import { createCallbackManager } from '../../../fnkit/createCallbackManager'
 import { KitProps, useKitProps } from '../../createKit'
 import { createSyncSignal } from '../../hooks/createSyncSignal'
 import { Piv } from '../../piv/Piv'
@@ -8,9 +10,10 @@ import { TabList } from './TabList'
 import {
   TabsControllerWithTabValue,
   TabsPropsWithTabValue,
-  useAbilityFeature_TabValue,
-} from './features/TabsControllerWithTabValue'
-import { mergeObjects } from '@edsolater/fnkit'
+  useAbilityFeature_TabValue_Tabs,
+} from './abilityFeatures/TabsControllerWithTabValue'
+
+type OnChangeCallback = (controller: TabsController) => void
 
 export type TabsController = {
   /** tabs group name */
@@ -26,7 +29,7 @@ export type TabsController = {
    * invoked by `Tab` component
    * register method
    */
-  _onChange(cb: (controller: TabsController) => void): { unregister(): void }
+  _onChange(cb: OnChangeCallback): { unregister(): void }
 } & TabsControllerWithTabValue
 
 export type CoreTabProps = {
@@ -73,14 +76,14 @@ export const TabsControllerContext = createContext<TabsController>(TabsControlle
  * </Tabs>
  */
 export function Tabs(rawProps: TabsProps) {
-  const registedOnChangeCallbacks: Set<(controller: TabsController) => void> = new Set()
+  const { registerCallback, invokeCallbacks } = createCallbackManager<OnChangeCallback>()
 
   const { props, shadowProps, lazyLoadController } = useKitProps(rawProps, { name: 'Tabs' })
 
   const {
     calculateVariables: { defaultIndex: getDefaultIndexByValue, index: getIndexByValue },
     additionalController,
-  } = useAbilityFeature_TabValue({
+  } = useAbilityFeature_TabValue_Tabs({
     props,
     currentIndex: () => selectedIndex(),
     setIndex: (...args) => selectTabByIndex(...args),
@@ -94,26 +97,16 @@ export function Tabs(rawProps: TabsProps) {
     defaultValue: () => getDefaultIndex() ?? getDefaultIndexByValue() ?? 0 /* defaultly focus on first one */,
     getValueFromOutside: () => getIndex() ?? getIndexByValue() ?? undefined /* defaultly focus on first one */,
     onInvokeSetter(value) {
-      // Invokes all registered onChange callbacks with the current tabs controller.
-      registedOnChangeCallbacks.forEach((cb) => cb(tabsController))
+      invokeCallbacks(tabsController)
       props.onChange?.(tabsController)
     },
   })
-
-  const registOnChangeCallbacks = (cb: (controller: TabsController) => void) => {
-    registedOnChangeCallbacks.add(cb)
-    return {
-      unregister: () => {
-        registedOnChangeCallbacks.delete(cb)
-      },
-    }
-  }
 
   const tabsController: TabsController = mergeObjects(additionalController, {
     groupName: () => props.groupName,
     selectedIndex,
     selectTabByIndex,
-    _onChange: registOnChangeCallbacks,
+    _onChange: registerCallback,
   })
 
   lazyLoadController(tabsController)
