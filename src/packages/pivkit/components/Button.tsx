@@ -1,17 +1,12 @@
 import { flap, isValuedArray, MayArray, MayFn, shrinkFn } from '@edsolater/fnkit'
-import { createMemo, JSX } from 'solid-js'
+import { createMemo } from 'solid-js'
 import { objectMerge } from '../../fnkit'
-import { addDefaultProps, mergeProps } from '../piv'
-import { KitProps, useKitProps } from '../piv'
-import { Piv } from '../piv'
-import { parsePivChildren } from '../piv'
-import { compressICSSToObj, ICSS } from '../piv'
-import { omit } from '../piv'
 import { createRef } from '../hooks/createRef'
 import { useGlobalKitTheme } from '../hooks/useGlobalKitTheme'
+import { addDefaultProps, compressICSSToObj, ICSS, KitProps, mergeProps, omit, parsePivChildren, Piv, PivChild, useKitProps } from '../piv'
+import { renderHTMLDOM } from '../piv/propHandlers/renderHTMLDOM'
 import { cssColors } from '../styles/cssColors'
 import { CSSColorString, CSSStyle } from '../styles/type'
-import { renderHTMLDOM } from '../piv/propHandlers/renderHTMLDOM'
 type BooleanLike = unknown
 
 export interface ButtonController {
@@ -54,9 +49,9 @@ export interface ButtonProps {
     fallbackProps?: Omit<ButtonProps, 'validators' | 'disabled'>
   }>
   /** normally, it's an icon  */
-  prefix?: JSX.Element
+  prefix?: PivChild
   /** normally, it's an icon  */
-  suffix?: JSX.Element
+  suffix?: PivChild
 }
 
 /**
@@ -185,10 +180,10 @@ export function Button(kitProps: KitProps<ButtonProps, { controller: ButtonContr
       ]}
       domRef={setRef}
     >
-      {props.prefix}
+      {parsePivChildren(props.prefix, mergedController)}
       {/* TODO: no need. this is because kitProp don't support Access and Deaccess */}
       {parsePivChildren(props.children, mergedController)}
-      {props.suffix}
+      {parsePivChildren(props.suffix, mergedController)}
     </Piv>
   )
 }

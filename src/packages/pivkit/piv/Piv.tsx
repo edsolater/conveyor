@@ -1,11 +1,10 @@
 import { MayArray, flap } from '@edsolater/fnkit'
 import { JSX, JSXElement, createComponent } from 'solid-js'
 import { makePipline } from '../../fnkit/makePipline'
+import { ClassName, HTMLProps, ICSS, IStyle, Plugin } from './propHandlers'
 import { renderHTMLDOM } from './propHandlers/renderHTMLDOM'
 import { HTMLTag, PivChild, ValidController } from './typeTools'
 import { omit } from './utils'
-import { ClassName, ICSS, IStyle, HTMLProps, Plugin, PluginCoreFn } from './propHandlers'
-import { pluginCoreSymbol } from './propHandlers/handlePluginProps'
 
 type Boollike = any
 
