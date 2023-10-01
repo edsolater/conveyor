@@ -6,13 +6,13 @@ import { JSXElement, createContext, mergeProps, useContext } from 'solid-js';
 import { PivProps, ValidProps } from '../piv';
 
 /** add props is implied by solidjs context */
-const InnerPropContext = createContext<{ props: unknown; when: AddPropsWhen }[]>()
+const InnerPropContext = createContext<{ props: unknown; when: PropContextWhen }[]>()
 
-type AddPropsWhen = (info: { componentName: string }) => boolean
+type PropContextWhen = (info: { componentName: string }) => boolean
 
-export function AddProps<Props extends ValidProps = PivProps>(props: {
+export function PropContext<Props extends ValidProps = PivProps>(props: {
   additionalProps: Props
-  when?: AddPropsWhen
+  when?: PropContextWhen
   children?: JSXElement
 }) {
   const parentPropContext = useContext(InnerPropContext)
@@ -30,7 +30,7 @@ export function AddProps<Props extends ValidProps = PivProps>(props: {
 }
 
 /** add additional prop through solidjs context */
-export function getPropsFromAddPropsContext(componentInfo: { componentName: string }): ValidProps | undefined {
+export function getPropsFromPropContextContext(componentInfo: { componentName: string }): ValidProps | undefined {
   const parentPropContext = useContext(InnerPropContext)
   const props = parentPropContext?.map(({ props, when }) => (when(componentInfo) ? (props as ValidProps) : undefined))
   const merged = props && mergeProps(...props)

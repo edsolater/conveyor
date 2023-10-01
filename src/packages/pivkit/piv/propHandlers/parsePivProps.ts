@@ -12,7 +12,7 @@ import { handlePluginProps } from './handlePluginProps'
 import { handleShadowProps } from './shadowProps'
 import { mergeProps, omit } from '../utils'
 import { PivProps } from '../Piv'
-import { getPropsFromAddPropsContext } from '../../components/AddProps'
+import { getPropsFromPropContextContext } from '../../components/PropContext'
 
 export type NativeProps = ReturnType<typeof parsePivProps>['props']
 /**
@@ -22,8 +22,8 @@ export type NativeProps = ReturnType<typeof parsePivProps>['props']
  */
 // TODO: props should be lazy load, props.htmlProps should also be lazy load
 export function parsePivProps(rawProps: PivProps<any>) {
-  // handle AddProps
-  const contextProps = getPropsFromAddPropsContext({ componentName: 'Piv' })
+  // handle PropContext
+  const contextProps = getPropsFromPropContextContext({ componentName: 'Piv' })
   const mergedContextProps = contextProps ? mergeProps(contextProps, rawProps) : rawProps
 
   function getProps(raw: Partial<PivProps>) {

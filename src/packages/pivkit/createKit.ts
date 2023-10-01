@@ -12,7 +12,7 @@ import { mergeProps } from './piv/utils'
 import { AddDefaultPivProps, addDefaultPivProps } from './piv/utils/addDefaultProps'
 import { omit } from './piv/utils/omit'
 import { CRef, PivProps } from './piv/Piv'
-import { getPropsFromAddPropsContext } from './components/AddProps'
+import { getPropsFromPropContextContext } from './components/PropContext'
 
 /**
  * - auto add `plugin` `shadowProps` `_promisePropsConfig` `controller` props
@@ -204,8 +204,8 @@ export function useKitProps<
 } {
   type RawProps = GetDeAccessifiedProps<P>
 
-  // handle AddProps
-  const contextProps = getPropsFromAddPropsContext({ componentName: options?.name ?? '' })
+  // handle PropContext
+  const contextProps = getPropsFromPropContextContext({ componentName: options?.name ?? '' })
   const props = contextProps ? mergeProps(contextProps, rawProps) : rawProps
 
   const { loadController, getControllerCreator } = createComponentController<RawProps, Controller>()
