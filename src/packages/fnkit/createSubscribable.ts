@@ -1,6 +1,6 @@
 import { createEventCenter } from '@edsolater/fnkit'
 
-type State<T> = {
+type Subscribable<T> = {
   /**
    * get current state
    * can also just access property:value. `state.value`
@@ -13,7 +13,7 @@ type State<T> = {
   value: T
 
   /** used by consumer */
-  onChange(cb: (newValue: T) => void): { unsubscribe(): void }
+  subscribe(cb: (newValue: T) => void): { unsubscribe(): void }
 
   clear(): void
 
@@ -26,15 +26,15 @@ type State<T> = {
 /**
  * hold value, so can subscribe it's change
  */
-export function createState<T>(): State<T | undefined>
-export function createState<T>(defaultValue: T): State<T>
-export function createState<T>(defaultValue?: T): State<any> {
+export function createSubscribable<T>(): Subscribable<T | undefined>
+export function createSubscribable<T>(defaultValue: T): Subscribable<T>
+export function createSubscribable<T>(defaultValue?: T): Subscribable<any> {
   let innerValue = defaultValue
   const eventCenter = createEventCenter<{
     value(v: T): void
   }>()
   const state = Object.assign(() => innerValue, {
-    onChange(cb: (newValue: T) => void) {
+    subscribe(cb: (newValue: T) => void) {
       return eventCenter.on('value', cb)
     },
     clear() {
