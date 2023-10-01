@@ -187,6 +187,7 @@ export type GetDeAccessifiedProps<K extends ValidProps> = DeAccessifyProps<K>
  *
  * return multi; not just props
  */
+// TODO: should has controllerContext to accept controllers
 export function useKitProps<
   P extends ValidProps,
   Controller extends ValidController | unknown = unknown,

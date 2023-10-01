@@ -10,6 +10,7 @@ const InnerPropContext = createContext<{ props: unknown; when: PropContextWhen }
 
 type PropContextWhen = (info: { componentName: string }) => boolean
 
+// TODO: <Context.Provider> now only JSXElement not ()=>JSXElement, so should create <Fragnment> component to accept controller
 export function PropContext<Props extends ValidProps = PivProps>(props: {
   additionalProps: Props
   when?: PropContextWhen
