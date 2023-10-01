@@ -2,8 +2,8 @@
 /**
  * this component is related to useKitProps
  */
-import { JSXElement, createContext, mergeProps, useContext } from 'solid-js';
-import { PivProps, ValidProps } from '../piv';
+import { JSXElement, createContext, useContext } from 'solid-js'
+import { PivProps, ValidProps, mergeProps } from '../piv'
 
 /** add props is implied by solidjs context */
 const InnerPropContext = createContext<{ props: unknown; when: PropContextWhen }[]>()
