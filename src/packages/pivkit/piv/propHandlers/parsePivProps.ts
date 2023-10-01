@@ -10,8 +10,9 @@ import { parseIStyles } from './istyle'
 import { parseOnClick } from './onClick'
 import { handlePluginProps } from './handlePluginProps'
 import { handleShadowProps } from './shadowProps'
-import { omit } from '../utils'
+import { mergeProps, omit } from '../utils'
 import { PivProps } from '../Piv'
+import { getPropsFromAddPropsContext } from '../../components/AddProps'
 
 export type NativeProps = ReturnType<typeof parsePivProps>['props']
 /**
@@ -21,9 +22,13 @@ export type NativeProps = ReturnType<typeof parsePivProps>['props']
  */
 // TODO: props should be lazy load, props.htmlProps should also be lazy load
 export function parsePivProps(rawProps: PivProps<any>) {
-  function getProps(rawProps: Partial<PivProps>) {
+  // handle AddProps
+  const contextProps = getPropsFromAddPropsContext({ componentName: 'Piv' })
+  const mergedContextProps = contextProps ? mergeProps(contextProps, rawProps) : rawProps
+
+  function getProps(raw: Partial<PivProps>) {
     const props = pipe(
-      rawProps as Partial<PivProps>,
+      raw as Partial<PivProps>,
       handleShadowProps,
       handlePluginProps,
       parsePivRenderPrependChildren,
@@ -35,8 +40,9 @@ export function parsePivProps(rawProps: PivProps<any>) {
     const selfCoverNode = 'render:self' in props ? props['render:self']?.(omit(props, ['render:self'])) : undefined
     return { props, controller, ifOnlyNeedRenderChildren, selfCoverNode, ifOnlyNeedRenderSelf }
   }
-  const { props, controller, ifOnlyNeedRenderChildren, selfCoverNode, ifOnlyNeedRenderSelf } = getProps(rawProps)
-  debugLog(rawProps, props, controller)
+  const { props, controller, ifOnlyNeedRenderChildren, selfCoverNode, ifOnlyNeedRenderSelf } =
+    getProps(mergedContextProps)
+  debugLog(mergedContextProps, props, controller)
   const nativeProps =
     'htmlProps' in props // 💩 currently urgly now
       ? {

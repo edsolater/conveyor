@@ -12,6 +12,7 @@ import { mergeProps } from './piv/utils'
 import { AddDefaultPivProps, addDefaultPivProps } from './piv/utils/addDefaultProps'
 import { omit } from './piv/utils/omit'
 import { CRef, PivProps } from './piv/Piv'
+import { getPropsFromAddPropsContext } from './components/AddProps'
 
 /**
  * - auto add `plugin` `shadowProps` `_promisePropsConfig` `controller` props
@@ -191,7 +192,7 @@ export function useKitProps<
   Controller extends ValidController | unknown = unknown,
   DefaultProps extends Partial<GetDeAccessifiedProps<P>> = {}
 >(
-  props: P,
+  rawProps: P,
   options?: KitPropsOptions<GetDeAccessifiedProps<P>, Controller, DefaultProps>
 ): {
   /** not declared self props means it's shadowProps */
@@ -202,6 +203,11 @@ export function useKitProps<
   // componentRef
 } {
   type RawProps = GetDeAccessifiedProps<P>
+
+  // handle AddProps
+  const contextProps = getPropsFromAddPropsContext({ componentName: options?.name ?? '' })
+  const props = contextProps ? mergeProps(contextProps, rawProps) : rawProps
+
   const { loadController, getControllerCreator } = createComponentController<RawProps, Controller>()
   const composedProps = getParsedKitProps(props, {
     controller: (props: ParsedKitProps<RawProps>) => getControllerCreator(props),
