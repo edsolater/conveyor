@@ -24,7 +24,7 @@ import {
   createIncresingAccessor,
   createIntervalEffect,
   createPlugin,
-  css_opacityColor,
+  css_opacity,
   generatePopoverPlugins,
   icssCol,
   icssRow,
@@ -59,9 +59,9 @@ function PlaygoundList() {
 
       {/* <ExamplePanel name='Drawer'>
         <DrawerExample />
-      </ExamplePanel> */}
+      </ExamplePanel>
 
-      {/* <ExamplePanel name='CSSTransition'>
+      <ExamplePanel name='CSSTransition'>
         <CSSTransitionExample />
       </ExamplePanel>
 
@@ -75,13 +75,13 @@ function PlaygoundList() {
 
       <ExamplePanel name='Modal'>
         <ModalExample />
-      </ExamplePanel>
+      </ExamplePanel> */}
 
       <ExamplePanel name='List'>
         <ListExample />
       </ExamplePanel>
 
-      <ExamplePanel name='Switch'>
+      {/* <ExamplePanel name='Switch'>
         <SwitchExample />
       </ExamplePanel>
 
@@ -91,11 +91,11 @@ function PlaygoundList() {
 
       <ExamplePanel name='Popover'>
         <PopoverExample />
-      </ExamplePanel>
+      </ExamplePanel> */}
 
       <ExamplePanel name='ComponentFactory'>
         <ComponentFactoryExample />
-      </ExamplePanel> */}
+      </ExamplePanel>
 
       <ExamplePanel name='upload'>
         <UploadExample />
@@ -410,7 +410,7 @@ function PropContextExample() {
   return (
     <PropContext additionalProps={{ icss: { paddingInline: '24px' } }}>
       <Box icss={{ border: 'solid' }}>
-        <Box icss={{ border: 'dashed', borderColor: css_opacityColor('currentcolor', 0.6), margin: '8px' }}>
+        <Box icss={{ border: 'dashed', borderColor: css_opacity('currentcolor', 0.6), margin: '8px' }}>
           PropContext can pass to deep nested components
         </Box>
       </Box>

@@ -10,7 +10,7 @@ type ColorItem = { /** ='currentColor' */ color?: ColorString; percent?: ColorPe
  * **CSS Utility Function**
  * @example
  * css_colorMix('#fff', ['#000', 0.5]) // => 'color-mix(in srgb, #ffffff 50%, #000000 50%)'
- * @returns a css color-mix string
+ * @returns css color-mix()
  */
 export function css_colorMix(...colors: (ColorString | ColorPercent | ColorItem)[]) {
   const colorItems = getColorItems(colors)
@@ -20,18 +20,6 @@ export function css_colorMix(...colors: (ColorString | ColorPercent | ColorItem)
   return `color-mix(in srgb, ${colorInfoList.join(', ')})`
 }
 
-/**
- *
- * @example
- * parsePercentString('58%') //=> '0.58'
- * @param s toPercentString returned value
- * @returns js:number
- */
-// TODO: delete it! fnkit already has
-export function parsePercentString(s: `${string}%` | number): number {
-  const isPercentString = typeof s === 'string' && s.endsWith('%')
-  return isPercentString ? Number(s.replace('%', '')) / 100 : (s as number)
-}
 
 /**
  *
@@ -86,6 +74,7 @@ function isColorItem(c: ColorPercent | ColorString | ColorItem | undefined): c i
  * @param transparentPercent 0~1
  * @returns color-mix() string
  */
-export function css_opacityColor(color: string, alpha: number) {
+export function css_opacity(color: string, alpha: number) {
   return css_colorMix(color, 'transparent', 1 - alpha)
 }
+
