@@ -15,6 +15,7 @@ import {
   Modal,
   ModalController,
   Piv,
+  PivProps,
   PluginObj,
   Radio,
   RenderFactory,
@@ -32,6 +33,7 @@ import {
   useComponentController,
   withHover,
 } from '../packages/pivkit'
+import { PropContext } from '../packages/pivkit/components/PropContext'
 
 export default function PlaygroundPage() {
   return (
@@ -103,6 +105,9 @@ function PlaygoundList() {
         <TabsExample />
       </ExamplePanel>
 
+      <ExamplePanel name='PropContext'>
+        <PropContextExample />
+      </ExamplePanel>
       {/* <Foo /> */}
     </Box>
   )
@@ -398,6 +403,17 @@ function TabsExample() {
         <Tabs.Tab>{({ selected }) => (selected() ? '🟢' : '🔴')} Tab3</Tabs.Tab>
       </Tabs.List>
     </Tabs>
+  )
+}
+
+function PropContextExample() {
+  return (
+    <PropContext additionalProps={{ icss: { paddingInline: '24px' } }}>
+      <Box icss={{ border: 'solid' }}>
+        <Text>hello world</Text>
+        <Box icss={{ border: 'dashed' }}>hello world</Box>
+      </Box>
+    </PropContext>
   )
 }
 

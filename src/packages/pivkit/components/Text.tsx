@@ -37,7 +37,6 @@ export function Text(rawProps: TextProps) {
         contentEditable: contentEditableValue,
       }}
       shadowProps={props}
-      class='Text'
     />
   )
 }
