@@ -1,5 +1,5 @@
 import { MayPromise } from '@edsolater/fnkit'
-import { Accessor, JSX, JSXElement, createContext, createEffect, createSignal, onCleanup } from 'solid-js'
+import { Accessor, JSXElement, createContext, createEffect, createSignal, onCleanup } from 'solid-js'
 import { createStore } from 'solid-js/store'
 import { CircularProgress } from '../components/CircularProgress'
 import { ExamplePanel } from '../components/ExamplePanel'
@@ -15,7 +15,6 @@ import {
   Modal,
   ModalController,
   Piv,
-  PivProps,
   PluginObj,
   Radio,
   RenderFactory,
@@ -25,13 +24,14 @@ import {
   createIncresingAccessor,
   createIntervalEffect,
   createPlugin,
+  css_opacityColor,
   generatePopoverPlugins,
   icssCol,
   icssRow,
   renderSwitchThumb,
   useCSSTransition,
   useComponentController,
-  withHover,
+  withHover
 } from '../packages/pivkit'
 import { PropContext } from '../packages/pivkit/components/PropContext'
 
@@ -410,8 +410,9 @@ function PropContextExample() {
   return (
     <PropContext additionalProps={{ icss: { paddingInline: '24px' } }}>
       <Box icss={{ border: 'solid' }}>
-        <Text>hello world</Text>
-        <Box icss={{ border: 'dashed' }}>hello world</Box>
+        <Box icss={{ border: 'dashed', borderColor: css_opacityColor('currentcolor', 0.6), margin: '8px' }}>
+          PropContext can pass to deep nested components
+        </Box>
       </Box>
     </PropContext>
   )
