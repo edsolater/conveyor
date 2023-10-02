@@ -53,6 +53,7 @@ export type InputProps = KitProps<
  */
 export function Input(rawProps: InputProps) {
   const { props } = useKitProps(rawProps, {
+    name: 'Input',
     controller: (mergedProps) =>
       ({
         get text() {

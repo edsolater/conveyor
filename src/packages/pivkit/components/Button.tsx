@@ -3,7 +3,18 @@ import { createMemo } from 'solid-js'
 import { objectMerge } from '../../fnkit'
 import { createRef } from '../hooks/createRef'
 import { useGlobalKitTheme } from '../hooks/useGlobalKitTheme'
-import { addDefaultProps, compressICSSToObj, ICSS, KitProps, mergeProps, omit, parsePivChildren, Piv, PivChild, useKitProps } from '../piv'
+import {
+  addDefaultProps,
+  compressICSSToObj,
+  ICSS,
+  KitProps,
+  mergeProps,
+  omit,
+  parsePivChildren,
+  Piv,
+  PivChild,
+  useKitProps,
+} from '../piv'
 import { renderHTMLDOM } from '../piv/propHandlers/renderHTMLDOM'
 import { cssColors } from '../styles/cssColors'
 import { CSSColorString, CSSStyle } from '../styles/type'
@@ -69,6 +80,7 @@ export function Button(kitProps: KitProps<ButtonProps, { controller: ButtonContr
   /* ---------------------------------- props --------------------------------- */
   const { props: rawProps } = useKitProps(kitProps, {
     controller: () => innerController,
+    name: 'Button',
   })
 
   const props = addDefaultProps(

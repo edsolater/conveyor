@@ -18,7 +18,7 @@ const defaultProps = {
  * @deprecated , just use {@link List}
  */
 export function ListContainerBox(rawProps: KitProps<ListContainerBoxProps, ListContainerBoxController>) {
-  const { props, lazyLoadController } = useKitProps(rawProps, { defaultProps })
+  const { props, lazyLoadController } = useKitProps(rawProps, { defaultProps, name: 'ListContainerBox' })
   return (
     <Box
       shadowProps={props}

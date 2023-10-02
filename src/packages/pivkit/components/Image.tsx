@@ -38,7 +38,7 @@ export function Image(rawProps: ImageProps) {
   // TODO is load
   const [isLoaded, setIsLoaded] = createSignal(false)
   const [dom, setDom] = createRef<HTMLImageElement>()
-  const { props, shadowProps } = useKitProps(rawProps, { defaultProps })
+  const { props, shadowProps } = useKitProps(rawProps, { name: 'Image', defaultProps })
 
   createEffect(() => {
     const { abort } = addEventListener(dom(), 'load', () => {

@@ -26,7 +26,7 @@ export interface CollapseController {
 const CollapseContext = createContext<CollapseController>({} as CollapseController, { name: 'CollapseController' })
 
 export function Collapse(rawProps: CollapseProps) {
-  const { props } = useKitProps(rawProps, { controller: () => controller })
+  const { props } = useKitProps(rawProps, { name: 'Collapse', controller: () => controller })
 
   const [innerOpen, { toggle, on, off, set }] = createToggle(props.open ?? props.defaultOpen ?? false, {
     onOff: props.onClose,
@@ -72,7 +72,7 @@ export function CollapseFace(
   >
 ) {
   const controller = useContext(CollapseContext)
-  const { props } = useKitProps(rawProps, { controller: () => controller })
+  const { props } = useKitProps(rawProps, { name: 'CollapseFase', controller: () => controller })
   return (
     <Piv<'summary', CollapseController>
       render:self={(selfProps) => renderHTMLDOM('summary', selfProps)}
@@ -89,7 +89,7 @@ interface CollapseContentProps extends PivProps {}
 
 export function CollapseContent(rawProps: CollapseContentProps) {
   const controller = useContext(CollapseContext)
-  const { props } = useKitProps(rawProps, { controller: () => controller })
+  const { props } = useKitProps(rawProps, { name: 'CollapseContent', controller: () => controller })
   return <Piv shadowProps={props} innerController={controller} />
 }
 

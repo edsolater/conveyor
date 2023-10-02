@@ -6,7 +6,7 @@ export interface HTMLCheckboxProps extends UIKit {
   defaultChecked?: boolean
 }
 export function HTMLCheckbox(rawProps: HTMLCheckboxProps) {
-  const { props } = useKitProps(rawProps)
+  const { props } = useKitProps(rawProps, { name: 'HTMLCheckbox' })
   return (
     <Piv
       class='HTMLCheckbox'

@@ -19,6 +19,7 @@ export type LoopProps<T> = KitProps<
  */
 export function Loop<T>(rawProps: LoopProps<T>) {
   const { props } = useKitProps(rawProps, {
+    name: 'Loop',
     noNeedDeAccessifyChildren: true,
   })
 

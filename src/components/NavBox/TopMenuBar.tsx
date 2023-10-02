@@ -20,7 +20,7 @@ function setMetaTitle(title?: string) {
  * {@link appConfig.navigator}
  */
 export function TopMenuBar(rawProps: KitProps) {
-  const { shadowProps } = useKitProps(rawProps)
+  const { shadowProps } = useKitProps(rawProps, { name: TopMenuBar.name })
   const { appConfig, setAppConfig } = useGlobalConfigContext()
 
   const { pathname } = useLocation()

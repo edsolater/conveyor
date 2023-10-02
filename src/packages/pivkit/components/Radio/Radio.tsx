@@ -41,6 +41,7 @@ const defaultProps = {
  */
 export function Radio(rawProps: RadioProps) {
   const { props, shadowProps, lazyLoadController } = useKitProps(rawProps, {
+    name: 'Radio',
     defaultProps,
     selfProps: selfProps,
   })

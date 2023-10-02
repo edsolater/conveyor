@@ -37,6 +37,7 @@ const defaultProps = {
  */
 export function RadioGroup(rawProps: RadioGroupProps) {
   const { props, shadowProps, lazyLoadController } = useKitProps(rawProps, {
+    name: 'RadioGroup',
     defaultProps,
     selfProps: selfProps,
   })
@@ -51,5 +52,5 @@ export function RadioGroup(rawProps: RadioGroupProps) {
 
   lazyLoadController(radioGroupController)
 
-  return <Box class='RadioGroup' shadowProps={shadowProps} icss={icssCol()}/>
+  return <Box class='RadioGroup' shadowProps={shadowProps} icss={icssCol()} />
 }

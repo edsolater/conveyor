@@ -16,7 +16,7 @@ export type TextProps = KitProps<{
  * if for layout , inner content should only be text
  */
 export function Text(rawProps: TextProps) {
-  const { props } = useKitProps(rawProps)
+  const { props } = useKitProps(rawProps, { name: 'Text' })
 
   const contentEditableValue =
     props.editable != null

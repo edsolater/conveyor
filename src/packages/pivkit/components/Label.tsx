@@ -12,6 +12,6 @@ export type LabelProps = KitProps<{
  * !`<label>` can transpond click/focus event for inner `<Input>`-like Node
  */
 export function Label(rawProps: LabelProps) {
-  const { shadowProps, props } = useKitProps(rawProps)
+  const { shadowProps, props } = useKitProps(rawProps, { name: 'Label' })
   return <Text class='Label' shadowProps={shadowProps} />
 }

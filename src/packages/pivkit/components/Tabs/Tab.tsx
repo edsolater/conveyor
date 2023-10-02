@@ -30,7 +30,7 @@ export type TabProps<Controller extends ValidController = TabController> = KitPr
 export function Tab(rawProps: TabProps) {
   const [currentIndex, setCurrentIndex] = createSignal<number>()
   const { dom, setDom } = createDomRef()
-  const { props, shadowProps, lazyLoadController } = useKitProps(rawProps)
+  const { props, shadowProps, lazyLoadController } = useKitProps(rawProps, { name: 'Tab' })
   const tabsController = useContext(TabsControllerContext)
   const selected = createMemo(() => tabsController.selectedIndex() === currentIndex())
 

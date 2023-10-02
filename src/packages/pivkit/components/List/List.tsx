@@ -48,6 +48,7 @@ export const ListContext = createContext<InnerListContext>({} as InnerListContex
  */
 export function List<T>(rawProps: ListProps<T>) {
   const { props } = useKitProps(rawProps, {
+    name: 'List',
     noNeedDeAccessifyChildren: true,
     defaultProps: {
       reachBottomMargin: 50,

@@ -35,22 +35,22 @@ export interface TransitionOptions {
 
 export const transitionPlugin = createPlugin(
   ({
-      cssTransitionDurationMs = 300,
-      cssTransitionTimingFunction,
+    cssTransitionDurationMs = 300,
+    cssTransitionTimingFunction,
 
-      appear,
-      currentIs,
+    appear,
+    currentIs,
 
-      fromProps,
-      toProps,
-      /** normaly don't use this */
-      progressProps,
+    fromProps,
+    toProps,
+    /** normaly don't use this */
+    progressProps,
 
-      onBeforeTransition,
-      onAfterTransition,
+    onBeforeTransition,
+    onAfterTransition,
 
-      presets,
-    }: TransitionOptions = {}) =>
+    presets,
+  }: TransitionOptions = {}) =>
     (props, { dom }) => {
       const transitionPhaseProps = createMemo(() => {
         const baseTransitionICSS = {

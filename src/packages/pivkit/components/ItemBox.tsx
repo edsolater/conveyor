@@ -10,7 +10,7 @@ export interface ItemBoxProps {
  * if for layout , don't render important content in Box
  */
 export function ItemBox(rawProps: KitProps<ItemBoxProps>) {
-  const { props } = useKitProps(rawProps)
+  const { props } = useKitProps(rawProps, { name: 'ItemBox' })
   /* ---------------------------------- props --------------------------------- */
   return (
     <Piv shadowProps={props} icss={{ display: 'flex', alignItems: 'center' }}>

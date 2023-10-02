@@ -24,14 +24,14 @@ export type Plugin<
   PluginOptions extends Record<string, any> = any,
   PluginState extends Record<string, any> = any,
   T extends ValidProps = any,
-  C extends ValidController = ValidController
+  C extends ValidController = ValidController,
 > = PluginObj<PluginOptions, PluginState, T, C> | PluginCoreFn<T, C>
 
 export type PluginObj<
   PluginOptions extends Record<string, any>,
   PluginState extends Record<string, any> = any,
   T extends ValidProps = any,
-  C extends ValidController = ValidController
+  C extends ValidController = ValidController,
 > = SettingsFunction<{
   (options?: PluginOptions): { plugin: PluginCoreFn<T, C>; state: PluginState }
   [isPluginObjSymbol]: true
@@ -57,7 +57,7 @@ export function createPlugin<
   PluginOptions extends AnyObj,
   PluginState extends Record<string, any> = any,
   Props extends ValidProps = PivProps,
-  Controller extends ValidController = ValidController
+  Controller extends ValidController = ValidController,
 >(
   createrFn: (options: PluginOptions) =>
     | {
@@ -71,13 +71,16 @@ export function createPlugin<
     name?: string
   }
 ): PluginObj<PluginOptions, PluginState, Props, Controller> {
-  const pluginCoreFn = createSettingsFunction((params: PluginOptions) => {
-    const mayPluginCore = createrFn(params)
-    const renamedMayPluginCore =
-      options?.name && isFunction(mayPluginCore) ? overwriteFunctionName(mayPluginCore, options.name) : mayPluginCore
-    if (isFunction(renamedMayPluginCore)) return { plugin: renamedMayPluginCore, state: {} }
-    return renamedMayPluginCore
-  }, options?.defaultOptions)
+  const pluginCoreFn = createSettingsFunction(
+    (params: PluginOptions) => {
+      const mayPluginCore = createrFn(params)
+      const renamedMayPluginCore =
+        options?.name && isFunction(mayPluginCore) ? overwriteFunctionName(mayPluginCore, options.name) : mayPluginCore
+      if (isFunction(renamedMayPluginCore)) return { plugin: renamedMayPluginCore, state: {} }
+      return renamedMayPluginCore
+    },
+    options?.defaultOptions
+  )
 
   Object.assign(pluginCoreFn, options, { [isPluginObjSymbol]: true })
 

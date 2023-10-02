@@ -32,7 +32,9 @@ export interface ModalProps {
 }
 
 export function Modal(rawProps: KitProps<ModalProps>) {
-  const { props, lazyLoadController } = useKitProps(rawProps)
+  const { props, lazyLoadController } = useKitProps(rawProps, {
+    name: 'Modal',
+  })
   lazyLoadController(() => ({
     get isOpen() {
       return innerOpen()

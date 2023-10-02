@@ -8,7 +8,7 @@ export type LabelBoxProps = KitProps<{}>
  * !`<label>` can transpond click/focus event for inner `<Input>`-like Node
  */
 export function LabelBox(rawProps: LabelBoxProps) {
-  const { props, shadowProps } = useKitProps(rawProps)
+  const { props, shadowProps } = useKitProps(rawProps, { name: 'LabelBox' })
   return (
     <Piv
       render:self={(selfProps) => renderHTMLDOM('label', selfProps)} // why set as will render twice

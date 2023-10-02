@@ -6,7 +6,7 @@ export interface HTMLInputRadioProps extends UIKit {
   defaultChecked?: boolean
 }
 export function HTMLInputRadio(rawProps: HTMLInputRadioProps) {
-  const { props } = useKitProps(rawProps)
+  const { props } = useKitProps(rawProps, { name: 'HTMLInputRadio' })
   return (
     <Piv
       class='HTMLCheckbox'

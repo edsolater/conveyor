@@ -9,7 +9,7 @@ export interface LinkProps {
 }
 
 export function Link(rawProps: KitProps<LinkProps>) {
-  const { props } = useKitProps(rawProps)
+  const { props } = useKitProps(rawProps, { name: 'Link' })
   const navigate = useNavigate()
   return (
     <Piv<'a'>

@@ -21,7 +21,7 @@ export interface ListItemController {
 export function ListItem(originalProps: ListItemProps) {
   const [childrenProps, rawProps] = splitProps(originalProps, ['children'])
   const children = childrenProps.children
-  const { props, lazyLoadController } = useKitProps(rawProps)
+  const { props, lazyLoadController } = useKitProps(rawProps, { name: 'ListItem' })
 
   const [itemRef, setRef] = createRef<HTMLElement>()
 

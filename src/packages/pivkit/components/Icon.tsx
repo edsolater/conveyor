@@ -13,7 +13,7 @@ export interface IconProps {
  * @todo add fallbackSrc
  */
 export function Icon(rawProps: KitProps<IconProps>) {
-  const { props } = useKitProps(rawProps)
+  const { props } = useKitProps(rawProps, { name: 'Icon' })
   /* ---------------------------------- props --------------------------------- */
   return (
     <Piv<'img'>

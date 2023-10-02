@@ -8,7 +8,7 @@ export function NavBox({ content }: { content: JSX.Element }) {
       icss={{
         overflowX: 'hidden',
         minHeight: '100dvh',
-        maxWidth:'100dvw',
+        maxWidth: '100dvw',
         display: 'grid',
         gridTemplate: `
           "nav" auto

@@ -13,7 +13,7 @@ export type TabListProps<Controller extends ValidController = TabListController>
  * contain `Tab` components
  */
 export function TabList(rawProps: TabListProps) {
-  const { props, shadowProps, lazyLoadController } = useKitProps(rawProps)
+  const { props, shadowProps, lazyLoadController } = useKitProps(rawProps, { name: 'TabList' })
   const tabListController: TabListController = {}
   lazyLoadController(tabListController)
   return (
