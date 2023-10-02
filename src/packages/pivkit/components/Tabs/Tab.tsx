@@ -15,19 +15,21 @@ export interface TabController {
   select(): void
 }
 
-export type TabProps<Controller extends ValidController = TabController> = KitProps<
-  {
-    value?: string
-    onSelect?(controller: TabController): void
-    onUnselect?(controller: TabController): void
-  },
+export type TabProps = {
+  value?: string
+  onSelect?(controller: TabController): void
+  onUnselect?(controller: TabController): void
+}
+
+export type TabKitProps<Controller extends ValidController = TabController> = KitProps<
+  TabProps,
   { controller: Controller }
 >
 
 /**
  * contain `Tab` components
  */
-export function Tab(rawProps: TabProps) {
+export function Tab(rawProps: TabKitProps) {
   const [currentIndex, setCurrentIndex] = createSignal<number>()
   const { dom, setDom } = createDomRef()
   const { props, shadowProps, lazyLoadController } = useKitProps(rawProps, { name: 'Tab' })

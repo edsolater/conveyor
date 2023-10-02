@@ -1,20 +1,21 @@
 import { createEffect, createSignal, onCleanup } from 'solid-js'
 import { onEvent as addEventListener } from '../../domkit'
 import { createRef } from '../hooks'
-import { Piv, UIKit, useKitProps } from '../piv'
+import { KitProps, Piv, useKitProps } from '../piv'
 import { renderHTMLDOM } from '../piv/propHandlers/renderHTMLDOM'
-import { Accessify } from '../utils/accessifyProps'
 
-export interface ImageProps extends UIKit<{ controller: ImageController }> {
+export interface ImageController {}
+
+export interface ImageProps {
   /**
    *  also accept multi srcs
    */
-  src?: Accessify<string | string[] | undefined, ImageController>
-  fallbackSrc?: Accessify<string | undefined, ImageController>
+  src?: string | string[] | undefined
+  fallbackSrc?: string | undefined
   /**
    *  for readability
    */
-  alt?: Accessify<string | undefined, ImageController>
+  alt?: string | undefined
 
   // TODO: imply it!!!
   resizeable?: boolean
@@ -25,16 +26,16 @@ export interface ImageProps extends UIKit<{ controller: ImageController }> {
   'css:height'?: string
 }
 
-export interface ImageController {}
+export type ImageKitProps = KitProps<ImageProps, { controller: ImageController }>
 
-const defaultProps = {} as const satisfies Partial<ImageProps>
+const defaultProps = {} as const satisfies Partial<ImageKitProps>
 
 export type DefaultImageProps = typeof defaultProps
 /**
  * if for layout , don't render important content in Box
  * @todo add fallbackSrc
  */
-export function Image(rawProps: ImageProps) {
+export function Image(rawProps: ImageKitProps) {
   // TODO is load
   const [isLoaded, setIsLoaded] = createSignal(false)
   const [dom, setDom] = createRef<HTMLImageElement>()

@@ -6,24 +6,20 @@ import { PopPortal } from './PopPortal'
 
 export interface DrawerController {
   isOpen: boolean
-  placement: NonNullable<DrawerProps['placement']>
+  placement: NonNullable<DrawerKitProps['placement']>
   open(): void
   close(): void
   toggle(): void
 }
-
-export type DrawerProps = KitProps<
-  {
-    open?: boolean
-    placement?: 'from-left' | 'from-bottom' | 'from-top' | 'from-right'
-  },
-  { controller: DrawerController }
->
-const drawerDefaultProps = { placement: 'from-right' } satisfies DrawerProps
-
+export type DrawerProps = {
+  open?: boolean
+  placement?: 'from-left' | 'from-bottom' | 'from-top' | 'from-right'
+}
+export type DrawerKitProps = KitProps<DrawerProps, { controller: DrawerController }>
+const drawerDefaultProps = { placement: 'from-right' } satisfies DrawerKitProps
 export type DrawerDefaultProps = typeof drawerDefaultProps
 
-export function Drawer(kitProps: DrawerProps) {
+export function Drawer(kitProps: DrawerKitProps) {
   const { props: rawProps } = useKitProps(kitProps, {
     name: 'Drawer',
     plugin: drawerKeyboardShortcut,

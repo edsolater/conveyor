@@ -12,31 +12,29 @@ export interface RadioGroupController {
   uncheck: () => void
 }
 
-export type RadioGroupProps<Controller extends ValidController = RadioGroupController> = KitProps<
-  {
-    name: string
-    option?: string
-    defaultOption?: string
-    onChange?(utils: { option: string; isChecked: boolean }): void
-    // 'anatomy:ContainerBox'?: LabelBoxProps
-    // 'anatomy:HTMLRadioGroup'?: HTMLInputRadioGroupProps
-    // 'anatomy:Checkbox'?: PivProps<'div', Controller>
-    // 'anatomy:Option'?: LabelProps
-  },
+export type RadioGroupProps = {
+  name: string
+  option?: string
+  defaultOption?: string
+  onChange?(utils: { option: string; isChecked: boolean }): void
+}
+
+export type RadioGroupKitProps<Controller extends ValidController = RadioGroupController> = KitProps<
+  RadioGroupProps,
   { controller: Controller }
 >
 
-const selfProps = ['name', 'option', 'defaultOption', 'onChange'] satisfies (keyof RadioGroupProps)[]
+const selfProps = ['name', 'option', 'defaultOption', 'onChange'] satisfies (keyof RadioGroupKitProps)[]
 
 const defaultProps = {
   name: 'unknown radio group',
-} satisfies Partial<RadioGroupProps>
+} satisfies Partial<RadioGroupKitProps>
 
 /**
  * RadioGroup can illustrate a boolean value
  */
-export function RadioGroup(rawProps: RadioGroupProps) {
-  const { props, shadowProps, lazyLoadController } = useKitProps(rawProps, {
+export function RadioGroup(kitProps: RadioGroupKitProps) {
+  const { props, shadowProps, lazyLoadController } = useKitProps(kitProps, {
     name: 'RadioGroup',
     defaultProps,
     selfProps: selfProps,

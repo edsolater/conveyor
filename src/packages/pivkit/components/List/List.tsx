@@ -7,34 +7,27 @@ import { KitProps, Piv, useKitProps } from '../../piv'
 import { ListItem } from './ListItem'
 
 export interface ListController {}
-
-export type ListProps<T> = KitProps<
-  {
-    children(item: T, index: () => number): JSXElement
-
-    of?: MayFn<Iterable<T>>
-
-    /**
-     * only meaningfull when turnOnScrollObserver is true
-     * @default 30
-     */
-    increaseRenderCount?: number
-    /**
-     * only meaningfull when turnOnScrollObserver is true
-     * @default 30
-     * can accept Infinity
-     */
-    initRenderCount?: number
-    /**
-     * only meaningfull when turnOnScrollObserver is true
-     * @default 50(px)
-     */
-    reachBottomMargin?: number
-  },
-  {
-    controller: ListController
-  }
->
+export type ListProps<T> = {
+  children(item: T, index: () => number): JSXElement
+  of?: MayFn<Iterable<T>>
+  /**
+   * only meaningfull when turnOnScrollObserver is true
+   * @default 30
+   */
+  increaseRenderCount?: number
+  /**
+   * only meaningfull when turnOnScrollObserver is true
+   * @default 30
+   * can accept Infinity
+   */
+  initRenderCount?: number
+  /**
+   * only meaningfull when turnOnScrollObserver is true
+   * @default 50(px)
+   */
+  reachBottomMargin?: number
+}
+export type ListKitProps<T> = KitProps<ListProps<T>, { controller: ListController }>
 
 export interface InnerListContext {
   observeFunction?: ObserveFn<HTMLElement>
@@ -46,8 +39,8 @@ export const ListContext = createContext<InnerListContext>({} as InnerListContex
 /**
  * if for layout , don't render important content in Box
  */
-export function List<T>(rawProps: ListProps<T>) {
-  const { props } = useKitProps(rawProps, {
+export function List<T>(kitProps: ListKitProps<T>) {
+  const { props } = useKitProps(kitProps, {
     name: 'List',
     noNeedDeAccessifyChildren: true,
     defaultProps: {

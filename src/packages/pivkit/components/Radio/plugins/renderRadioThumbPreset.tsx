@@ -1,5 +1,5 @@
 import { PivChild, Piv } from '../../../piv'
-import { RadioController, RadioProps } from '..'
+import { RadioController, RadioKitProps } from '..'
 
 /**
  * component plugin
@@ -19,7 +19,7 @@ export function renderRadioThumb(
       }}
     />
   )
-): RadioProps['shadowProps'] {
+): RadioKitProps['shadowProps'] {
   return {
     'anatomy:Thumb': {
       'render:lastChild': renderContent,

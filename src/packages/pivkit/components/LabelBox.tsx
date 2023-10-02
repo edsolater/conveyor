@@ -1,14 +1,16 @@
 import { KitProps, Piv, useKitProps } from '../piv'
 import { renderHTMLDOM } from '../piv/propHandlers/renderHTMLDOM'
 
-export type LabelBoxProps = KitProps<{}>
+export type LabelBoxProps = {}
+
+export type LabelBoxKitProps = KitProps<LabelBoxProps>
 /**
  * created for form widget component
  *
  * !`<label>` can transpond click/focus event for inner `<Input>`-like Node
  */
-export function LabelBox(rawProps: LabelBoxProps) {
-  const { props, shadowProps } = useKitProps(rawProps, { name: 'LabelBox' })
+export function LabelBox(kitProps: LabelBoxKitProps) {
+  const { props, shadowProps } = useKitProps(kitProps, { name: 'LabelBox' })
   return (
     <Piv
       render:self={(selfProps) => renderHTMLDOM('label', selfProps)} // why set as will render twice

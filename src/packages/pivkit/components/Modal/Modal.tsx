@@ -31,8 +31,10 @@ export interface ModalProps {
     | 'always' // always stay DOM
 }
 
-export function Modal(rawProps: KitProps<ModalProps>) {
-  const { props, lazyLoadController } = useKitProps(rawProps, {
+export type ModalKitProps = KitProps<ModalProps>
+
+export function Modal(kitProps: ModalKitProps) {
+  const { props, lazyLoadController } = useKitProps(kitProps, {
     name: 'Modal',
   })
   lazyLoadController(() => ({

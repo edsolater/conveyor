@@ -6,10 +6,12 @@ export interface ItemBoxProps {
   prefix?: JSXElement
 }
 
+export type ItemBoxKitProps = KitProps<ItemBoxProps>
+
 /**
  * if for layout , don't render important content in Box
  */
-export function ItemBox(rawProps: KitProps<ItemBoxProps>) {
+export function ItemBox(rawProps: ItemBoxKitProps) {
   const { props } = useKitProps(rawProps, { name: 'ItemBox' })
   /* ---------------------------------- props --------------------------------- */
   return (

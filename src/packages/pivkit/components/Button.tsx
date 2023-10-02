@@ -65,10 +65,12 @@ export interface ButtonProps {
   suffix?: PivChild
 }
 
+export type ButtonKitProps = KitProps<ButtonProps, { controller: ButtonController }>
+
 /**
  * feat: build-in click ui effect
  */
-export function Button(kitProps: KitProps<ButtonProps, { controller: ButtonController }>) {
+export function Button(kitProps: ButtonKitProps) {
   const innerController: ButtonController = {
     click: () => {
       ref()?.click()

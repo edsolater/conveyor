@@ -3,7 +3,7 @@ import { Piv, PivProps, UIKit, useKitProps } from '../../piv'
 import { createSyncSignal } from '../../hooks/createSyncSignal'
 import { makeElementMoveSmooth } from '../../hooks/makeElementMoveSmooth'
 import { Accessify } from '../../utils/accessifyProps'
-import { Label, LabelProps } from '../Label'
+import { Label, LabelKitProps } from '../Label'
 import { HTMLCheckbox, HTMLCheckboxProps } from './HTMLCheckbox'
 import { useSwitchStyle } from './hooks/useSwitchStyle'
 import { LabelBox } from '../LabelBox'
@@ -25,7 +25,7 @@ export interface SwitchProps extends Omit<UIKit<{ controller: SwitchController }
   isDefaultChecked?: Accessify<boolean, SwitchController>
   onChange?(utils: { isChecked: boolean }): void
   /** for Chakra has, so i has */
-  'anatomy:ContainerBox'?: LabelProps
+  'anatomy:ContainerBox'?: LabelKitProps
   /** hidden HTML input(type=checkbox) for aria readbility */
   'anatomy:HTMLCheckbox'?: HTMLCheckboxProps
   /** SwitchThumb */

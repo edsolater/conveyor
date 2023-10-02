@@ -32,7 +32,7 @@ export type TabsController = {
   _onChange(cb: OnChangeCallback): { unregister(): void }
 } & TabsControllerWithTabValue
 
-export type CoreTabProps = {
+export type TabProps = {
   /** recommand to set, so can flat ui state to pure js object  */
   groupName?: string
   selectedIndex?: number
@@ -40,8 +40,8 @@ export type CoreTabProps = {
   onChange?(controller: TabsController): void
 } & TabsPropsWithTabValue
 
-export type TabsProps<Controller extends ValidController = TabsController> = KitProps<
-  CoreTabProps,
+export type TabsKitProps<Controller extends ValidController = TabsController> = KitProps<
+  TabProps,
   { controller: Controller }
 >
 
@@ -75,7 +75,7 @@ export const TabsControllerContext = createContext<TabsController>(TabsControlle
  *   </Tab.Panels>
  * </Tabs>
  */
-export function Tabs(rawProps: TabsProps) {
+export function Tabs(rawProps: TabsKitProps) {
   const { registerCallback, invokeCallbacks } = createCallbackManager<OnChangeCallback>()
 
   const { props, shadowProps, lazyLoadController } = useKitProps(rawProps, { name: 'Tabs' })

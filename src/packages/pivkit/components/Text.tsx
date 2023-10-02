@@ -1,6 +1,6 @@
 import { KitProps, Piv, useKitProps } from '../piv'
 
-export type TextProps = KitProps<{
+export interface TextProps {
   inline?: boolean
   /** if true, it is 'text' */
   editable?: boolean | 'text' | 'all'
@@ -9,14 +9,16 @@ export type TextProps = KitProps<{
    *  you should directily use `props.children` if possiable, this prop is for batch processing
    */
   value?: string | number
-}>
+}
+
+export type TextKitProps = KitProps<TextProps>
 
 /**
  * @componentType widget
  * if for layout , inner content should only be text
  */
-export function Text(rawProps: TextProps) {
-  const { props } = useKitProps(rawProps, { name: 'Text' })
+export function Text(kitProps: TextKitProps) {
+  const { props } = useKitProps(kitProps, { name: 'Text' })
 
   const contentEditableValue =
     props.editable != null

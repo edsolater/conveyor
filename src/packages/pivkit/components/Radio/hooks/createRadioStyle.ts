@@ -1,15 +1,15 @@
 import { DeKitProps } from '../../../piv'
-import { LabelProps } from '../../Label'
+import { LabelKitProps } from '../../Label'
 import { HTMLInputRadioProps } from '../HTMLInputRadio'
-import { RadioProps } from '../Radio'
+import { RadioKitProps } from '../Radio'
 
-/** {@link RadioProps} should extends this  */
+/** {@link RadioKitProps} should extends this  */
 export type RadioStyleProps = {}
 
 /**
  * hook for radio's **style**
  */
-export function createRadioStyle(params: { props: DeKitProps<RadioProps> }) {
+export function createRadioStyle(params: { props: DeKitProps<RadioKitProps> }) {
   const containerBoxStyleProps = {
     icss: {
       display: 'flex',
@@ -23,7 +23,7 @@ export function createRadioStyle(params: { props: DeKitProps<RadioProps> }) {
       },
       transition: '300ms',
     },
-  } satisfies Partial<LabelProps>
+  } satisfies Partial<LabelKitProps>
 
   const htmlCheckboxStyleProps = {
     icss: {
@@ -61,11 +61,11 @@ export function createRadioStyle(params: { props: DeKitProps<RadioProps> }) {
         backgroundColor: 'white',
       },
     }),
-  } satisfies Partial<RadioProps>
+  } satisfies Partial<RadioKitProps>
 
   const radioLabelStyleProps = {
     icss: {},
-  } satisfies Partial<LabelProps>
+  } satisfies Partial<LabelKitProps>
 
   return { containerBoxStyleProps, htmlCheckboxStyleProps, radioCheckboxStyleProps, radioLabelStyleProps }
 }

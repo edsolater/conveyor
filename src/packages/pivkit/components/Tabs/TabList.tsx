@@ -3,16 +3,16 @@ import { Piv } from '../../piv/Piv'
 import { ValidController } from '../../piv/typeTools'
 
 export interface TabListController {}
-
-export type TabListProps<Controller extends ValidController = TabListController> = KitProps<
-  {},
+export interface TabListProps {}
+export type TabListKitProps<Controller extends ValidController = TabListController> = KitProps<
+  TabListProps,
   { controller: Controller }
 >
 
 /**
  * contain `Tab` components
  */
-export function TabList(rawProps: TabListProps) {
+export function TabList(rawProps: TabListKitProps) {
   const { props, shadowProps, lazyLoadController } = useKitProps(rawProps, { name: 'TabList' })
   const tabListController: TabListController = {}
   lazyLoadController(tabListController)

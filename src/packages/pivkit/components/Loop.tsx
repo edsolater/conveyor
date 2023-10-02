@@ -5,20 +5,19 @@ import { createRef } from '../hooks/createRef'
 
 export interface LoopController {}
 
-export type LoopProps<T> = KitProps<
-  {
-    of?: MayFn<Iterable<T>>
-    children(item: T, index: () => number): JSXElement
-  },
-  { controller: LoopController }
->
+export type LoopProps<T> = {
+  of?: MayFn<Iterable<T>>
+  children(item: T, index: () => number): JSXElement
+}
+
+export type LoopKitProps<T> = KitProps<LoopProps<T>, { controller: LoopController }>
 
 /**
  * just a wrapper of <For>, very simple
  * if for layout , don't render important content in Box
  */
-export function Loop<T>(rawProps: LoopProps<T>) {
-  const { props } = useKitProps(rawProps, {
+export function Loop<T>(kitProps: LoopKitProps<T>) {
+  const { props } = useKitProps(kitProps, {
     name: 'Loop',
     noNeedDeAccessifyChildren: true,
   })
