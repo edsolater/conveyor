@@ -12,7 +12,7 @@ import { handlePluginProps } from './handlePluginProps'
 import { handleShadowProps } from './shadowProps'
 import { mergeProps, omit } from '../utils'
 import { PivProps } from '../Piv'
-import { getPropsFromPropContextContext } from '../../components/PropContext'
+import { getPropsFromPropContextContext } from '../PropContext'
 
 export type NativeProps = ReturnType<typeof parsePivProps>['props']
 /**

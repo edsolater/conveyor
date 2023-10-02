@@ -57,7 +57,7 @@ export function getPivPropsValue(objs: AnyObj[], key: keyof any) {
     case 'style':
     case 'icss':
     case 'htmlProps':
-    case 'showProps':
+    case 'shadowProps':
     case 'plugin':
     case 'render:outWrapper':
       return objs.reduce((finalValue, objB) => {

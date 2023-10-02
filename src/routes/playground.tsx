@@ -33,7 +33,7 @@ import {
   useComponentController,
   withHover
 } from '../packages/pivkit'
-import { PropContext } from '../packages/pivkit/components/PropContext'
+import { PropContext } from '../packages/pivkit/piv/PropContext'
 
 export default function PlaygroundPage() {
   return (

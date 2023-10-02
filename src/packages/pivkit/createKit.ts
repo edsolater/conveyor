@@ -1,8 +1,11 @@
 import { hasProperty, MayArray, MayDeepArray, pipe } from '@edsolater/fnkit'
 import { AccessifyProps, DeAccessifyProps, useAccessifiedProps } from '.'
-import { Faker } from '../fnkit'
+import { createOnRunObject, LazyLoadObj } from '../fnkit'
 import { createUUID, UUID } from './hooks/utils/createUUID'
+import { getControllerObjFromControllerContext, handlePropsInnerController } from './piv/ControllerContext'
 import { registerControllerInCreateKit } from './piv/hooks/useComponentController'
+import { CRef, PivProps } from './piv/Piv'
+import { getPropsFromPropContextContext } from './piv/PropContext'
 import { loadPropsControllerRef, toProxifyController } from './piv/propHandlers/children'
 import { handlePluginProps } from './piv/propHandlers/handlePluginProps'
 import { GetPluginParams, Plugin } from './piv/propHandlers/plugin'
@@ -11,8 +14,6 @@ import { HTMLTag, ValidController, ValidProps } from './piv/typeTools'
 import { mergeProps } from './piv/utils'
 import { AddDefaultPivProps, addDefaultPivProps } from './piv/utils/addDefaultProps'
 import { omit } from './piv/utils/omit'
-import { CRef, PivProps } from './piv/Piv'
-import { getPropsFromPropContextContext } from './components/PropContext'
 
 /**
  * - auto add `plugin` `shadowProps` `_promisePropsConfig` `controller` props
@@ -198,17 +199,23 @@ export function useKitProps<
   shadowProps: any
   props: DeKitProps<P, Controller, DefaultProps>
   lazyLoadController(controller: Controller | ((props: ParsedKitProps<GetDeAccessifiedProps<P>>) => Controller)): void
+  contextController: any // no need to infer this type for you always force it !!!
   // TODO: imply it !!! For complicated DOM API always need this, this is a fast shortcut
   // componentRef
 } {
   type RawProps = GetDeAccessifiedProps<P>
+  // handle ControllerContext
+  const mergedContextController = createOnRunObject(getControllerObjFromControllerContext)
+  const controllerContextParsedProps = options?.name ? handlePropsInnerController(rawProps, options.name) : rawProps
 
   // handle PropContext
   const contextProps = getPropsFromPropContextContext({ componentName: options?.name ?? '' })
-  const props = contextProps ? mergeProps(contextProps, rawProps) : rawProps
+  const propContextParsedProps = contextProps
+    ? mergeProps(contextProps, controllerContextParsedProps)
+    : controllerContextParsedProps
 
   const { loadController, getControllerCreator } = createComponentController<RawProps, Controller>()
-  const composedProps = getParsedKitProps(props, {
+  const composedProps = getParsedKitProps(propContextParsedProps, {
     controller: (props: ParsedKitProps<RawProps>) => getControllerCreator(props),
     ...options,
   }) as any /* too difficult to type, no need to check */
@@ -217,6 +224,7 @@ export function useKitProps<
     props: composedProps,
     shadowProps,
     lazyLoadController: loadController,
+    contextController: mergedContextController,
   }
 }
 
@@ -224,7 +232,7 @@ export function useKitProps<
  * section 2: load controller
  */
 function createComponentController<RawProps extends ValidProps, Controller extends ValidController | unknown>() {
-  const controllerFaker = new Faker<(props: ParsedKitProps<RawProps>) => Controller>()
+  const controllerFaker = new LazyLoadObj<(props: ParsedKitProps<RawProps>) => Controller>()
   const loadController = (inputController: Controller | ((props: ParsedKitProps<RawProps>) => Controller)) => {
     const controllerCreator = typeof inputController === 'function' ? inputController : () => inputController
     //@ts-expect-error unknown ?

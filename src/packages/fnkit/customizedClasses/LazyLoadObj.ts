@@ -5,7 +5,7 @@ import { AnyFn, isFunction } from '@edsolater/fnkit'
  * can pretend an object, but will only access it when it's property accessed
  * can pretend a function, but will only access it when it's called
  */
-export class Faker<T extends object | AnyFn> {
+export class LazyLoadObj<T extends object | AnyFn> {
   loadedTargetObject = undefined as T | undefined
   constructor(initObject?: T) {
     if (initObject) this.loadedTargetObject = initObject
