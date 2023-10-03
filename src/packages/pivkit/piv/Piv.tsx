@@ -6,6 +6,7 @@ import { renderHTMLDOM } from './propHandlers/renderHTMLDOM'
 import { HTMLTag, PivChild, ValidController } from './typeTools'
 import { omit } from './utils'
 import { handlePropsInnerController } from './ControllerContext'
+import { createOnRunObject } from '../../fnkit'
 
 type Boollike = any
 
@@ -143,7 +144,10 @@ export const Piv = <TagName extends HTMLTag = HTMLTag, Controller extends ValidC
     handleShadowProps,
     handlePropsInnerController
   )
-  return 'render:outWrapper' in props ? handleDangerousWrapperPluginsWithChildren(props) : handleNormalPivProps(props)
+  if ('innerController' in props) {
+    console.log('rawProps 1111: ', props)
+  }
+  return 'render:outWrapper' in props ? handlePropRenderOutWrapper(props) : handleNormalPivProps(props)
 }
 
 function handleNormalPivProps(props?: Omit<PivProps<any, any>, 'plugin' | 'shadowProps'>) {
@@ -153,9 +157,10 @@ function handleNormalPivProps(props?: Omit<PivProps<any, any>, 'plugin' | 'shado
   // return selfCoverNode ? selfCoverNode : renderHTMLDiv(parsedProps, ifOnlyNeedRenderChildren, ifOnlyNeedRenderSelf)
 }
 
-function handleDangerousWrapperPluginsWithChildren(props: PivProps<any, any>): JSXElement {
+function handlePropRenderOutWrapper(props: PivProps<any, any>): JSXElement {
   return flap(props['render:outWrapper']).reduce(
     (prevNode, getWrappedNode) => (getWrappedNode ? getWrappedNode(prevNode) : prevNode),
-    handleNormalPivProps(omit(props, 'render:outWrapper'))
+    // @ts-expect-error force
+    (() => handleNormalPivProps(omit(props, 'render:outWrapper'))) as JSXElement // 📝 wrap function to let not solidjs read at once when array.prototype.reduce not finish yet
   )
 }

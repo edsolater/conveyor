@@ -44,15 +44,16 @@ export function getControllerObjFromControllerContext() {
 }
 
 export function handlePropsInnerController(props: ValidProps, componentName?: string): ValidProps {
-  const controller = props.innerController as PivProps['innerController']
+  const inputController = props.innerController as PivProps['innerController']
   // only check props not props.shadowProps
-  if (controller) {
+  if (inputController && Object.keys(inputController).length) {
+    console.log('innerController:1', inputController)
     const ControllerContext = getControllerContext(componentName)
     const newProps = mergeProps(props, {
       'render:outWrapper': (originalNode) => {
-        console.log('innerController:2', controller)
+        console.log('innerController:2', inputController)
         return (
-          <ControllerContext.Provider value={{ controller: controller }}>
+          <ControllerContext.Provider value={inputController}>
             <Fragnment>{originalNode}</Fragnment>
           </ControllerContext.Provider>
         )

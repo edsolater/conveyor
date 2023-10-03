@@ -410,27 +410,23 @@ function TabsExample() {
 }
 
 function PropContextExample() {
-  const ControllerContext = getControllerContext()
   return (
     <PropContext additionalProps={{ icss: { paddingInline: '24px' } }}>
       <Box icss={{ border: 'solid' }}>
-        <ControllerContext.Provider value={{ hehe: () => 'hello world' }}>
-          <Piv innerController={{ say: () => 'ControllerContext should can receive the message' }}>
-            <Box icss={{ border: 'dashed', borderColor: css_opacity('currentcolor', 0.6), margin: '8px' }}>
-              PropContext can pass to deep nested components
-            </Box>
-            <ControllerContextExample />
-          </Piv>
-        </ControllerContext.Provider>
+        <Piv innerController={{ say: () => 'ControllerContext should can receive the message' }}>
+          <Box icss={{ border: 'dashed', borderColor: css_opacity('currentcolor', 0.6), margin: '8px' }}>
+            PropContext can pass to deep nested components
+          </Box>
+          <ControllerContextExample />
+        </Piv>
       </Box>
     </PropContext>
   )
 }
 function ControllerContextExample(kitProps: ValidProps) {
   const { contextController } = useKitProps(kitProps, { name: 'ControllerContextExample' })
-  const { say, hehe } = contextController as { say: () => string }
-  console.log('extracted contextController: ', contextController)
-  return <Box>{say?.() + hehe?.()}</Box>
+  const { say } = contextController as { say: () => string }
+  return <Box>{say?.()}</Box>
 }
 
 function UploadExample() {
