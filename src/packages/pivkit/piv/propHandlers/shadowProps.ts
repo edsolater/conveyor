@@ -6,13 +6,13 @@ import { omit } from '../utils'
 export type PivShadowProps<OriginalProps> = MayArray<Partial<Omit<OriginalProps, 'as' | 'children'>>>
 
 /** as will only calculate props when access, so, return verbose big object is ok */
-// TODO: just like plugin, which use `mergeProps`
 export function handleShadowProps<P extends Partial<PivProps<any>>>(
   props: P,
   additionalShadowPropNames?: string[]
 ): Omit<P, 'shadowProps'> {
   if (!('shadowProps' in props)) return props
   const keys = getMergedKeys(props).concat(additionalShadowPropNames ?? [])
+  // TODO: 🤔 need to faster like mergeProps?
   const merged = Object.defineProperties(
     {},
     keys.reduce((acc: any, key: any) => {

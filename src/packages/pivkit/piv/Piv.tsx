@@ -1,10 +1,11 @@
-import { MayArray, flap } from '@edsolater/fnkit'
+import { MayArray, flap, pipe } from '@edsolater/fnkit'
 import { JSX, JSXElement, createComponent } from 'solid-js'
 import { makePipline } from '../../fnkit/makePipline'
-import { ClassName, HTMLProps, ICSS, IStyle, Plugin } from './propHandlers'
+import { ClassName, HTMLProps, ICSS, IStyle, Plugin, handlePluginProps, handleShadowProps } from './propHandlers'
 import { renderHTMLDOM } from './propHandlers/renderHTMLDOM'
 import { HTMLTag, PivChild, ValidController } from './typeTools'
 import { omit } from './utils'
+import { handlePropsInnerController } from './ControllerContext'
 
 type Boollike = any
 
@@ -133,11 +134,17 @@ export const pivPropsNames = [
 ] satisfies (keyof PivProps<any>)[]
 
 export const Piv = <TagName extends HTMLTag = HTMLTag, Controller extends ValidController | unknown = unknown>(
-  props: PivProps<TagName, Controller>
-) =>
-  'render:outWrapper' in props
-    ? handleDangerousWrapperPluginsWithChildren(props)
-    : makePipline(props).pipe(handleNormalPivProps).calcValue()
+  kitProps: PivProps<TagName, Controller>
+) => {
+  const props = pipe(
+    kitProps as PivProps<any>,
+    handleShadowProps,
+    handlePluginProps,
+    handleShadowProps,
+    handlePropsInnerController
+  )
+  return 'render:outWrapper' in props ? handleDangerousWrapperPluginsWithChildren(props) : handleNormalPivProps(props)
+}
 
 function handleNormalPivProps(props?: Omit<PivProps<any, any>, 'plugin' | 'shadowProps'>) {
   if (!props) return
@@ -149,6 +156,6 @@ function handleNormalPivProps(props?: Omit<PivProps<any, any>, 'plugin' | 'shado
 function handleDangerousWrapperPluginsWithChildren(props: PivProps<any, any>): JSXElement {
   return flap(props['render:outWrapper']).reduce(
     (prevNode, getWrappedNode) => (getWrappedNode ? getWrappedNode(prevNode) : prevNode),
-    createComponent(Piv, omit(props, 'render:outWrapper'))
+    handleNormalPivProps(omit(props, 'render:outWrapper'))
   )
 }

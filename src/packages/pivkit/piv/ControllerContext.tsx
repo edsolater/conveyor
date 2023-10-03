@@ -5,8 +5,10 @@ import { WeakerMap, WeakerSet } from '@edsolater/fnkit'
 
 type ControllerContext = Context<ValidController | undefined>
 type ComponentName = string
-const controllerContextStore = new WeakerMap<ComponentName, ControllerContext>()
-const anonymousComponentControllerContextStore = new WeakerSet<ControllerContext>()
+
+// same component share same ControllerContext
+const controllerContextStore = new Map<ComponentName, ControllerContext>()
+const anonymousComponentControllerContextStore = new Set<ControllerContext>()
 
 /**
  * same componentName will output same context
@@ -26,41 +28,36 @@ export function getControllerContext(name?: ComponentName) {
     return InnerAnonymousControllerContext
   }
 }
-const getAllControllerContext = () => [...controllerContextStore.values(), ...anonymousComponentControllerContextStore.values()]
+
+const getAllControllerContext = () => [
+  ...controllerContextStore.values(),
+  ...anonymousComponentControllerContextStore.values(),
+]
 
 /** add additional prop through solidjs context */
 export function getControllerObjFromControllerContext() {
-  const contextControllers = getAllControllerContext().map(useContext)
+  const Contexts = getAllControllerContext()
+  const contextControllers = Contexts.map(useContext)
   const mergedController = mergeProps(...contextControllers)
+  console.log('mergedController: ', mergedController, Contexts, contextControllers)
   return mergedController
 }
 
-/**
- * used in useKitProps and piv\
- * so ControllerContext will auto input by set prop:innerController
- */
-function ControllerContext(props: { componentName: string; controller: ValidController; children?: PivChild }) {
-  const ControllerContext = getControllerContext(props.componentName)
-  return (
-    <ControllerContext.Provider value={props.controller}>
-      <Fragnment>{props.children}</Fragnment>
-    </ControllerContext.Provider>
-  )
-}
-
-export function handlePropsInnerController(props: ValidProps, componentName: string): ValidProps {
-  const innerController = props.innerController as PivProps['innerController']
+export function handlePropsInnerController(props: ValidProps, componentName?: string): ValidProps {
+  const controller = props.innerController as PivProps['innerController']
   // only check props not props.shadowProps
-  if (innerController) {
+  if (controller) {
+    const ControllerContext = getControllerContext(componentName)
     const newProps = mergeProps(props, {
-      shadowProps: {
-        'render:outWrapper': (originalNode) => (
-          <ControllerContext controller={innerController} componentName={componentName}>
-            {originalNode}
-          </ControllerContext>
-        ),
-      } as Partial<PivProps>,
-    })
+      'render:outWrapper': (originalNode) => {
+        console.log('innerController:2', controller)
+        return (
+          <ControllerContext.Provider value={{ controller: controller }}>
+            <Fragnment>{originalNode}</Fragnment>
+          </ControllerContext.Provider>
+        )
+      },
+    } as Partial<PivProps>)
     return newProps
   }
   return props

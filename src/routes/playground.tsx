@@ -21,17 +21,20 @@ import {
   Switch,
   Tabs,
   Text,
+  ValidProps,
   createIncresingAccessor,
   createIntervalEffect,
   createPlugin,
   css_opacity,
   generatePopoverPlugins,
+  getControllerContext,
   icssCol,
   icssRow,
   renderSwitchThumb,
   useCSSTransition,
   useComponentController,
-  withHover
+  useKitProps,
+  withHover,
 } from '../packages/pivkit'
 import { PropContext } from '../packages/pivkit/piv/PropContext'
 
@@ -53,9 +56,9 @@ function PlaygoundList() {
         gap: '4vw',
       }}
     >
-      <ExamplePanel name='IntervalCircle'>
+      {/* <ExamplePanel name='IntervalCircle'>
         <CircularProgressExample />
-      </ExamplePanel>
+      </ExamplePanel> */}
 
       {/* <ExamplePanel name='Drawer'>
         <DrawerExample />
@@ -77,9 +80,9 @@ function PlaygoundList() {
         <ModalExample />
       </ExamplePanel> */}
 
-      <ExamplePanel name='List'>
+      {/* <ExamplePanel name='List'>
         <ListExample />
-      </ExamplePanel>
+      </ExamplePanel> */}
 
       {/* <ExamplePanel name='Switch'>
         <SwitchExample />
@@ -93,7 +96,7 @@ function PlaygoundList() {
         <PopoverExample />
       </ExamplePanel> */}
 
-      <ExamplePanel name='ComponentFactory'>
+      {/* <ExamplePanel name='ComponentFactory'>
         <ComponentFactoryExample />
       </ExamplePanel>
 
@@ -103,9 +106,9 @@ function PlaygoundList() {
 
       <ExamplePanel name='Tabs'>
         <TabsExample />
-      </ExamplePanel>
+      </ExamplePanel> */}
 
-      <ExamplePanel name='PropContext'>
+      <ExamplePanel name='PropContext + ControllerContext'>
         <PropContextExample />
       </ExamplePanel>
       {/* <Foo /> */}
@@ -407,15 +410,27 @@ function TabsExample() {
 }
 
 function PropContextExample() {
+  const ControllerContext = getControllerContext()
   return (
     <PropContext additionalProps={{ icss: { paddingInline: '24px' } }}>
       <Box icss={{ border: 'solid' }}>
-        <Box icss={{ border: 'dashed', borderColor: css_opacity('currentcolor', 0.6), margin: '8px' }}>
-          PropContext can pass to deep nested components
-        </Box>
+        <ControllerContext.Provider value={{ hehe: () => 'hello world' }}>
+          <Piv innerController={{ say: () => 'ControllerContext should can receive the message' }}>
+            <Box icss={{ border: 'dashed', borderColor: css_opacity('currentcolor', 0.6), margin: '8px' }}>
+              PropContext can pass to deep nested components
+            </Box>
+            <ControllerContextExample />
+          </Piv>
+        </ControllerContext.Provider>
       </Box>
     </PropContext>
   )
+}
+function ControllerContextExample(kitProps: ValidProps) {
+  const { contextController } = useKitProps(kitProps, { name: 'ControllerContextExample' })
+  const { say, hehe } = contextController as { say: () => string }
+  console.log('extracted contextController: ', contextController)
+  return <Box>{say?.() + hehe?.()}</Box>
 }
 
 function UploadExample() {
