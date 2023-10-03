@@ -17,24 +17,39 @@ export function mergeProps<P extends ValidProps | undefined>(...propsObjs: P[]):
 export function mergeProps<P extends ValidProps | undefined>(...propsObjs: P[]): Exclude<P, undefined> {
   // @ts-ignore
   if (propsObjs.length <= 1) return propsObjs[0] ?? {}
-  const trimedProps = shakeNil(flap(propsObjs))
+  // ready to parse
+  const props = shakeNil(flap(propsObjs))
   // @ts-ignore
-  if (trimedProps.length <= 1) return trimedProps[0] ?? {}
+  if (props.length <= 1) return props[0] ?? {}
 
-  const merged = Object.defineProperties(
+  let keys: Set<string | symbol> | undefined = undefined
+  let keysArray: (string | symbol)[] | undefined = undefined
+
+  function getOwnKeys() {
+    if (!keys || !keysArray) {
+      keysArray = getKeys(props)
+      keys = new Set(keysArray)
+    }
+    return { s: keys, a: keysArray }
+  }
+
+  return new Proxy(
     {},
-    getKeys(trimedProps).reduce((acc: any, key: any) => {
-      acc[key] = {
+    {
+      get: (_target, key) => getPivPropsValue(props, key),
+      has: (_target, key) => getOwnKeys().s.has(key as string),
+      set: (_target, key, value) => Reflect.set(_target, key, value),
+      ownKeys: () => getOwnKeys().a,
+      // for Object.keys to filter
+      getOwnPropertyDescriptor: (_target, key) => ({
         enumerable: true,
+        configurable:true,
         get() {
-          return getPivPropsValue(trimedProps, key)
+          return getPivPropsValue(props, key)
         },
-      }
-      return acc
-    }, {} as PropertyDescriptorMap)
-  ) as Exclude<P, undefined>
-
-  return merged
+      }),
+    }
+  ) as any
 }
 
 export function getPivPropsValue(objs: AnyObj[], key: keyof any) {

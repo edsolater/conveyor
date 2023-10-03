@@ -88,15 +88,15 @@ function PlaygoundList() {
         <SwitchExample />
       </ExamplePanel>
 
-      {/*<ExamplePanel name='Radio'>
+      <ExamplePanel name='Radio'>
         <RadioExample />
       </ExamplePanel>
 
-      <ExamplePanel name='Popover'>
+      {/* <ExamplePanel name='Popover'>
         <PopoverExample />
-      </ExamplePanel> */}
+      </ExamplePanel>
 
-      {/* <ExamplePanel name='ComponentFactory'>
+      <ExamplePanel name='ComponentFactory'>
         <ComponentFactoryExample />
       </ExamplePanel>
 
