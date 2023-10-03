@@ -1,5 +1,10 @@
 import { unifyItem } from '@edsolater/fnkit'
 
+/**
+ * unique keys from objects
+ * @param objs get keys from these objects
+ * @returns unique keys
+ */
 export function getKeys<T extends object | undefined>(objs: T[]) {
   return unifyItem(
     objs.flatMap((obj) => {

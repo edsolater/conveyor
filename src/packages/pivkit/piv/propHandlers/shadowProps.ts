@@ -1,33 +1,58 @@
-import { MayArray, isArray, isObject, shakeNil } from '@edsolater/fnkit'
-import { PivProps, pivPropsNames } from '../Piv'
-import { getPivPropsValue } from '../utils/mergeProps'
+import { AnyFn, MayArray, isArray, isObject, shakeNil } from '@edsolater/fnkit'
+import { PivProps } from '../Piv'
 import { omit } from '../utils'
+import { getPivPropsValue } from '../utils/mergeProps'
 
 export type PivShadowProps<OriginalProps> = MayArray<Partial<Omit<OriginalProps, 'as' | 'children'>>>
+
+/**
+ * invoke only once, return the cached result when invoke again
+ */
+//TODO: imply feature: same input have same output
+// TEMP fnkit already have this function
+function createCachedFunction<F extends AnyFn>(fn: F): F {
+  let cachedResult: ReturnType<F> | undefined = undefined
+  return function (...args: Parameters<F>) {
+    if (cachedResult == null) {
+      cachedResult = fn(...args)
+    }
+    return cachedResult
+  } as F
+}
 
 /** as will only calculate props when access, so, return verbose big object is ok */
 export function handleShadowProps<P extends Partial<PivProps<any>>>(
   props: P,
+  /** @deprecated no need,  */
   additionalShadowPropNames?: string[]
 ): Omit<P, 'shadowProps'> {
   if (!('shadowProps' in props)) return props
-  const keys = getNeedToMergeKeys(props).concat(additionalShadowPropNames ?? [])
-  // TODO: 🤔 need to faster like mergeProps?
-  const merged = Object.defineProperties(
+
+  const candidates = createCachedFunction(() => shakeNil([props].concat(props.shadowProps)))
+  const getOwnKeys = createCachedFunction(() => {
+    const keysArray = getNeedToMergeKeys(props).concat(additionalShadowPropNames ?? [])
+    const keys = new Set(keysArray)
+    const uniqueKeys = Array.from(keys)
+    return { set: keys, arr: uniqueKeys }
+  })
+
+  return new Proxy(
     {},
-    keys.reduce((acc: any, key: any) => {
-      acc[key] = {
+    {
+      get: (_target, key) => getPivPropsValue(candidates(), key),
+      has: (_target, key) => getOwnKeys().set.has(key as string),
+      set: (_target, key, value) => Reflect.set(_target, key, value),
+      ownKeys: () => getOwnKeys().arr,
+      // for Object.keys to filter
+      getOwnPropertyDescriptor: (_target, key) => ({
         enumerable: true,
         configurable: true,
         get() {
-          const candidates = shakeNil([props].concat(props.shadowProps))
-          return getPivPropsValue(candidates, key)
+          return getPivPropsValue(candidates(), key)
         },
-      }
-      return acc
-    }, {} as PropertyDescriptorMap)
-  ) as Exclude<P, undefined>
-  return merged
+      }),
+    }
+  ) as any
 }
 
 function getNeedToMergeKeys(props: Partial<PivProps<any>>) {
@@ -40,12 +65,5 @@ function getNeedToMergeKeys(props: Partial<PivProps<any>>) {
   }
   const shadowKeys = getShadowPropKeys(props)
   const selfProps = Object.getOwnPropertyNames(omit(props, ['shadowProps']))
-  const pivProps = pivPropsNames
   return selfProps.concat(shadowKeys)
-}
-
-function getIntersection<T, W>(arr1: T[], arr2: W[]): T[] {
-  const a2 = new Set(arr2)
-  const result = [...arr1].filter((item) => a2.has(item as any))
-  return result
 }

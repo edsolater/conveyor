@@ -1,7 +1,22 @@
-import { AnyObj, flap, shakeNil } from '@edsolater/fnkit'
+import { AnyFn, AnyObj, flap, shakeNil } from '@edsolater/fnkit'
 import { ValidProps } from '../typeTools'
 import { getKeys } from './getKeys'
 import { mergeRefs } from './mergeRefs'
+
+/**
+ * invoke only once, return the cached result when invoke again
+ */
+//TODO: imply feature: same input have same output
+// TEMP fnkit already have this function
+function createCachedFunction<F extends AnyFn>(fn: F): F {
+  let cachedResult: ReturnType<F> | undefined = undefined
+  return function (...args: Parameters<F>) {
+    if (cachedResult == null) {
+      cachedResult = fn(...args)
+    }
+    return cachedResult
+  } as F
+}
 
 export function mergeProps<P1 = ValidProps, P2 = ValidProps>(...propsObjs: [P1, P2]): Exclude<P1 & P2, undefined>
 export function mergeProps<P1 = ValidProps, P2 = ValidProps, P3 = ValidProps>(
@@ -22,24 +37,19 @@ export function mergeProps<P extends ValidProps | undefined>(...propsObjs: P[]):
   // @ts-ignore
   if (props.length <= 1) return props[0] ?? {}
 
-  let keys: Set<string | symbol> | undefined = undefined
-  let keysArray: (string | symbol)[] | undefined = undefined
-
-  function getOwnKeys() {
-    if (!keys || !keysArray) {
-      keysArray = getKeys(props)
-      keys = new Set(keysArray)
-    }
-    return { s: keys, a: keysArray }
-  }
+  const getOwnKeys = createCachedFunction(() => {
+    const keysArray = getKeys(props)
+    const keys = new Set(keysArray)
+    return { set: keys, arr: keysArray }
+  })
 
   return new Proxy(
     {},
     {
       get: (_target, key) => getPivPropsValue(props, key),
-      has: (_target, key) => getOwnKeys().s.has(key as string),
+      has: (_target, key) => getOwnKeys().set.has(key as string),
       set: (_target, key, value) => Reflect.set(_target, key, value),
-      ownKeys: () => getOwnKeys().a,
+      ownKeys: () => getOwnKeys().arr,
       // for Object.keys to filter
       getOwnPropertyDescriptor: (_target, key) => ({
         enumerable: true,
@@ -52,6 +62,9 @@ export function mergeProps<P extends ValidProps | undefined>(...propsObjs: P[]):
   ) as any
 }
 
+/**
+ * use in mergeProps
+ */
 export function getPivPropsValue(objs: AnyObj[], key: keyof any) {
   switch (key) {
     // -------- specific --------

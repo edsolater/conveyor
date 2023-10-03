@@ -1,13 +1,14 @@
 import { Context, createContext, useContext } from 'solid-js'
 import { PivProps, ValidController, ValidProps, mergeProps } from '.'
 import { Fragnment } from './Fragnment'
+import { WeakerMap, WeakerSet } from '@edsolater/fnkit'
 
 type ControllerContext = Context<ValidController | undefined>
 type ComponentName = string
 
 // same component share same ControllerContext
-const controllerContextStore = new Map<ComponentName, ControllerContext>()
-const anonymousComponentControllerContextStore = new Set<ControllerContext>()
+const controllerContextStore = new WeakerMap<ComponentName, ControllerContext>()
+const anonymousComponentControllerContextStore = new WeakerSet<ControllerContext>()
 
 /**
  * same componentName will output same context
