@@ -11,7 +11,7 @@ export function handleShadowProps<P extends Partial<PivProps<any>>>(
   additionalShadowPropNames?: string[]
 ): Omit<P, 'shadowProps'> {
   if (!('shadowProps' in props)) return props
-  const keys = getMergedKeys(props).concat(additionalShadowPropNames ?? [])
+  const keys = getNeedToMergeKeys(props).concat(additionalShadowPropNames ?? [])
   // TODO: 🤔 need to faster like mergeProps?
   const merged = Object.defineProperties(
     {},
@@ -30,7 +30,7 @@ export function handleShadowProps<P extends Partial<PivProps<any>>>(
   return merged
 }
 
-function getMergedKeys(props: Partial<PivProps<any>>) {
+function getNeedToMergeKeys(props: Partial<PivProps<any>>) {
   function getShadowPropKeys(props: Partial<PivProps<any>>): string[] {
     return isArray(props.shadowProps)
       ? props.shadowProps.flatMap((p) => (isObject(p) ? Object.getOwnPropertyNames(p) : []))

@@ -206,7 +206,6 @@ export function useKitProps<
   type RawProps = GetDeAccessifiedProps<P>
   // handle ControllerContext
   const mergedContextController = createOnRunObject(getControllerObjFromControllerContext)
-  console.log('mergedContextController: ', mergedContextController)
   const controllerContextParsedProps = handlePropsInnerController(rawProps, options?.name)
 
   // handle PropContext
