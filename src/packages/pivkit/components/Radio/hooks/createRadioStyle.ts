@@ -1,4 +1,5 @@
 import { DeKitProps } from '../../../piv'
+import { cssColors, css_darken, css_opacity, css_var } from '../../../styles'
 import { LabelKitProps } from '../../Label'
 import { HTMLInputRadioProps } from '../HTMLInputRadio'
 import { RadioKitProps } from '../Radio'
@@ -41,6 +42,15 @@ export function createRadioStyle(params: { props: DeKitProps<RadioKitProps> }) {
   // FIXME: why not a createMemo is ok ?
   const radioCheckboxStyleProps = {
     icss: ({ isChecked }) => ({
+      '@layer default-variable': {
+        '--accent-color': cssColors.accentColor,
+        '--accent-color-hover': 'dodgerblue',
+
+        '--radio-border': cssColors.accentColor,
+        '--radio-border-hover': 'dodgerblue',
+        '--radio-border-unchecked': css_opacity(css_darken(css_var('--radio-border'), 0.8), 0.2),
+      },
+
       position: 'relative',
       display: 'grid',
       placeItems: 'center',
@@ -49,8 +59,10 @@ export function createRadioStyle(params: { props: DeKitProps<RadioKitProps> }) {
       borderRadius: '999em',
       borderStyle: 'solid',
 
-      borderColor: isChecked() ? 'dodgerblue' : '#e3e8ef',
-      background: isChecked() ? 'dodgerblue' : 'white',
+      background: isChecked() ? css_var('--accent-color') : cssColors.transparent,
+      borderColor: isChecked() ? css_var('--radio-border') : css_var('--radio-border-unchecked'),
+      transition: '60ms',
+
       '&::before': {
         content: '""',
         display: 'block',

@@ -1,4 +1,5 @@
 import { DeKitProps } from '../../../piv'
+import { cssColors } from '../../../styles'
 import { HTMLCheckboxProps } from '../HTMLCheckbox'
 import { SwitchProps } from '../Switch'
 
@@ -8,8 +9,8 @@ import { SwitchProps } from '../Switch'
 export function useSwitchStyle(params: { props: DeKitProps<SwitchProps> }) {
   const wrapperLabelStyleProps = {
     icss: ({ isChecked }) => ({
-      '@layer defaults': {
-        '--accent-color': '#4982ca',
+      '@layer default-variable': {
+        '--accent-color': cssColors.accentColor,
         '--switch-width': '2em',
         '--slot-bg-active': 'color-mix(in srgb, var(--accent-color), #fff 80%)',
         '--slot-bg-inactive': 'color-mix(in srgb, color-mix(in srgb, var(--accent-color), #fff 80%), #ddd 90%)',

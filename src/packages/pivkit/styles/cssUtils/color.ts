@@ -78,3 +78,14 @@ export function css_opacity(color: string, alpha: number) {
   return css_colorMix(color, 'transparent', 1 - alpha)
 }
 
+export function css_lighten(color: string, alpha: number) {
+  return css_colorMix(color, 'white', alpha)
+}
+
+export function css_darken(color: string, alpha: number) {
+  return css_colorMix(color, 'black', alpha)
+}
+
+export function css_grayscale(color: string, alpha: number) {
+  return css_colorMix(color, 'gray', alpha)
+}
