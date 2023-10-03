@@ -144,9 +144,6 @@ export const Piv = <TagName extends HTMLTag = HTMLTag, Controller extends ValidC
     handleShadowProps,
     handlePropsInnerController
   )
-  if ('innerController' in props) {
-    console.log('rawProps 1111: ', props)
-  }
   return 'render:outWrapper' in props ? handlePropRenderOutWrapper(props) : handleNormalPivProps(props)
 }
 

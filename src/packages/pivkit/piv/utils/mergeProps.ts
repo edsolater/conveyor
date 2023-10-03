@@ -43,7 +43,7 @@ export function mergeProps<P extends ValidProps | undefined>(...propsObjs: P[]):
       // for Object.keys to filter
       getOwnPropertyDescriptor: (_target, key) => ({
         enumerable: true,
-        configurable:true,
+        configurable: true,
         get() {
           return getPivPropsValue(props, key)
         },

@@ -25,7 +25,7 @@ export function GridBox(rawProps: KitProps<GridBoxProps>) {
 
 export type GridItemBoxProps = {
   'icss:area'?: ICSSGridItemOption['area']
-} & { extends: BoxProps }
+} & BoxProps
 
 /**
  * for direct sub component of `<GridBox>`

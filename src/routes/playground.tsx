@@ -56,9 +56,9 @@ function PlaygoundList() {
         gap: '4vw',
       }}
     >
-      <ExamplePanel name='IntervalCircle'>
+      {/* <ExamplePanel name='IntervalCircle'>
         <CircularProgressExample />
-      </ExamplePanel>
+      </ExamplePanel> */}
 
       {/* <ExamplePanel name='Drawer'>
         <DrawerExample />
@@ -80,17 +80,17 @@ function PlaygoundList() {
         <ModalExample />
       </ExamplePanel> */}
 
-      <ExamplePanel name='List'>
+      {/* <ExamplePanel name='List'>
         <ListExample />
-      </ExamplePanel>
+      </ExamplePanel> */}
 
-      <ExamplePanel name='Switch'>
+      {/* <ExamplePanel name='Switch'>
         <SwitchExample />
-      </ExamplePanel>
+      </ExamplePanel> */}
 
-      <ExamplePanel name='Radio'>
+      {/* <ExamplePanel name='Radio'>
         <RadioExample />
-      </ExamplePanel>
+      </ExamplePanel> */}
 
       {/* <ExamplePanel name='Popover'>
         <PopoverExample />
@@ -108,9 +108,9 @@ function PlaygoundList() {
         <TabsExample />
       </ExamplePanel> */}
 
-      <ExamplePanel name='PropContext + ControllerContext'>
+      {/* <ExamplePanel name='PropContext + ControllerContext'>
         <PropContextExample />
-      </ExamplePanel>
+      </ExamplePanel> */}
       {/* <Foo /> */}
     </Box>
   )

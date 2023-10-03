@@ -12,27 +12,9 @@ export function loadPropsControllerRef<Controller extends ValidController | unkn
   }
 }
 
-/** for aviod access controller too early */
-export function toProxifyController<Controller extends ValidController | unknown>(
-  getController: () => Controller
-): Controller {
-  let controller: Controller | undefined = undefined
-  return new Proxy(
-    {},
-    {
-      get(_target, prop) {
-        if (!controller) {
-          controller = getController()
-        }
-        return controller![prop as keyof Controller]
-      },
-    }
-  ) as Controller
-}
-
 export function parsePivChildren<
   P extends unknown | ((controller: Controller) => unknown),
-  Controller extends ValidController | unknown,
+  Controller extends ValidController | unknown
 >(originalChildren: P, controller: Controller = {} as Controller): JSXElement {
   return isArray(originalChildren)
     ? originalChildren.map((i) => parsePivChildren(i, controller))

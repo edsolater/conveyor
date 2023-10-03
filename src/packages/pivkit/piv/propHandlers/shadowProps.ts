@@ -41,7 +41,7 @@ function getNeedToMergeKeys(props: Partial<PivProps<any>>) {
   const shadowKeys = getShadowPropKeys(props)
   const selfProps = Object.getOwnPropertyNames(omit(props, ['shadowProps']))
   const pivProps = pivPropsNames
-  return getIntersection(selfProps.concat(shadowKeys), pivProps)
+  return selfProps.concat(shadowKeys)
 }
 
 function getIntersection<T, W>(arr1: T[], arr2: W[]): T[] {
