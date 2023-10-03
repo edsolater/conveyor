@@ -30,7 +30,7 @@ export function handleShadowProps<P extends Partial<PivProps<any>>>(
 
   const candidates = createCachedFunction(() => shakeNil([props].concat(props.shadowProps)))
   const getOwnKeys = createCachedFunction(() => {
-    const keysArray = getNeedToMergeKeys(props).concat(additionalShadowPropNames ?? [])
+    const keysArray = getNeedToMergeKeys(props)
     const keys = new Set(keysArray)
     const uniqueKeys = Array.from(keys)
     return { set: keys, arr: uniqueKeys }

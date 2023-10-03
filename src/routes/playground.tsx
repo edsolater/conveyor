@@ -40,12 +40,12 @@ import { PropContext } from '../packages/pivkit/piv/PropContext'
 export default function PlaygroundPage() {
   return (
     <Piv>
-      <PlaygoundList />
+      <ComponentSpecList />
     </Piv>
   )
 }
 
-function PlaygoundList() {
+function ComponentSpecList() {
   return (
     <Box
       icss={{
