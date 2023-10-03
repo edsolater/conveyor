@@ -2,7 +2,7 @@ import { hasProperty, MayArray, MayDeepArray, pipe } from '@edsolater/fnkit'
 import { AccessifyProps, DeAccessifyProps, useAccessifiedProps } from '.'
 import { createOnRunObject, LazyLoadObj } from '../fnkit'
 import { createUUID, UUID } from './hooks/utils/createUUID'
-import { getControllerObjFromControllerContext, handlePropsInnerController } from './piv/ControllerContext'
+import { getControllerObjFromControllerContext } from './piv/ControllerContext'
 import { registerControllerInCreateKit } from './piv/hooks/useComponentController'
 import { CRef, PivProps } from './piv/Piv'
 import { getPropsFromPropContextContext } from './piv/PropContext'
@@ -189,7 +189,7 @@ export function useKitProps<
   Controller extends ValidController | unknown = unknown,
   DefaultProps extends Partial<GetDeAccessifiedProps<P>> = {}
 >(
-  rawProps: P,
+  kitProps: P,
   options?: KitPropsOptions<GetDeAccessifiedProps<P>, Controller, DefaultProps>
 ): {
   /** not declared self props means it's shadowProps */
@@ -201,15 +201,14 @@ export function useKitProps<
   // componentRef
 } {
   type RawProps = GetDeAccessifiedProps<P>
+  
   // handle ControllerContext
+  // wrap controllerContext based on props:innerController is only in `<Piv>`
   const mergedContextController = createOnRunObject(getControllerObjFromControllerContext)
-  const controllerContextParsedProps = handlePropsInnerController(rawProps, options?.name)
 
   // handle PropContext
   const contextProps = getPropsFromPropContextContext({ componentName: options?.name ?? '' })
-  const propContextParsedProps = contextProps
-    ? mergeProps(contextProps, controllerContextParsedProps)
-    : controllerContextParsedProps
+  const propContextParsedProps = contextProps ? mergeProps(contextProps, kitProps) : kitProps
 
   const { loadController, getControllerCreator } = createComponentController<RawProps, Controller>()
   const composedProps = getParsedKitProps(propContextParsedProps, {
@@ -238,7 +237,11 @@ function createComponentController<RawProps extends ValidProps, Controller exten
   return {
     loadController,
     getControllerCreator: (props: ParsedKitProps<RawProps>) =>
-      controllerFaker.hasLoaded() ? controllerFaker.spawn()(props) : {/* if don't invoke lazyLoadController, use this default empty  */ },
+      controllerFaker.hasLoaded()
+        ? controllerFaker.spawn()(props)
+        : {
+            /* if don't invoke lazyLoadController, use this default empty  */
+          },
   }
 }
 

@@ -1,7 +1,6 @@
 import { Context, createContext, useContext } from 'solid-js'
-import { PivChild, PivProps, ValidController, ValidProps, mergeProps } from '.'
+import { PivProps, ValidController, ValidProps, mergeProps } from '.'
 import { Fragnment } from './Fragnment'
-import { WeakerMap, WeakerSet } from '@edsolater/fnkit'
 
 type ControllerContext = Context<ValidController | undefined>
 type ComponentName = string
@@ -39,25 +38,21 @@ export function getControllerObjFromControllerContext() {
   const Contexts = getAllControllerContext()
   const contextControllers = Contexts.map(useContext)
   const mergedController = mergeProps(...contextControllers)
-  console.log('mergedController: ', mergedController, Contexts, contextControllers)
   return mergedController
 }
 
+/** should handle this only in <Piv> */
 export function handlePropsInnerController(props: ValidProps, componentName?: string): ValidProps {
   const inputController = props.innerController as PivProps['innerController']
   // only check props not props.shadowProps
   if (inputController && Object.keys(inputController).length) {
-    console.log('innerController:1', inputController)
     const ControllerContext = getControllerContext(componentName)
     const newProps = mergeProps(props, {
-      'render:outWrapper': (originalNode) => {
-        console.log('innerController:2', inputController)
-        return (
-          <ControllerContext.Provider value={inputController}>
-            <Fragnment>{originalNode}</Fragnment>
-          </ControllerContext.Provider>
-        )
-      },
+      'render:outWrapper': (originalNode) => (
+        <ControllerContext.Provider value={inputController}>
+          <Fragnment>{originalNode}</Fragnment>
+        </ControllerContext.Provider>
+      ),
     } as Partial<PivProps>)
     return newProps
   }

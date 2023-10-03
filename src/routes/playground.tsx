@@ -84,9 +84,9 @@ function PlaygoundList() {
         <ListExample />
       </ExamplePanel> */}
 
-      {/* <ExamplePanel name='Switch'>
+      <ExamplePanel name='Switch'>
         <SwitchExample />
-      </ExamplePanel> */}
+      </ExamplePanel>
 
       {/* <ExamplePanel name='Radio'>
         <RadioExample />
@@ -108,9 +108,9 @@ function PlaygoundList() {
         <TabsExample />
       </ExamplePanel> */}
 
-      {/* <ExamplePanel name='PropContext + ControllerContext'>
+      <ExamplePanel name='PropContext + ControllerContext'>
         <PropContextExample />
-      </ExamplePanel> */}
+      </ExamplePanel>
       {/* <Foo /> */}
     </Box>
   )
