@@ -1,7 +1,7 @@
 import { Accessor } from 'solid-js'
 import { Piv, PivProps, UIKit, useKitProps } from '../../piv'
 import { createSyncSignal } from '../../hooks/createSyncSignal'
-import { makeElementMoveSmooth } from '../../hooks/makeElementMoveSmooth'
+import { makeElementMoveSmooth } from '../../domkit/utils/makeElementMoveSmooth'
 import { Accessify } from '../../utils/accessifyProps'
 import { Label, LabelKitProps } from '../Label'
 import { HTMLCheckbox, HTMLCheckboxProps } from './HTMLCheckbox'

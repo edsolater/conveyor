@@ -1,6 +1,6 @@
 import { flap, MayArray, MayFn, shrinkFn } from '@edsolater/fnkit'
 import { Accessor, createEffect, createMemo, createSignal, onCleanup } from 'solid-js'
-import { onEvent } from '../../domkit'
+import { onEvent } from '../domkit'
 import { createRef } from '../hooks/createRef'
 import { CSSObject, mergeProps, PivProps } from '../piv'
 import { Accessify, useAccessifiedProps } from '../utils/accessifyProps'

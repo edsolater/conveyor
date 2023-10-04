@@ -1,7 +1,7 @@
 import { Accessor, Show, createEffect, createSignal } from 'solid-js'
 import { createRef } from '../../hooks/createRef'
-import { useClickOutside } from '../../hooks/useClickOutside'
-import { useDOMEventListener } from '../../hooks/useDOMEventListener'
+import { useClickOutside } from '../../domkit/hooks/useClickOutside'
+import { useDOMEventListener } from '../../domkit/hooks/useDOMEventListener'
 import { ICSS, KitProps, Piv, useKitProps } from '../../piv'
 import { renderHTMLDOM } from '../../piv/propHandlers/renderHTMLDOM'
 

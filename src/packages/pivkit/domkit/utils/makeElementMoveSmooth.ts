@@ -1,6 +1,6 @@
 import { addDefault } from '@edsolater/fnkit'
 import { Accessor, AccessorArray, createEffect, on, onCleanup } from 'solid-js'
-import { createRef } from './createRef'
+import { createRef } from '../../hooks/createRef'
 
 /**
  * Animates an element's movement when its position changes.

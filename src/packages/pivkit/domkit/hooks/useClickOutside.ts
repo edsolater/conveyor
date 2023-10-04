@@ -1,6 +1,6 @@
 import { Accessor, createEffect, onCleanup } from 'solid-js'
-import { EventCallback, onEvent } from '../../domkit'
-import { ElementAccessors, getElementsFromAccessors } from '../utils/elementAccessors'
+import { EventCallback, onEvent } from '..'
+import { ElementAccessors, getElementsFromAccessors } from '../../utils/elementAccessors'
 import { shrinkFn } from '@edsolater/fnkit'
 
 type OnClickOutSideCallback = (

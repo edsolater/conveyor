@@ -2,7 +2,7 @@ import { Accessor, JSX, createEffect, createMemo, createSignal, onCleanup, split
 import { Piv, PivProps, useKitProps } from '../../piv'
 import { omit } from '../../piv'
 import { createRef } from '../../hooks/createRef'
-import useResizeObserver from '../../hooks/useResizeObserver'
+import useResizeObserver from '../../domkit/hooks/useResizeObserver'
 import { ListContext } from './List'
 
 export interface ListItemProps extends Omit<PivProps, 'children'> {

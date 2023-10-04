@@ -1,7 +1,7 @@
 //#region ------------------- hook: useHover() -------------------
 
 import { Accessor, createEffect, onCleanup } from 'solid-js'
-import { createToggle } from './createToggle'
+import { createToggle } from '../../hooks/createToggle'
 
 export interface GestureHoverOptions {
   el: Accessor<HTMLElement | undefined | null>

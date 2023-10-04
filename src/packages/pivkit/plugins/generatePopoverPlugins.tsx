@@ -1,6 +1,6 @@
 import { createEffect, onCleanup } from 'solid-js'
 import { createRef } from '..'
-import { onEvent } from '../../domkit'
+import { onEvent } from '../domkit'
 import { createTriggerController } from '../hooks/utils/createTriggerController'
 import { PivProps, createPlugin } from '../piv'
 import { PopoverLocationHookOptions, usePopoverLocation } from '../pluginComponents/popover/usePopoverLocation'

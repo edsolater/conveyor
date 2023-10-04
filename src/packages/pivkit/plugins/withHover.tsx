@@ -1,5 +1,5 @@
 import { createRef } from '..'
-import { GestureHoverOptions, GestureHoverStates, useGestureHover } from '../hooks/useGestureHover'
+import { GestureHoverOptions, GestureHoverStates, useGestureHover } from '../domkit/hooks/useGestureHover'
 import { createPlugin } from '../piv'
 
 /**
