@@ -134,7 +134,7 @@ function getParsedKitProps<
   const mergedGettersProps = pipe(
     defaultedProps,
 
-    
+
     (props) => handleShadowProps(props, options?.selfProps), // outside-props-run-time // TODO: assume can't be promisify
     (props) => handleMergifyOnCallbackProps(props), 
 
@@ -213,9 +213,9 @@ export function useKitProps<
   const contextProps = getPropsFromPropContextContext({ componentName: options?.name ?? '' })
   const propContextParsedProps = contextProps ? mergeProps(contextProps, kitProps) : kitProps
   
-  if (propContextParsedProps.children === 'PropContext can pass to deep nested components') {
-    console.log('kitProps raw: ', { ...propContextParsedProps })
-  }
+  // if (propContextParsedProps.children === 'PropContext can pass to deep nested components') {
+  //   console.log('kitProps raw: ', { ...propContextParsedProps })
+  // }
   const { loadController, getControllerCreator } = createComponentController<RawProps, Controller>()
   const composedProps = getParsedKitProps(propContextParsedProps, {
     controller: (props: ParsedKitProps<RawProps>) => getControllerCreator(props),

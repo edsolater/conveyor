@@ -27,7 +27,7 @@ export function parsePivProps(rawProps: PivProps<any>) {
   const contextProps = getPropsFromPropContextContext({ componentName: 'Piv' })
   const mergedContextProps = contextProps ? mergeProps(contextProps, rawProps) : rawProps
 
-  function getProps(raw: Partial<PivProps>) {
+  function getPropsInfo(raw: Partial<PivProps>) {
     const props = pipe(
       raw as Partial<PivProps>,
       handleShadowProps,
@@ -43,7 +43,7 @@ export function parsePivProps(rawProps: PivProps<any>) {
     return { props, controller, ifOnlyNeedRenderChildren, selfCoverNode, ifOnlyNeedRenderSelf }
   }
   const { props, controller, ifOnlyNeedRenderChildren, selfCoverNode, ifOnlyNeedRenderSelf } =
-    getProps(mergedContextProps)
+    getPropsInfo(mergedContextProps)
   debugLog(mergedContextProps, props, controller)
   const nativeProps =
     'htmlProps' in props // 💩 currently urgly now
