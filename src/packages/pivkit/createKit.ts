@@ -8,6 +8,7 @@ import { CRef, PivProps } from './piv/Piv'
 import { getPropsFromPropContextContext } from './piv/PropContext'
 import { loadPropsControllerRef } from './piv/propHandlers/children'
 import { handlePluginProps } from './piv/propHandlers/handlePluginProps'
+import { handleMergifyOnCallbackProps, MergifyProps } from './piv/propHandlers/mergifyProps'
 import { GetPluginParams, Plugin } from './piv/propHandlers/plugin'
 import { handleShadowProps } from './piv/propHandlers/shadowProps'
 import { HTMLTag, ValidController, ValidProps } from './piv/typeTools'
@@ -44,9 +45,6 @@ type KitPropsInstance<
     keyof RawProps
   >
 
-/**
- *  just a shortcut of KitProps
- */
 export type KitProps<
   RawProps extends ValidProps = {},
   O extends {
@@ -58,7 +56,7 @@ export type KitProps<
     needAccessifyProps?: (keyof RawProps)[]
   } = {}
 > = KitPropsInstance<
-  RawProps,
+  MergifyProps<RawProps>,
   NonNullable<O['controller']>,
   NonNullable<O['plugin']>,
   NonNullable<O['htmlPropsTagName']>,
@@ -135,6 +133,11 @@ function getParsedKitProps<
   // merge kit props
   const mergedGettersProps = pipe(
     defaultedProps,
+
+    
+    (props) => handleShadowProps(props, options?.selfProps), // outside-props-run-time // TODO: assume can't be promisify
+    (props) => handleMergifyOnCallbackProps(props), 
+
     (props) =>
       useAccessifiedProps(
         props,
@@ -201,15 +204,18 @@ export function useKitProps<
   // componentRef
 } {
   type RawProps = GetDeAccessifiedProps<P>
-  
+
   // handle ControllerContext
   // wrap controllerContext based on props:innerController is only in `<Piv>`
   const mergedContextController = createOnRunObject(getControllerObjFromControllerContext)
-
+  
   // handle PropContext
   const contextProps = getPropsFromPropContextContext({ componentName: options?.name ?? '' })
   const propContextParsedProps = contextProps ? mergeProps(contextProps, kitProps) : kitProps
-
+  
+  if (propContextParsedProps.children === 'PropContext can pass to deep nested components') {
+    console.log('kitProps raw: ', { ...propContextParsedProps })
+  }
   const { loadController, getControllerCreator } = createComponentController<RawProps, Controller>()
   const composedProps = getParsedKitProps(propContextParsedProps, {
     controller: (props: ParsedKitProps<RawProps>) => getControllerCreator(props),

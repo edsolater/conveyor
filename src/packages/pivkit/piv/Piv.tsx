@@ -10,6 +10,8 @@ import { createOnRunObject } from '../../fnkit'
 
 type Boollike = any
 
+
+
 export interface PivProps<TagName extends HTMLTag = HTMLTag, Controller extends ValidController | unknown = unknown> {
   /** if is settled and is flase , only it's children will render */
   if?: Boollike
@@ -44,6 +46,16 @@ export interface PivProps<TagName extends HTMLTag = HTMLTag, Controller extends 
       el: HTMLElement
     } & Controller
   ) => void // for accessifyProps, onClick can't be array
+
+  'merge:onClick'?: (
+    utils: {
+      ev: MouseEvent & {
+        currentTarget: HTMLElement
+        target: Element
+      }
+      el: HTMLElement
+    } & Controller
+  ) => void // for accessifyProps, "merge:onClick" can't be array
 
   /**
    * auto merge by shadowProps

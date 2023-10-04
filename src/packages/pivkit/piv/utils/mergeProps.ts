@@ -1,4 +1,4 @@
-import { AnyFn, AnyObj, flap, shakeNil } from '@edsolater/fnkit'
+import { AnyFn, AnyObj, flap, mergeFunction, shakeNil } from '@edsolater/fnkit'
 import { ValidProps } from '../typeTools'
 import { getKeys } from './getKeys'
 import { mergeRefs } from './mergeRefs'
@@ -63,7 +63,7 @@ export function mergeProps<P extends ValidProps | undefined>(...propsObjs: P[]):
 }
 
 /**
- * use in mergeProps
+ * use in mergeProps, core if merge props
  */
 export function getPivPropsValue(objs: AnyObj[], key: keyof any) {
   switch (key) {
@@ -94,20 +94,20 @@ export function getPivPropsValue(objs: AnyObj[], key: keyof any) {
       }, undefined as unknown)
     // -------- normal props --------
     default: {
-      // -------- 'on' callback function --------
-      // if (key.toString().startsWith('on')) {
-      //   return objs.reduce((finalValue, objB) => {
-      //     const valueB = objB[key]
-      //     return valueB && finalValue ? mergeFunction(finalValue, valueB) : valueB ?? finalValue
-      //   }, undefined as unknown)
-      // } else {
-      // -------- very normal props --------
-      for (let i = objs.length - 1; i >= 0; i--) {
-        const obj = objs[i]
-        const v = obj?.[key]
-        if (v != null) return v
+      // -------- 'merge:on' callback function --------
+      if (key.toString().startsWith('merge:')) {
+        return objs.reduce((finalValue, objB) => {
+          const valueB = objB[key]
+          return valueB && finalValue ? mergeFunction(finalValue, valueB) : valueB ?? finalValue
+        }, undefined as unknown)
+      } else {
+        // -------- very normal props --------
+        for (let i = objs.length - 1; i >= 0; i--) {
+          const obj = objs[i]
+          const v = obj?.[key]
+          if (v != null) return v
+        }
       }
-      // }
     }
   }
 }

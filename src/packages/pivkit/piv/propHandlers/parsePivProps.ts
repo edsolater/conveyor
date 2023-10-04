@@ -13,6 +13,7 @@ import { handleShadowProps } from './shadowProps'
 import { mergeProps, omit } from '../utils'
 import { PivProps } from '../Piv'
 import { getPropsFromPropContextContext } from '../PropContext'
+import { handleMergifyOnCallbackProps } from './mergifyProps'
 
 export type NativeProps = ReturnType<typeof parsePivProps>['props']
 /**
@@ -32,7 +33,8 @@ export function parsePivProps(rawProps: PivProps<any>) {
       handleShadowProps,
       handlePluginProps,
       parsePivRenderPrependChildren,
-      parsePivRenderAppendChildren
+      parsePivRenderAppendChildren,
+      handleMergifyOnCallbackProps,
     )
     const controller = (props.innerController ?? {}) as ValidController
     const ifOnlyNeedRenderChildren = 'if' in props ? Boolean(props.if) : undefined

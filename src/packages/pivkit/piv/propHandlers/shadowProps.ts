@@ -47,9 +47,7 @@ export function handleShadowProps<P extends Partial<PivProps<any>>>(
       getOwnPropertyDescriptor: (_target, key) => ({
         enumerable: true,
         configurable: true,
-        get() {
-          return getPivPropsValue(candidates(), key)
-        },
+        get: () => getPivPropsValue(candidates(), key),
       }),
     }
   ) as any

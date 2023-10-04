@@ -55,7 +55,7 @@ function ComponentSpecList() {
         gap: '4vw',
       }}
     >
-      <ExamplePanel name='IntervalCircle'>
+      {/* <ExamplePanel name='IntervalCircle'>
         <CircularProgressExample />
       </ExamplePanel>
 
@@ -105,7 +105,7 @@ function ComponentSpecList() {
 
       <ExamplePanel name='Tabs'>
         <TabsExample />
-      </ExamplePanel>
+      </ExamplePanel> */}
 
       <ExamplePanel name='PropContext + ControllerContext'>
         <PropContextExample />
@@ -413,7 +413,12 @@ function PropContextExample() {
     <PropContext additionalProps={{ icss: { paddingInline: '24px' } }}>
       <Box icss={{ border: 'solid' }}>
         <Piv innerController={{ say: () => 'ControllerContext should can receive the message' }}>
-          <Box icss={{ border: 'dashed', borderColor: css_opacity('currentcolor', 0.6), margin: '8px' }}>
+          <Box
+            merge:onClick={() => {
+              console.log('click PropContext description')
+            }}
+            icss={{ cursor: 'pointer', border: 'dashed', borderColor: css_opacity('currentcolor', 0.6), margin: '8px' }}
+          >
             PropContext can pass to deep nested components
           </Box>
           <ControllerContextExample />

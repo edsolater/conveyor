@@ -43,6 +43,8 @@ export function useAccessifiedProps<P extends AnyObj, Controller extends ValidCo
             isString(key) &&
             ((needAccessifyProps ? !needAccessifyProps?.includes(key) : false) ||
               key.startsWith('on') ||
+              key.startsWith('render:') ||
+              key.startsWith('merge:') ||
               key === 'domRef' ||
               key === 'controllerRef' ||
               key === 'plugin' ||
