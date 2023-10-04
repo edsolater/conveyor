@@ -8,7 +8,7 @@ const recordedControllers = new Subscribable<WeakerMap<string, ValidController |
 /**
  * only use it in {@link useKitProps}
  * @param proxyController provide controller
- * @param id id for {@link useComponentController}
+ * @param id id for {@link useControllerByID}
  */
 export function registerControllerInCreateKit(
   proxyController: ValidController | unknown | undefined,
@@ -43,9 +43,9 @@ export function unregisterController(id?: string) {
 
 /**
  * **Hook:** get target component's controller
- * @param id component id
+ * @param componentID component id
  */
-export function useComponentController<Controller extends ValidController | unknown>(id: string) {
+export function useControllerByID<Controller extends ValidController | unknown>(componentID: string) {
   let recordController: Controller | undefined = undefined
   const controller = new Proxy(
     {},
@@ -59,7 +59,7 @@ export function useComponentController<Controller extends ValidController | unkn
     }
   )
   recordedControllers.subscribe((records) => {
-    recordController = records?.get(id) as Controller | undefined
+    recordController = records?.get(componentID) as Controller | undefined
   })
   return controller as Controller
 }

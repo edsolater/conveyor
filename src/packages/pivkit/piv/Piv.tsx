@@ -1,12 +1,10 @@
 import { MayArray, flap, pipe } from '@edsolater/fnkit'
-import { JSX, JSXElement, createComponent } from 'solid-js'
-import { makePipline } from '../../fnkit/makePipline'
+import { JSX, JSXElement } from 'solid-js'
+import { handlePropsInnerController } from './ControllerContext'
 import { ClassName, HTMLProps, ICSS, IStyle, Plugin, handlePluginProps, handleShadowProps } from './propHandlers'
 import { renderHTMLDOM } from './propHandlers/renderHTMLDOM'
 import { HTMLTag, PivChild, ValidController } from './typeTools'
 import { omit } from './utils'
-import { handlePropsInnerController } from './ControllerContext'
-import { createOnRunObject } from '../../fnkit'
 
 type Boollike = any
 
@@ -32,7 +30,7 @@ export interface PivProps<TagName extends HTMLTag = HTMLTag, Controller extends 
   class?: MayArray<ClassName<Controller>>
 
   /**
-   * id for component instance
+   * id for `useComponentByID`
    * so others can access component's controller without set `props:controllerRef` to component, this have to have access to certain component instance
    */
   id?: string

@@ -31,7 +31,7 @@ import {
   icssRow,
   renderSwitchThumb,
   useCSSTransition,
-  useComponentController,
+  useControllerByID,
   useKitProps,
   withHover,
 } from '../packages/pivkit'
@@ -145,7 +145,7 @@ function CircularProgressExample() {
 }
 
 function DrawerExample() {
-  const drawerController = useComponentController<DrawerController>('big-drawer')
+  const drawerController = useControllerByID<DrawerController>('big-drawer')
   return (
     <>
       <Button
@@ -162,8 +162,8 @@ function DrawerExample() {
 }
 
 function ModalExample() {
-  const modalController = useComponentController<ModalController>('example-modal')
-  const modalController2 = useComponentController<ModalController>('example-modal2')
+  const modalController = useControllerByID<ModalController>('example-modal')
+  const modalController2 = useControllerByID<ModalController>('example-modal2')
   const couter = createIncresingAccessor()
   return (
     <>

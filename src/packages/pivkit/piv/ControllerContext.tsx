@@ -2,6 +2,7 @@ import { Context, createContext, useContext } from 'solid-js'
 import { PivProps, ValidController, ValidProps, mergeProps } from '.'
 import { Fragnment } from './Fragnment'
 import { WeakerMap, WeakerSet } from '@edsolater/fnkit'
+import { contactIterableIterators } from '../../fnkit/contactIterableIterators'
 
 type ControllerContext = Context<ValidController | undefined>
 type ComponentName = string
@@ -11,6 +12,7 @@ const controllerContextStore = new WeakerMap<ComponentName, ControllerContext>()
 const anonymousComponentControllerContextStore = new WeakerSet<ControllerContext>()
 
 /**
+ * will auto-create
  * same componentName will output same context
  */
 export function getControllerContext(name?: ComponentName) {
@@ -29,10 +31,15 @@ export function getControllerContext(name?: ComponentName) {
   }
 }
 
-const getAllControllerContext = () => [
-  ...controllerContextStore.values(),
-  ...anonymousComponentControllerContextStore.values(),
-]
+const getAllControllerContext = () => {
+  const allIterators = contactIterableIterators(
+    controllerContextStore.values(),
+    anonymousComponentControllerContextStore.values()
+  )
+  return Array.from(allIterators)
+}
+
+const getControllerContextByComponentName = (name: ComponentName) => controllerContextStore.get(name)
 
 /** add additional prop through solidjs context */
 export function getControllerObjFromControllerContext() {
@@ -58,4 +65,15 @@ export function handlePropsInnerController(props: ValidProps, componentName?: st
     return newProps
   }
   return props
+}
+
+/**
+ * **Hook** get target component's controller\
+ * use it you may know the stucture, it will cause difficult
+ * @param componentName component name (e.g. 'Drawer')
+ */
+export function useContextController<Controller extends ValidController | unknown>(componentName: string) {
+  const Context = getControllerContextByComponentName(componentName)
+  const controller = Context && useContext(Context)
+  return controller as Controller | undefined
 }
