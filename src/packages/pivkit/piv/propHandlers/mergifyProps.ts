@@ -25,7 +25,6 @@ function createCachedFunction<F extends AnyFn>(
 export function handleMergifyOnCallbackProps<P extends Partial<PivProps<any>>>(
   props: P
 ): P /* no need type too accurately */ {
-
   const hasAnyMergeProp = Object.getOwnPropertyNames(props).some((key) => key.startsWith('merge:'))
   if (!hasAnyMergeProp) return props
 
@@ -34,7 +33,6 @@ export function handleMergifyOnCallbackProps<P extends Partial<PivProps<any>>>(
     const propsValue = props[key]
     const toBeMergePropValue = props[`merge:${key}`]
     if (isFunction(toBeMergePropValue) && isFunction(propsValue)) {
-      console.log('code not in run')
       const mergedValue = mergeFunction(toBeMergePropValue, propsValue)
       return mergedValue
     } else {
@@ -53,15 +51,24 @@ export function handleMergifyOnCallbackProps<P extends Partial<PivProps<any>>>(
     set: (_target, key, value) => Reflect.set(_target, key, value),
     ownKeys: () => getOwnKeys().arr,
     // for Object.keys to filter
-    getOwnPropertyDescriptor: (_target, key) => {
-      console.log('key: ', key)
-      return {
-        enumerable: true,
-        configurable: true,
-        value: undefined,
-      }
-    },
+    getOwnPropertyDescriptor: (_target, key) => ({
+      enumerable: true,
+      configurable: true,
+      get: () => getProps(key),
+    }),
   })
+
+  // const merged = Object.defineProperties(
+  //   {},
+  //   getOwnKeys().arr.reduce((acc: any, key: any) => {
+  //     acc[key] = {
+  //       enumerable: true,
+  //       configurable: true,
+  //       get: () => getProps(key),
+  //     }
+  //     return acc
+  //   }, {} as PropertyDescriptorMap)
+  // ) as any
   return merged
 }
 

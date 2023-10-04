@@ -55,7 +55,7 @@ function ComponentSpecList() {
         gap: '4vw',
       }}
     >
-      {/* <ExamplePanel name='IntervalCircle'>
+      <ExamplePanel name='IntervalCircle'>
         <CircularProgressExample />
       </ExamplePanel>
 
@@ -105,7 +105,7 @@ function ComponentSpecList() {
 
       <ExamplePanel name='Tabs'>
         <TabsExample />
-      </ExamplePanel> */}
+      </ExamplePanel>
 
       <ExamplePanel name='PropContext + ControllerContext'>
         <PropContextExample />

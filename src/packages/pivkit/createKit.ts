@@ -133,11 +133,6 @@ function getParsedKitProps<
   // merge kit props
   const mergedGettersProps = pipe(
     defaultedProps,
-
-
-    (props) => handleShadowProps(props, options?.selfProps), // outside-props-run-time // TODO: assume can't be promisify
-    (props) => handleMergifyOnCallbackProps(props), 
-
     (props) =>
       useAccessifiedProps(
         props,
@@ -147,8 +142,12 @@ function getParsedKitProps<
             ? omitItems(Object.getOwnPropertyNames(props), ['children'])
             : Object.getOwnPropertyNames(props))
       ),
+
     // inject controller (📝!!!important notice, for lazyLoadController props:innerController will always be a prop of any component useKitProps)
     (props) => mergeProps(props, { innerController: proxyController } as PivProps),
+
+    (props) => handleShadowProps(props, options?.selfProps), // outside-props-run-time // TODO: assume can't be promisify
+    (props) => handleMergifyOnCallbackProps(props),
     // parse plugin of **options**
     (props) =>
       handlePluginProps(
@@ -208,11 +207,11 @@ export function useKitProps<
   // handle ControllerContext
   // wrap controllerContext based on props:innerController is only in `<Piv>`
   const mergedContextController = createOnRunObject(getControllerObjFromControllerContext)
-  
+
   // handle PropContext
   const contextProps = getPropsFromPropContextContext({ componentName: options?.name ?? '' })
   const propContextParsedProps = contextProps ? mergeProps(contextProps, kitProps) : kitProps
-  
+
   // if (propContextParsedProps.children === 'PropContext can pass to deep nested components') {
   //   console.log('kitProps raw: ', { ...propContextParsedProps })
   // }
