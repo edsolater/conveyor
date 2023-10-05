@@ -11,10 +11,10 @@
   "devDependencies": {
     "@types/babel__core": "^7.20.2",
     "@types/debug": "^4.1.9",
-    "@types/node": "^20.7.0",
+    "@types/node": "^20.8.2",
     "solid-start-node": "^0.3.6",
     "typescript": "^5.2.2",
-    "vite": "^4.4.9"
+    "vite": "^4.4.10"
   },
   "dependencies": {
     "@edsolater/fnkit": "^0.1.46",
