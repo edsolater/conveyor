@@ -1,5 +1,6 @@
+import { KitProps, useKitProps } from '../createKit'
+import { Piv } from '../piv'
 import { renderHTMLDOM } from '../piv/propHandlers/renderHTMLDOM'
-import { KitProps, Piv, useKitProps } from '../piv'
 
 export interface IconProps {
   name?: string
@@ -14,14 +15,33 @@ export interface IconProps {
  */
 export function Icon(rawProps: KitProps<IconProps>) {
   const { props } = useKitProps(rawProps, { name: 'Icon' })
-  /* ---------------------------------- props --------------------------------- */
+  const sizePx =
+    props.size === 'xs'
+      ? '12px'
+      : props.size === 'sm'
+        ? '16px'
+        : props.size === 'smi'
+          ? '20px'
+          : props.size === 'md'
+            ? '24px'
+            : props.size == 'lg'
+              ? '32px'
+              : '100%'
+
+  /** if not set src, no need to render wired broken image */
+  const shouldRendSrc = () => Boolean(props.src)
   return (
     <Piv<'img'>
       render:self={(selfProps) => renderHTMLDOM('img', selfProps)}
       htmlProps={{ alt: props.name, src: props.src }}
-      icss={{ display: 'block' }}
+      icss={{
+        display: 'block',
+        visibility: shouldRendSrc() ? undefined : 'hidden',
+        width: sizePx,
+        height: sizePx,
+        objectFit: 'cover',
+      }}
       shadowProps={props}
-      class={Icon.name}
     />
   )
 }

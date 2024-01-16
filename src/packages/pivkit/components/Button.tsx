@@ -1,23 +1,12 @@
-import { flap, isValuedArray, MayArray, MayFn, shrinkFn } from '@edsolater/fnkit'
+import { flap, isMeanfulArray, MayArray, MayFn, shrinkFn } from '@edsolater/fnkit'
 import { createMemo } from 'solid-js'
 import { objectMerge } from '../../fnkit'
 import { createRef } from '../hooks/createRef'
-import { useGlobalKitTheme } from '../hooks/useGlobalKitTheme'
-import {
-  addDefaultProps,
-  compressICSSToObj,
-  ICSS,
-  KitProps,
-  mergeProps,
-  omit,
-  parsePivChildren,
-  Piv,
-  PivChild,
-  useKitProps,
-} from '../piv'
+import { compressICSSToObj, ICSS, mergeProps, omit, parsePivChildren, Piv, PivChild } from '../piv'
 import { renderHTMLDOM } from '../piv/propHandlers/renderHTMLDOM'
 import { cssColors } from '../styles/cssColors'
 import { CSSColorString, CSSStyle } from '../styles/type'
+import { KitProps, useKitProps } from '../createKit'
 type BooleanLike = unknown
 
 export interface ButtonController {
@@ -80,26 +69,22 @@ export function Button(kitProps: ButtonKitProps) {
     },
   }
   /* ---------------------------------- props --------------------------------- */
-  const { props: rawProps } = useKitProps(kitProps, {
+  const { props } = useKitProps(kitProps, {
     controller: () => innerController,
     name: 'Button',
+    defaultProps: { variant: 'solid', size: 'md' },
   })
-
-  const props = addDefaultProps(
-    rawProps,
-    mergeProps({ variant: 'solid', size: 'md' }, useGlobalKitTheme<Partial<ButtonProps>>('Button'))
-  )
 
   /* ------------------------------- validation ------------------------------- */
   const failedTestValidator = createMemo(() =>
-    isValuedArray(props.validators) || props.validators
+    isMeanfulArray(props.validators) || props.validators
       ? flap(props.validators!).find(({ should }) => !shrinkFn(should))
-      : undefined
+      : undefined,
   )
   const mergedProps = mergeProps(props, failedTestValidator()?.fallbackProps)
 
   const isActive = createMemo(
-    () => failedTestValidator()?.forceActive || (!failedTestValidator() && !mergedProps.disabled)
+    () => failedTestValidator()?.forceActive || (!failedTestValidator() && !mergedProps.disabled),
   )
 
   const mainBgColor = props.theme?.mainBgColor ?? cssColors.component_button_bg_primary
@@ -140,7 +125,6 @@ export function Button(kitProps: ButtonKitProps) {
     'innerController' in props ? objectMerge(props.innerController!, innerController) : innerController
   return (
     <Piv<'button'>
-      class={Button.name}
       render:self={(selfProps) => renderHTMLDOM('button', selfProps)}
       shadowProps={omit(props, 'onClick')} // omit onClick for need to invoke the function manually, see below 👇
       onClick={(...args) => isActive() && props.onClick?.(...args)}
@@ -156,7 +140,7 @@ export function Button(kitProps: ButtonKitProps) {
         },
         {
           display: 'inline-flex',
-          gap: shrinkFn(contentGap, [mergedProps]),
+          gap: shrinkFn(contentGap, [mergedProps]) + 'px',
           alignItems: 'center',
           justifyContent: 'center',
         }, // center the items
@@ -168,7 +152,7 @@ export function Button(kitProps: ButtonKitProps) {
           padding: cssPadding,
           fontSize: cssFontSize,
           borderRadius: cssBorderRadius,
-          fontWeight: '500px',
+          fontWeight: '500',
         },
         (!props.variant || props.variant === 'solid') && {
           backgroundColor: shrinkFn(mainBgColor, [mergedProps]),

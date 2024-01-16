@@ -1,9 +1,11 @@
-import { WeakerMap } from '@edsolater/fnkit'
-import { Subscribable } from '../../../fnkit'
-import { ValidController } from '../typeTools'
+import { WeakerMap, createSubscribable } from '@edsolater/fnkit'
 import { createEffect, onCleanup } from 'solid-js'
+import { ValidController } from '../typeTools'
+import { createStore } from 'solid-js/store'
+import { createStoreSetter } from '../../hooks/smartStore/utils/setStoreByObject'
+import { createSmartStore } from '../../hooks'
 
-const recordedControllers = new Subscribable<WeakerMap<string, ValidController | unknown>>()
+const recordedControllers = createSubscribable<WeakerMap<string, ValidController | unknown>>()
 
 /**
  * only use it in {@link useKitProps}
@@ -12,7 +14,7 @@ const recordedControllers = new Subscribable<WeakerMap<string, ValidController |
  */
 export function registerControllerInCreateKit(
   proxyController: ValidController | unknown | undefined,
-  id: string | undefined
+  id: string | undefined,
 ) {
   if (!proxyController) return
   if (!id) return
@@ -26,16 +28,16 @@ export function registerControllerInCreateKit(
 
 export function recordController<Controller extends ValidController | unknown>(
   id: string,
-  proxyController: Controller
+  proxyController: Controller,
 ) {
-  recordedControllers.inject((m) => (m ?? new WeakerMap()).set(id, proxyController))
+  recordedControllers.set((m) => (m ?? new WeakerMap()).set(id, proxyController))
 }
 
 export function unregisterController(id?: string) {
   if (!id) return
-  const records = recordedControllers.current
+  const records = recordedControllers()
   if (!records) return
-  recordedControllers.inject((recoder) => {
+  recordedControllers.set((recoder) => {
     recoder?.delete(id)
     return recoder
   })
@@ -47,19 +49,17 @@ export function unregisterController(id?: string) {
  */
 export function useControllerByID<Controller extends ValidController | unknown>(componentID: string) {
   let recordController: Controller | undefined = undefined
-  const controller = new Proxy(
-    {},
-    {
-      get(_target, prop) {
-        if (!recordController) {
-          throw new Error('controller not ready')
-        }
-        return Reflect.get(recordController, prop)
-      },
-    }
-  )
+  const { store: controller, setStore: setController } = createSmartStore<Partial<Controller>>({})
   recordedControllers.subscribe((records) => {
-    recordController = records?.get(componentID) as Controller | undefined
+    const newController = records?.get(componentID) as Controller | undefined
+    if (newController && newController !== recordController) {
+      recordController = newController
+      try {
+        setController(newController)
+      } catch (error) {
+        console.error('use controller set controller error', error, '| controller: ', newController)
+      }
+    }
   })
-  return controller as Controller
+  return controller as Partial<Controller>
 }

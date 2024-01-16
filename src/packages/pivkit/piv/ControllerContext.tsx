@@ -15,7 +15,7 @@ const anonymousComponentControllerContextStore = new WeakerSet<ControllerContext
  * will auto-create
  * same componentName will output same context
  */
-export function getControllerContext(name?: ComponentName) {
+function getControllerContext(name?: ComponentName) {
   if (name) {
     if (controllerContextStore.has(name)) {
       return controllerContextStore.get(name)!
@@ -34,7 +34,7 @@ export function getControllerContext(name?: ComponentName) {
 const getAllControllerContext = () => {
   const allIterators = contactIterableIterators(
     controllerContextStore.values(),
-    anonymousComponentControllerContextStore.values()
+    anonymousComponentControllerContextStore.values(),
   )
   return Array.from(allIterators)
 }
@@ -49,18 +49,23 @@ export function getControllerObjFromControllerContext() {
   return mergedController
 }
 
-/** should handle this only in <Piv> */
+/** should handle this only in <Piv>
+ * 🤔 maybe it's a bad idea? for it will bring new complication
+ */
 export function handlePropsInnerController(props: ValidProps, componentName?: string): ValidProps {
   const inputController = props.innerController as PivProps['innerController']
   // only check props not props.shadowProps
   if (inputController && Object.keys(inputController).length) {
     const ControllerContext = getControllerContext(componentName)
     const newProps = mergeProps(props, {
-      'render:outWrapper': (originalNode) => (
-        <ControllerContext.Provider value={inputController}>
-          <Fragnment>{originalNode}</Fragnment>
-        </ControllerContext.Provider>
-      ),
+      'render:outWrapper': (originalNode) => {
+        console.log('parse outWrapper', 33)
+        return (
+          <ControllerContext.Provider value={inputController}>
+            <Fragnment>{originalNode}</Fragnment>
+          </ControllerContext.Provider>
+        )
+      },
     } as Partial<PivProps>)
     return newProps
   }
@@ -68,7 +73,7 @@ export function handlePropsInnerController(props: ValidProps, componentName?: st
 }
 
 /**
- * **Hook** get target component's controller\
+ * **Hook**: get target component's controller\
  * use it you may know the stucture, it will cause difficult
  * @param componentName component name (e.g. 'Drawer')
  */

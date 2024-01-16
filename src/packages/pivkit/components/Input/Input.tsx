@@ -1,14 +1,21 @@
-import { createEffect, createMemo, createSignal, on } from 'solid-js'
-import { KitProps, Piv, PivProps, useKitProps } from '../../piv'
+import { hasProperty, mergeObjects } from '@edsolater/fnkit'
+import { Accessor, createEffect, createMemo, createSignal, on } from 'solid-js'
+import { runtimeObject } from '../../../fnkit/runtimeObject'
+import { KitProps, useKitProps } from '../../createKit'
+import { createDomRef } from '../../hooks'
 import { createRef } from '../../hooks/createRef'
-import { createToggle } from '../../hooks/createToggle'
-import { Accessify, DeAccessifyProps } from '../../utils/accessifyProps'
+import { createDisclosure } from '../../hooks/createDisclosure'
+import { Piv, PivProps, } from '../../piv'
 import { renderHTMLDOM } from '../../piv/propHandlers/renderHTMLDOM'
+import { useKeyboardShortcut } from '../../plugins/useKeyboardShortcut'
+import { DeAccessifyProps } from '../../utils/accessifyProps'
+import { useFocus } from './hooks/useFocus'
 
 export interface InputController {
   text: string
   /** set Input Value */
   setText(newText: string | undefined | ((oldText: string | undefined) => string | undefined)): void
+  isFocused: Accessor<boolean>
 }
 
 export type InputProps = {
@@ -23,6 +30,8 @@ export type InputProps = {
   defaultValue?: string
   /** when change, affact to ui*/
   value?: string
+
+  placeholder?: string
   /** default is true */
   disableOutsideValueUpdateWhenUserInput?: boolean
   disableUserInput?: boolean
@@ -31,37 +40,58 @@ export type InputProps = {
   /** disabled = disableOutSideValue + disableUserInput */
   disabled?: boolean
   // only user can trigger this callback
-  onUserInput?(utils: { text: string | undefined }): void
-  // both user and program can trigger this callback
-  onInput?(utils: { text: string | undefined; byUser: boolean }): void
+  onUserInput?(text: string | undefined, controller: InputController): void
   // only program can trigger this callback
-  onProgramInput?(utils: { text: string | undefined }): void
+  onProgramInput?(text: string | undefined, controller: InputController): void
+  // onUserInput + onProgramInput
+  onInput?(text: string | undefined, controller: InputController & { byUser: boolean }): void
+  onEnter?(text: string | undefined, controller: InputController): void
 }
 
 export type InputKitProps = KitProps<InputProps, { controller: InputController }>
 
 /**
  * if for layout , don't render important content in Box
+ * TODO: enter should send related button, but shift+enter should "just enter"
  */
 export function Input(rawProps: InputKitProps) {
-  const { props } = useKitProps(rawProps, {
-    name: 'Input',
-    controller: (mergedProps) =>
-      ({
-        get text() {
-          return innerText()
-        },
-        setText: updateText,
-      } as InputController),
+  const { dom, setDom } = createDomRef<HTMLInputElement>()
+  const isFocused = useFocus(dom)
+
+  const controller = runtimeObject<InputController>({
+    text: () => innerText(),
+    setText: () => updateText,
+    isFocused: () => isFocused,
   })
 
-  const [additionalProps, { innerText, updateText }] = useInputInnerValue(props)
+  const { props } = useKitProps(rawProps, {
+    name: 'Input',
+    controller: () => controller,
+  })
+
+  const [additionalProps, { innerText, updateText }] = useInputInnerValue(props, controller)
+
+  useKeyboardShortcut(
+    dom,
+    {
+      'enter': {
+        fn: () => {
+          props.onEnter?.(innerText(), controller)
+        },
+        keyboardShortcut: 'Enter',
+      },
+    },
+    { when: isFocused, disabled: !hasProperty(props, 'onEnter') },
+  )
 
   return (
     <Piv<'input'>
+      domRef={setDom}
+      htmlProps={{
+        placeholder: props.placeholder,
+      }}  
       render:self={(selfProps) => renderHTMLDOM('input', selfProps)}
       shadowProps={[props, additionalProps()]}
-      class={Input.name}
       icss={[
         { flex: 1, background: 'transparent', minWidth: props.isFluid ? undefined : '14em' },
         /* initialize */
@@ -74,10 +104,10 @@ export function Input(rawProps: InputKitProps) {
 /**
  *  handle `<Input>`'s value
  */
-function useInputInnerValue(props: DeAccessifyProps<InputKitProps>) {
+function useInputInnerValue(props: DeAccessifyProps<InputKitProps>, controller: InputController) {
   const [inputRef, setInputRef] = createRef<HTMLInputElement>()
   // if user is inputing or just input, no need to update upon out-side value
-  const [isFocused, { on: focusInput, off: unfocusInput }] = createToggle()
+  const [isFocused, { open: focusInput, close: unfocusInput }] = createDisclosure()
   // store inner value for
   const [cachedOutsideValue, setCachedOutsideValue] = createSignal(props.defaultValue ?? props.value)
 
@@ -89,8 +119,8 @@ function useInputInnerValue(props: DeAccessifyProps<InputKitProps>) {
     if (el) {
       el.value = newText ?? ''
       setInnerText(newText)
-      props.onProgramInput?.({ text: newText })
-      props.onInput?.({ text: newText, byUser: false })
+      props.onProgramInput?.(newText, controller)
+      props.onInput?.(newText, mergeObjects(controller, { byUser: false }))
     }
   }
 
@@ -137,8 +167,8 @@ function useInputInnerValue(props: DeAccessifyProps<InputKitProps>) {
       () => props.value,
       (newValue) => {
         updateTextDOM(newValue)
-      }
-    )
+      },
+    ),
   )
 
   // update when lose focus
@@ -147,8 +177,8 @@ function useInputInnerValue(props: DeAccessifyProps<InputKitProps>) {
       () => isFocused() === false,
       () => {
         setCachedOutsideValue(props.value)
-      }
-    )
+      },
+    ),
   )
 
   const additionalProps = createMemo(
@@ -166,13 +196,13 @@ function useInputInnerValue(props: DeAccessifyProps<InputKitProps>) {
           onInput: (e: Event) => {
             const text = (e.target as HTMLInputElement).value
             setInnerText(text)
-            props.onInput?.({ text, byUser: true })
-            props.onUserInput?.({ text })
+            props.onInput?.(text, mergeObjects(controller, { byUser: true }))
+            props.onUserInput?.(text, controller)
           },
           onFocus: focusInput,
           onBlur: unfocusInput,
         },
-      } as PivProps<'input'>)
+      }) as PivProps<'input'>,
   )
   return [
     additionalProps,

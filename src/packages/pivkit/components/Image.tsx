@@ -1,9 +1,10 @@
 import { createEffect, createSignal, onCleanup } from 'solid-js'
-import { onEvent as addEventListener } from '../domkit'
+import { addEventListener as addEventListener } from '../domkit'
 import { createRef } from '../hooks'
-import { KitProps, Piv, useKitProps } from '../piv'
 import { renderHTMLDOM } from '../piv/propHandlers/renderHTMLDOM'
 
+import { KitProps, useKitProps } from '../createKit'
+import { Piv } from '../piv'
 export interface ImageController {}
 
 export interface ImageProps {

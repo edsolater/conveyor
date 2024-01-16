@@ -1,15 +1,42 @@
 import { MayFn, shrinkFn } from '@edsolater/fnkit'
-import { Accessor, For, JSXElement, Show, createContext, createEffect, createMemo, createSignal, on } from 'solid-js'
-import { createRef } from '../../hooks/createRef'
+import {
+  Accessor,
+  For,
+  JSXElement,
+  Show,
+  createContext,
+  createDeferred,
+  createEffect,
+  createMemo,
+  createSignal,
+  on,
+} from 'solid-js'
+import { KitProps, useKitProps } from '../../createKit'
 import { ObserveFn, useIntersectionObserver } from '../../domkit/hooks/useIntersectionObserver'
 import { useScrollDegreeDetector } from '../../domkit/hooks/useScrollDegreeDetector'
-import { KitProps, Piv, useKitProps } from '../../piv'
+import { createAsyncMemo } from '../../hooks/createAsyncMemo'
+import { createRef } from '../../hooks/createRef'
+import { Piv } from '../../piv'
 import { ListItem } from './ListItem'
+import { toArray } from '../../../fnkit/itemMethods'
 
-export interface ListController {}
+export type ItemList<T> =
+  | Map<any, T>
+  | Set<T>
+  | T[]
+  | Record<keyof any, T>
+  | IterableIterator<T>
+  | Iterable<T>
+  | undefined
+export interface ListController {
+  resetRenderCount(): void
+}
 export type ListProps<T> = {
   children(item: T, index: () => number): JSXElement
-  of?: MayFn<Iterable<T>>
+  items?: MayFn<ItemList<T>>
+
+  /** lazy render for get init frame faster */
+  lazy?: boolean
   /**
    * only meaningfull when turnOnScrollObserver is true
    * @default 30
@@ -40,7 +67,7 @@ export const ListContext = createContext<InnerListContext>({} as InnerListContex
  * if for layout , don't render important content in Box
  */
 export function List<T>(kitProps: ListKitProps<T>) {
-  const { props } = useKitProps(kitProps, {
+  const { props, lazyLoadController } = useKitProps(kitProps, {
     name: 'List',
     noNeedDeAccessifyChildren: true,
     defaultProps: {
@@ -49,7 +76,11 @@ export function List<T>(kitProps: ListKitProps<T>) {
   })
 
   // [configs]
-  const allItems = createMemo(() => Array.from(shrinkFn(props.of ?? [])))
+
+  const _allItems = props.lazy
+    ? createAsyncMemo(() => toArray(shrinkFn(props.items ?? [])), [] as T[])
+    : createMemo(() => toArray(shrinkFn(props.items ?? [])))
+  const allItems = createDeferred(_allItems) // to smoother the render
   const increaseRenderCount = createMemo(
     () => props.increaseRenderCount ?? Math.min(Math.floor(allItems().length / 10), 30)
   )
@@ -86,6 +117,13 @@ export function List<T>(kitProps: ListKitProps<T>) {
     )
   )
 
+  const resetRenderCount: ListController['resetRenderCount'] = () => {
+    setRenderItemLength(initRenderCount())
+  }
+
+  const controller = { resetRenderCount } as ListController
+  lazyLoadController(controller)
+
   const renderListItems = (item: T, idx: () => number) => {
     return (
       <Show when={checkNeedRenderByIndex(idx(), renderItemLength())}>
@@ -96,7 +134,7 @@ export function List<T>(kitProps: ListKitProps<T>) {
 
   return (
     <ListContext.Provider value={{ observeFunction: observe, renderItemLength }}>
-      <Piv class='List' domRef={setRef} shadowProps={props} icss={{ overflow: 'auto', contain: 'paint' }}>
+      <Piv domRef={setRef} shadowProps={props} icss={{ overflow: 'auto', contain: 'paint' }}>
         <For each={allItems()}>{renderListItems}</For>
       </Piv>
     </ListContext.Provider>

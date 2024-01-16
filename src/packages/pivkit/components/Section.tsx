@@ -1,4 +1,5 @@
-import { KitProps, Piv, useKitProps } from '../piv'
+import { KitProps, useKitProps } from '../createKit'
+import { Piv } from '../piv'
 
 export type SectionProps = {
   name?: string
@@ -11,6 +12,5 @@ export type SectionKitProps = KitProps<SectionProps>
  */
 export function Section(rawProps: SectionKitProps) {
   const { shadowProps, props } = useKitProps(rawProps, { name: 'Section' })
-  /* ---------------------------------- props --------------------------------- */
-  return <Piv class={`Section ${props.name ?? ''}`} shadowProps={shadowProps} />
+  return <Piv class={props.name} shadowProps={shadowProps} />
 }

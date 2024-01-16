@@ -1,20 +1,34 @@
-import { MayArray, flap, pipe } from '@edsolater/fnkit'
+import { MayArray, MayFn, flap, pipe } from '@edsolater/fnkit'
 import { JSX, JSXElement } from 'solid-js'
-import { handlePropsInnerController } from './ControllerContext'
-import { ClassName, HTMLProps, ICSS, IStyle, Plugin, handlePluginProps, handleShadowProps } from './propHandlers'
+import {
+  ClassName,
+  HTMLProps,
+  ICSS,
+  IStyle,
+  Plugin,
+  PluginCoreFn,
+  handlePluginProps,
+  handleShadowProps,
+} from './propHandlers'
 import { renderHTMLDOM } from './propHandlers/renderHTMLDOM'
 import { HTMLTag, PivChild, ValidController } from './typeTools'
 import { omit } from './utils'
 
 type Boollike = any
 
+export type ClickController<Controller extends ValidController = ValidController> = {
+  ev: MouseEvent & {
+    currentTarget: HTMLElement
+    target: Element
+  }
+  el: HTMLElement
+} & Controller
 
-
-export interface PivProps<TagName extends HTMLTag = HTMLTag, Controller extends ValidController | unknown = unknown> {
+export interface PivProps<TagName extends HTMLTag = HTMLTag, Controller extends ValidController = ValidController> {
   /** if is settled and is flase , only it's children will render */
-  if?: Boollike
+  if?: MayFn<Boollike>
   /** if is settled and is flase , only it's children will render */
-  ifSelfShown?: Boollike
+  ifSelfShown?: MayFn<Boollike>
 
   debugLog?: (keyof PivProps)[]
 
@@ -35,15 +49,7 @@ export interface PivProps<TagName extends HTMLTag = HTMLTag, Controller extends 
    */
   id?: string
 
-  onClick?: (
-    utils: {
-      ev: MouseEvent & {
-        currentTarget: HTMLElement
-        target: Element
-      }
-      el: HTMLElement
-    } & Controller
-  ) => void // for accessifyProps, onClick can't be array
+  onClick?: (utils: ClickController<Controller>) => void // for accessifyProps, onClick can't be array
 
   'merge:onClick'?: (
     utils: {
@@ -52,20 +58,20 @@ export interface PivProps<TagName extends HTMLTag = HTMLTag, Controller extends 
         target: Element
       }
       el: HTMLElement
-    } & Controller
+    } & Controller,
   ) => void // for accessifyProps, "merge:onClick" can't be array
 
   /**
    * auto merge by shadowProps
    * if it's in shadow props, it will merge with exist props
    */
-  icss?: ICSS<Controller>
+  icss?: ICSS<any>
 
   /**
    * auto merge by shadowProps
    * if it's in shadow props, it will merge with exist props
    */
-  style?: IStyle<Controller>
+  style?: IStyle<any>
 
   /**
    * auto merge by shadowProps
@@ -90,7 +96,7 @@ export interface PivProps<TagName extends HTMLTag = HTMLTag, Controller extends 
    * auto merge by shadowProps
    * special: every kit baseon <Piv> should support this prop
    */
-  plugin?: MayArray<Plugin<any>>
+  plugin?: MayArray<Plugin<any> | PluginCoreFn>
 
   // -------- special prop --------
 
@@ -144,30 +150,24 @@ export const pivPropsNames = [
   'render:lastChild',
 ] satisfies (keyof PivProps<any>)[]
 
-export const Piv = <TagName extends HTMLTag = HTMLTag, Controller extends ValidController | unknown = unknown>(
-  kitProps: PivProps<TagName, Controller>
+export const Piv = <TagName extends HTMLTag = HTMLTag, Controller extends ValidController = ValidController>(
+  kitProps: PivProps<TagName, Controller>,
 ) => {
-  const props = pipe(
-    kitProps as PivProps<any>,
-    handleShadowProps,
-    handlePluginProps,
-    handleShadowProps,
-    handlePropsInnerController
-  )
+  // 📝 render:outWrapper may in showProps or plugin. so need to handle it first
+  const props = pipe(kitProps, handleShadowProps, handlePluginProps, handleShadowProps)
   return 'render:outWrapper' in props ? handlePropRenderOutWrapper(props) : handleNormalPivProps(props)
 }
 
-function handleNormalPivProps(props?: Omit<PivProps<any, any>, 'plugin' | 'shadowProps'>) {
-  if (!props) return
-  return renderHTMLDOM('div', props)
-  // const { props: parsedProps, ifOnlyNeedRenderChildren, selfCoverNode, ifOnlyNeedRenderSelf } = parsePivProps(props)
-  // return selfCoverNode ? selfCoverNode : renderHTMLDiv(parsedProps, ifOnlyNeedRenderChildren, ifOnlyNeedRenderSelf)
+function handleNormalPivProps(rawProps?: Omit<PivProps<any, any>, 'plugin' | 'shadowProps'>) {
+  if (!rawProps) return
+  return renderHTMLDOM('div', rawProps)
 }
 
 function handlePropRenderOutWrapper(props: PivProps<any, any>): JSXElement {
+  console.log('detect render:outWrapper') // FIXME: <-- why not detected?
   return flap(props['render:outWrapper']).reduce(
     (prevNode, getWrappedNode) => (getWrappedNode ? getWrappedNode(prevNode) : prevNode),
     // @ts-expect-error force
-    (() => handleNormalPivProps(omit(props, 'render:outWrapper'))) as JSXElement // 📝 wrap function to let not solidjs read at once when array.prototype.reduce not finish yet
+    (() => handleNormalPivProps(omit(props, 'render:outWrapper'))) as JSXElement, // 📝 wrap function to let not solidjs read at once when array.prototype.reduce not finish yet
   )
 }

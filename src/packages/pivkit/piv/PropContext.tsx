@@ -3,37 +3,31 @@
  * this component is related to useKitProps
  */
 import { createContext, useContext } from 'solid-js'
-import { PivChild, PivProps, ValidProps, mergeProps } from '.'
+import { PivProps, ValidProps, mergeProps, omit } from '.'
 import { Fragnment } from './Fragnment'
 
 /** add props is implied by solidjs context */
-const InnerPropContext = createContext<{ props: unknown; when: PropContextWhen }[]>()
+const _PropContext = createContext<ValidProps[]>()
 
-type PropContextWhen = (info: { componentName: string }) => boolean
-
-export function PropContext<Props extends ValidProps = PivProps>(props: {
-  additionalProps: Props
-  when?: PropContextWhen
-  children?: PivChild
-}) {
-  const parentPropContext = useContext(InnerPropContext)
+/**
+ * `<PropContext>` is **Context** , not `<AddProps>` \
+ * it will add props to all children components
+ */
+export function PropContext<Props extends ValidProps = PivProps>(props: Props) {
+  const parentPropContext = useContext(_PropContext) ?? []
+  const selfPropContextValue = parentPropContext.concat(
+    omit(props, 'children'), // PropContext should not change inners children
+  )
   return (
-    <InnerPropContext.Provider
-      value={
-        parentPropContext
-          ? [...parentPropContext, { props: props.additionalProps, when: props.when ?? (() => true) }]
-          : [{ props: props.additionalProps, when: props.when ?? (() => true) }]
-      }
-    >
+    <_PropContext.Provider value={selfPropContextValue}>
       <Fragnment>{props.children}</Fragnment>
-    </InnerPropContext.Provider>
+    </_PropContext.Provider>
   )
 }
 
 /** add additional prop through solidjs context */
-export function getPropsFromPropContextContext(componentInfo: { componentName: string }): ValidProps | undefined {
-  const contextParent = useContext(InnerPropContext)
-  const props = contextParent?.map(({ props, when }) => (when(componentInfo) ? (props as ValidProps) : undefined))
-  const merged = props && mergeProps(...props)
-  return merged
+export function getPropsFromPropContextContext(componentInfo: { componentName?: string }): ValidProps | undefined {
+  const allPropses = useContext(_PropContext)
+  if (!allPropses) return undefined
+  return mergeProps(...allPropses)
 }

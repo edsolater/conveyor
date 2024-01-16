@@ -1,7 +1,8 @@
 import { mergeObjects } from '@edsolater/fnkit'
 import { Accessor, createContext } from 'solid-js'
-import { createCallbackManager } from '../../../fnkit/createCallbackManager'
-import { KitProps, useKitProps } from '../../createKit'
+import { callbackManager } from '../../../fnkit/callbackManager'
+import { useKitProps } from '../../createKit/useKitProps'
+import { KitProps } from '../../createKit/KitProps'
 import { createSyncSignal } from '../../hooks/createSyncSignal'
 import { Piv } from '../../piv/Piv'
 import { ValidController } from '../../piv/typeTools'
@@ -76,7 +77,7 @@ export const TabsControllerContext = createContext<TabsController>(TabsControlle
  * </Tabs>
  */
 export function Tabs(rawProps: TabsKitProps) {
-  const { registerCallback, invokeCallbacks } = createCallbackManager<OnChangeCallback>()
+  const { registerCallback, invokeCallbacks } = callbackManager<OnChangeCallback>()
 
   const { props, shadowProps, lazyLoadController } = useKitProps(rawProps, { name: 'Tabs' })
 

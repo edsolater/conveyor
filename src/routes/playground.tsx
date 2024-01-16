@@ -1,10 +1,9 @@
-import { MayPromise } from '@edsolater/fnkit'
+import { MayPromise, switchCase } from '@edsolater/fnkit'
 import { Accessor, JSXElement, createContext, createEffect, createSignal, onCleanup } from 'solid-js'
 import { createStore } from 'solid-js/store'
 import { CircularProgress } from '../components/CircularProgress'
 import { ExamplePanel } from '../components/ExamplePanel'
 import { useLoopPercent } from '../hooks/useLoopPercent'
-import { switchCase } from '../packages/fnkit'
 import {
   Box,
   Button,
@@ -22,18 +21,18 @@ import {
   Tabs,
   Text,
   ValidProps,
+  buildPopover,
   createIncresingAccessor,
   createIntervalEffect,
   createPlugin,
-  css_opacity,
-  generatePopoverPlugins,
+  cssOpacity,
   icssCol,
   icssRow,
   renderSwitchThumb,
   useCSSTransition,
   useControllerByID,
+  useHoverPlugin,
   useKitProps,
-  withHover,
 } from '../packages/pivkit'
 import { PropContext } from '../packages/pivkit/piv/PropContext'
 
@@ -168,13 +167,9 @@ function ModalExample() {
   return (
     <>
       <Button onClick={() => modalController.toggle?.()}>Open</Button>
-      <Modal id='example-modal' isModal>
-        Modal1
-      </Modal>
+      <Modal id='example-modal'>Modal1</Modal>
       <Button onClick={() => modalController2.toggle?.()}>Open</Button>
-      <Modal id='example-modal2' isModal>
-        Modal2 + {couter()}
-      </Modal>
+      <Modal id='example-modal2'>Modal2 + {couter()}</Modal>
     </>
   )
 }
@@ -183,12 +178,12 @@ function CSSTransitionExample() {
   const [show, setShow] = createSignal(false)
 
   // TODO: invoke in  plugin
-  const { transitionProps, refSetter } = useCSSTransition({
+  const { transitionProps, setDom: refSetter } = useCSSTransition({
     show,
     onAfterEnter() {},
     onBeforeEnter() {},
-    fromProps: { icss: { height: '100px' } },
-    toProps: { icss: { height: '200px' } },
+    hideProps: { icss: { height: '100px' } },
+    showProps: { icss: { height: '200px' } },
   })
 
   return (
@@ -214,7 +209,7 @@ function InputExample() {
     <Input
       value={controlledValue}
       icss={{ border: 'solid' }}
-      onUserInput={({ text }) => {
+      onUserInput={(text) => {
         setControlledValue(text)
       }}
     />
@@ -321,7 +316,7 @@ function ListExample() {
     }, 100)
   })
   return (
-    <List of={data} initRenderCount={10} icss={[icssCol({ gap: '16px' }), { height: '30dvh' }]}>
+    <List items={data} initRenderCount={10} icss={[icssCol({ gap: '16px' }), { height: '30dvh' }]}>
       {(d, idx) => (
         <Box icss={[icssRow, { background: '#0001', width: '100%' }]}>
           <Text>{d.name}</Text>
@@ -366,13 +361,15 @@ function ComponentFactoryExample() {
   )
 }
 
-const { popoverButtonPlugin, popoverPanelPlugin } = generatePopoverPlugins({ placement: 'top' })
+const {
+  plugins: { panel: popoverPanelPlugin, trigger: popoverButtonPlugin },
+} = buildPopover({ placement: 'top' })
 
 function PopoverExample() {
   const {
     plugin,
     state: { isHover },
-  } = withHover({ onHover: () => console.log('hover') })
+  } = useHoverPlugin({ onHover: () => console.log('hover') })
   createEffect(() => {
     console.log('isHover: ', isHover())
   })
@@ -417,7 +414,7 @@ function PropContextExample() {
             merge:onClick={() => {
               console.log('click PropContext description')
             }}
-            icss={{ cursor: 'pointer', border: 'dashed', borderColor: css_opacity('currentcolor', 0.6), margin: '8px' }}
+            icss={{ cursor: 'pointer', border: 'dashed', borderColor: cssOpacity('currentcolor', 0.6), margin: '8px' }}
           >
             PropContext can pass to deep nested components
           </Box>

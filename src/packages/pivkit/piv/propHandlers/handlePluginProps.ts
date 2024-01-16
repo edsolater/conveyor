@@ -1,6 +1,6 @@
 import { AnyObj, flap, hasProperty, MayArray, shakeNil, shrinkFn } from '@edsolater/fnkit'
 import { createSignal } from 'solid-js'
-import { KitProps } from '../../createKit'
+import { KitProps } from '../../createKit/KitProps'
 import { PivProps } from '../Piv'
 import { ValidController } from '../typeTools'
 import { mergeProps } from '../utils/mergeProps'
@@ -13,17 +13,14 @@ export const pluginCoreSymbol = Symbol('pluginCore')
 export function handlePluginProps<P extends AnyObj>(
   props: P,
   getPlugin: (props: PivProps) => PivProps['plugin'] = (props) => props.plugin,
-  checkHasPluginProps: (props: PivProps) => boolean = (props) => hasProperty(props, 'plugin')
+  checkHasPluginProps: (props: PivProps) => boolean = (props) => hasProperty(props, 'plugin'),
 ) {
   if (!props) return props
   if (!checkHasPluginProps(props)) return props
   const plugin = getPlugin(props)
+  console.log('plugin: ', plugin)
   if (!plugin) return omit(props, 'plugin')
-  const sortedPluginObjs = omit(
-    mergePluginReturnedProps({ plugins: sortPluginByPriority(flap(plugin)), props }),
-    'plugin'
-  )
-  return sortedPluginObjs
+  return getMergePluginReturnedProps(sortPluginByPriority(flap(plugin)), props)
 }
 
 function sortPluginByPriority(plugins: Plugin<any>[]) {
@@ -52,19 +49,14 @@ function sortPluginByPriority(plugins: Plugin<any>[]) {
  * merge additional props from plugin
  */
 
-function mergePluginReturnedProps<T extends AnyObj>({
-  plugins,
-  props,
-}: {
-  plugins: MayArray<Plugin<T> | undefined>
-  props: T & PivProps
-}): T & PivProps {
-  return plugins
-    ? shakeNil(flap(plugins)).reduce((acc, plugin) => {
-        const pluginProps = invokePlugin(plugin, acc)
-        return pluginProps ? mergeProps(acc, pluginProps) : acc
-      }, props)
-    : props
+function getMergePluginReturnedProps<T extends AnyObj>(
+  plugins: MayArray<Plugin<T> | undefined>,
+  props: T & PivProps,
+): Omit<T & PivProps, 'plugin'> {
+  return omit(
+    plugins ? shakeNil(flap(plugins)).reduce((acc, plugin) => invokePlugin(plugin, acc), props) : props,
+    'plugin',
+  )
 }
 
 /** core */

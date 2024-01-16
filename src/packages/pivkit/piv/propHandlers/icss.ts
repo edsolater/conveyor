@@ -2,6 +2,7 @@ import {
   AnyFn,
   AnyObj,
   MayArray,
+  MayDeepArray,
   MayFn,
   filter,
   flap,
@@ -9,11 +10,12 @@ import {
   getKeys,
   isObject,
   isString,
+  mergeObjects,
   mergeObjectsWithConfigs,
   overwriteFunctionName,
   shrinkFn,
 } from '@edsolater/fnkit'
-import { SettingsFunction, createSettingsFunction } from '../../../fnkit/createSettingsFunction'
+import { ConfigableFunction, createConfigableFunction } from '../../../fnkit/configableFunction'
 import { CSSAttribute, css } from 'solid-styled-components'
 
 type ValidController = AnyObj
@@ -26,7 +28,7 @@ export type ICSSObject<Controller extends ValidController | unknown = unknown> =
 // }
 export type CSSObject = CSSAttribute
 
-export type ICSS<Controller extends ValidController | unknown = unknown> = MayArray<
+export type ICSS<Controller extends ValidController | unknown = unknown> = MayDeepArray<
   LoadController<boolean | string | number | null | undefined, Controller> | ICSSObject<Controller>
 >
 
@@ -34,22 +36,25 @@ const isTaggedICSSSybol = Symbol('isTaggedICSS')
 const toICSSSymbol = Symbol('toICSS') // 🤔 is it necessary?
 
 type RuleCreatorFn = (settings?: AnyObj) => ICSS
-type TaggedICSS<T extends AnyFn> = SettingsFunction<T> & {
+type TaggedICSS<T extends AnyFn> = ConfigableFunction<T> & {
   [isTaggedICSSSybol]: true | string
   [toICSSSymbol](): ICSS
   [toICSSSymbol](...additionalSettings: Parameters<T>): ICSS
 }
 
+// TODO: imply it !!!
+export function injectRuleToGlobal(rule: ICSS) {}
 export function createICSS<T extends RuleCreatorFn>(
   rule: T,
-  options?: { name?: string; defaultSettings?: Partial<AnyObj> }
-): TaggedICSS<T> {
-  const factory = createSettingsFunction(
+  options?: { name?: string; defaultSettings?: Partial<AnyObj>; globalSyle?: ICSS },
+): TaggedICSS<any> {
+  const factory = createConfigableFunction(
     (settings?: AnyObj) => rule(settings),
-    options?.defaultSettings
+    options?.defaultSettings,
   ) as unknown as TaggedICSS<T>
   Reflect.set(factory, isTaggedICSSSybol, true)
   Reflect.set(factory, toICSSSymbol, (...args: any[]) => invokeTaggedICSS(factory, ...args))
+  // add global
   // rename
   const fn = options?.name ? overwriteFunctionName(factory, options.name) : factory
   return fn
@@ -60,13 +65,13 @@ export function isTaggedICSS(v: any): v is TaggedICSS<any> {
 }
 
 function invokeTaggedICSS<T extends RuleCreatorFn>(v: TaggedICSS<T>, params?: AnyObj): ICSS {
-  return v.addParam(params)()
+  return v.config(params as any)()
 }
 
 /** for piv to parse icss props */
 export function handleICSSProps<Controller extends ValidController | unknown = unknown>(
   cssProp: ICSS<Controller>,
-  controller: Controller = {} as Controller
+  controller: Controller = {} as Controller,
 ) {
   const cssObjList = flapDeep(cssProp)
     .map((i) => {
@@ -79,12 +84,12 @@ export function handleICSSProps<Controller extends ValidController | unknown = u
 }
 
 export function compressICSSToObj<Controller extends ValidController | unknown = unknown>(
-  icss: ICSS<Controller>
+  icss: ICSS<Controller>,
 ): ICSSObject<Controller> {
   return (controller: Controller) => {
     const cssObjList = filter(
       flap(icss).map((i) => shrinkFn(i, [controller])),
-      isObject
+      isObject,
     ) as ICSSObject<Controller>[]
     const l = cssObjList.reduce((acc, cur) => mergeICSSObject<Controller>(acc, cur), {} as ICSSObject<Controller>)
     return shrinkFn(l, [controller])
@@ -92,11 +97,11 @@ export function compressICSSToObj<Controller extends ValidController | unknown =
 }
 
 function mergeICSSObject<Controller extends ValidController | unknown = unknown>(
-  ...icsses: ICSSObject<Controller>[]
+  ...icssEs: ICSSObject<Controller>[]
 ): ICSSObject<Controller> {
   return (controller: Controller) =>
     mergeObjectsWithConfigs(
-      icsses.map((ic) => shrinkFn(ic, [controller])),
-      ({ valueA: v1, valueB: v2 }) => v2 ?? v1
+      icssEs.map((ic) => shrinkFn(ic, [controller])),
+      ({ valueA: v1, valueB: v2 }) => v2 ?? v1,
     )
 }

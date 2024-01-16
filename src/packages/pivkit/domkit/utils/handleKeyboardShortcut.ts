@@ -1,4 +1,4 @@
-import { onEvent, EventListenerController } from './onEvent'
+import { addEventListener, EventListenerController } from './addEventListener'
 import { mapKey, shakeFalsy, toLowerCase, unifyItem } from '@edsolater/fnkit'
 import { addTabIndex } from './addTabIndex'
 
@@ -79,16 +79,23 @@ export type KeyboardShortcutFn = () => void
 export type KeyboardShortcutSettings = {
   [key in KeybordShortcutKeys]?: KeyboardShortcutFn
 }
-export function handleKeyboardShortcut(
+export function bindKeyboardShortcutEventListener(
   el: HTMLElement,
-  keyboardShortcutSettings: KeyboardShortcutSettings
+  keyboardShortcutSettings: KeyboardShortcutSettings,
+  options?: { stopPropagation?: boolean },
 ): EventListenerController {
   addTabIndex(el) // keydown must have fousable element
-  return onEvent(el, 'keydown', ({ ev }) => {
-    const pressedKey = getShorcutStringFromKeyboardEvent(ev)
-    const targetShortcutFn = Reflect.get(keyboardShortcutSettings, pressedKey)
-    targetShortcutFn?.()
-  })
+  const subscription = addEventListener(
+    el,
+    'keydown',
+    ({ ev }) => {
+      const pressedKey = getShorcutStringFromKeyboardEvent(ev)
+      const targetShortcutFn = Reflect.get(keyboardShortcutSettings, pressedKey)
+      targetShortcutFn?.()
+    },
+    { stopPropergation: options?.stopPropagation },
+  )
+  return subscription
 }
 /** this still not prevent **all** brower shortcut (like build-in ctrl T ) */
 export function preventDefaultKeyboardShortcut(pureEl: HTMLElement) {
@@ -98,7 +105,7 @@ export function preventDefaultKeyboardShortcut(pureEl: HTMLElement) {
       ev.stopPropagation()
       ev.preventDefault()
     },
-    { capture: true }
+    { capture: true },
   )
 }
 
@@ -109,8 +116,14 @@ export function preventDefaultKeyboardShortcut(pureEl: HTMLElement) {
  */
 export function getShorcutStringFromKeyboardEvent(ev: KeyboardEvent) {
   const rawKey = areCaseInsensitiveEqual(ev.key, 'control') ? 'ctrl' : ev.key // special
-  const keyArray = [ev.ctrlKey && 'ctrl', ev.shiftKey && 'shift', ev.altKey && 'alt', ev.metaKey && 'meta', rawKey]
-  return unifyItem(shakeFalsy(keyArray).map(toLowerCase)).join(' + ')
+  const keyArray = [
+    ev.ctrlKey ? 'ctrl' : undefined,
+    ev.shiftKey ? 'shift' : undefined,
+    ev.altKey ? 'alt' : undefined,
+    ev.metaKey ? 'meta' : undefined,
+    rawKey.replace(/(ctrl|shift|alt|meta)/i, ''),
+  ].map((s) => s?.trim())
+  return unifyItem(shakeFalsy(keyArray)).join(' + ')
 }
 
 export function areCaseInsensitiveEqual(a: string, b: string) {

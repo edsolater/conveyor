@@ -1,7 +1,7 @@
 import { AnyObj, isFunction, overwriteFunctionName } from '@edsolater/fnkit'
 import { Accessor } from 'solid-js'
-import { SettingsFunction, createSettingsFunction } from '../../../fnkit/createSettingsFunction'
-import { KitProps } from '../../createKit'
+import { ConfigableFunction, createConfigableFunction } from '../../../fnkit/configableFunction'
+import { KitProps } from '../../createKit/KitProps'
 import { Accessify } from '../../utils'
 import { ValidController, ValidProps } from '../typeTools'
 import { PivProps } from '../Piv'
@@ -32,7 +32,7 @@ export type PluginObj<
   PluginState extends Record<string, any> = any,
   T extends ValidProps = any,
   C extends ValidController = ValidController,
-> = SettingsFunction<{
+> = ConfigableFunction<{
   (options?: PluginOptions): { plugin: PluginCoreFn<T, C>; state: PluginState }
   [isPluginObjSymbol]: true
   priority?: number
@@ -68,10 +68,11 @@ export function createPlugin<
   options?: {
     defaultOptions?: Partial<PluginOptions>
     priority?: number // NOTE -1:  it should be render after final prop has determine
+    /** Fixme: why not work? */
     name?: string
   }
 ): PluginObj<PluginOptions, PluginState, Props, Controller> {
-  const pluginCoreFn = createSettingsFunction(
+  const pluginCoreFn = createConfigableFunction(
     (params: PluginOptions) => {
       const mayPluginCore = createrFn(params)
       const renamedMayPluginCore =
@@ -82,7 +83,7 @@ export function createPlugin<
     options?.defaultOptions
   )
 
-  Object.assign(pluginCoreFn, options, { [isPluginObjSymbol]: true })
+  Object.assign(pluginCoreFn, { [isPluginObjSymbol]: true })
 
   // @ts-expect-error no need to check
   return pluginCoreFn

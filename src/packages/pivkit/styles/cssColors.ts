@@ -1,6 +1,8 @@
+import { cssVar } from './cssValues'
 import { tailwindPaletteColors } from './tailwindPaletteColors'
 import { CSSColorString } from './type'
 
+// TODO: just inner the uikit, but should export to outside
 export const cssColors = {
   screenBg: '#f3f5f7',
 
@@ -38,3 +40,5 @@ export const cssColors = {
   accentColor: 'dodgerblue',
   // accentColorInactive: 'dodgerblue',
 } as const
+
+export const cssCurrentColor = cssVar('--current-color', 'currentcolor')

@@ -1,18 +1,23 @@
 import { createCachedGlobalHook } from '../createGlobalHook'
-import { createProxiedStore, CreateProxiedStoreCallbacks } from './createProxiedStore'
-import { DefaultStoreValue, OnChangeCallback, Store } from './type'
+import { createSmartStore, CreateSmartStoreOptions } from '../smartStore/createSmartStore'
+import { OnChangeCallback } from '../smartStore/features/onPropertyChange'
 
 export function createGlobalStore<T extends Record<string, any>>(
-  defaultValue?: DefaultStoreValue<T>,
-  options?: CreateProxiedStoreCallbacks<T>
+  defaultValue: T,
+  options?: CreateSmartStoreOptions<T>,
 ): [
-  useStore: () => Store<T>,
+  useStore: () => T,
   // don't use if possible, data in store is reactive
   rawStore: T,
   // don't use if possible, data in store is reactive
-  onPropertyChange: <K extends keyof T>(key: K, cb: OnChangeCallback<T, K>) => { abort(): void },
+  onPropertyChange: <K extends keyof T>(
+    key: K,
+    cb: OnChangeCallback<T, K>,
+  ) => {
+    remove(): void
+  },
 ] {
-  const [proxiedStore, rawStore, onPropertyChange] = createProxiedStore(defaultValue, options)
-  const useStore = createCachedGlobalHook(() => proxiedStore)
-  return [useStore, rawStore, onPropertyChange]
+  const { store, _rawStore, onPropertyChange } = createSmartStore(defaultValue, options)
+  const useStore = createCachedGlobalHook(() => store)
+  return [useStore, _rawStore, onPropertyChange]
 }

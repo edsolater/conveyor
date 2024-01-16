@@ -6,7 +6,7 @@ import { useSearch } from '../packages/features/searchItems'
 import {
   Box,
   Button,
-  GridBox,
+  Grid,
   GridItem,
   ICSS,
   Image,
@@ -18,7 +18,7 @@ import {
   icssCard,
   icssGrid,
   icssGridItem,
-  icssRow,
+  icssRow
 } from '../packages/pivkit'
 
 export default function LinksPage() {
@@ -53,7 +53,7 @@ export default function LinksPage() {
       <Section name='content' icss={{ display: 'grid', padding: '32px' }}>
         <Box icss={[icssRow({ gap: '4px' }), { marginBottom: '8px', fontSize: '2em' }]}>
           <Text>search tags:</Text>
-          <Input icss={{ border: 'solid' }} onUserInput={({ text }) => setSearchText(text)} />
+          <Input icss={{ border: 'solid' }} onUserInput={(text) => setSearchText(text)} />
         </Box>
 
         <Loop of={visiableLinks} icss={icssGrid({ gap: '24px' })}>
@@ -126,12 +126,13 @@ function SiteItem(props: { item: LinkItem; level?: /* zero or undefined is the t
 
 function SiteSubItem(props: { item: LinkItem; level?: /* zero or undefined is the top */ number }) {
   return (
-    <GridBox
-      icss:grid={{
-        template: `
-            "info" auto 
-            "sub " auto / 1fr
-          `,
+    <Grid
+      icss={{
+        gridTemplate: `
+        "info" auto 
+        "sub " auto / 1fr
+      `,
+        gap: '1em',
       }}
     >
       <GridItem icss:area='info'>
@@ -150,7 +151,7 @@ function SiteSubItem(props: { item: LinkItem; level?: /* zero or undefined is th
       </GridItem>
 
       <GridItem icss:area='sub' />
-    </GridBox>
+    </Grid>
   )
 }
 
@@ -167,7 +168,7 @@ function Screenshot(props: { item?: DeMayArray<LinkItemScreenshot>; siteUrl: Lin
 }
 
 //TODO: should be a plugin
-function icss_onlyContent(opt?: { nodeShown?: MayFn<boolean> }): ICSS {
+function icssOnlyContent(opt?: { nodeShown?: MayFn<boolean> }): ICSS {
   const nodeShown = !!shrinkFn(opt?.nodeShown)
   return { all: nodeShown ? undefined : 'inherit', display: nodeShown ? undefined : 'contents' }
 }

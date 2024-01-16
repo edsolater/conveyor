@@ -1,28 +1,28 @@
 import { createEffect, onCleanup } from 'solid-js'
-import { onEvent } from '..'
+import { addEventListener } from '..'
 import { EventListenerController } from '..'
-import { ElementAccessors, GetElementsFromElementAccessors, getElementsFromAccessors } from '../../utils/elementAccessors'
+import { ElementRefs, GetElementsFromElementRefs, getElementsFromRefs } from '../../utils/getElementsFromRefs'
 
 /**
  * register DOM Event Listener
  * use auto cleanup
  */
-export function useDOMEventListener<El extends ElementAccessors, K extends keyof HTMLElementEventMap>(
+export function useDOMEventListener<El extends ElementRefs, K extends keyof HTMLElementEventMap>(
   el: El,
   eventName: K,
   fn: (payload: {
     ev: HTMLElementEventMap[K]
-    el: GetElementsFromElementAccessors<El>
+    el: GetElementsFromElementRefs<El>
     eventListenerController: EventListenerController
   }) => void,
   /** default is `{ passive: true }` */
   options?: EventListenerOptions
 ) {
   createEffect(() => {
-    const els = getElementsFromAccessors(el)
+    const els = getElementsFromRefs(el)
     els.forEach((el) => {
       // @ts-expect-error no need to check
-      const { abort: cancel } = onEvent(el, eventName, fn, options)
+      const { abort: cancel } = addEventListener(el, eventName, fn, options)
       onCleanup(cancel)
     })
   })
@@ -39,7 +39,7 @@ export function useDocumentEventListener<K extends keyof HTMLElementEventMap>(
   options?: EventListenerOptions
 ) {
   createEffect(() => {
-    const { abort: cancel } = onEvent(globalThis.document, eventName, fn, options)
+    const { abort: cancel } = addEventListener(globalThis.document, eventName, fn, options)
     onCleanup(cancel)
   })
 }
@@ -55,7 +55,7 @@ export function useWindowEventListener<K extends keyof HTMLElementEventMap>(
   options?: EventListenerOptions
 ) {
   createEffect(() => {
-    const { abort: cancel } = onEvent(globalThis.window, eventName, fn, options)
+    const { abort: cancel } = addEventListener(globalThis.window, eventName, fn, options)
     onCleanup(cancel)
   })
 }
