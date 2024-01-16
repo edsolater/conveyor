@@ -1,4 +1,4 @@
-import { APIEvent } from 'solid-start'
+import { APIEvent } from '@solidjs/start/server/types'
 import { createNewResponse } from '../../../packages/networkkit/wrapToNewResponse'
 
 export async function GET({ params }: APIEvent) {

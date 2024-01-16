@@ -1,9 +1,9 @@
 import { createEffect, createMemo } from 'solid-js'
-import { useLocation } from 'solid-start'
 import { threeGridSlotBoxICSS } from '../../icssBlocks/threeGridSlotBoxICSS'
 import { Box, Icon, KitProps, Loop, Piv, icssRow, renderHTMLDOM, useKitProps } from '../../packages/pivkit'
-import { useGlobalConfigContext } from '../../root'
+import { useGlobalConfigContext } from '../../app'
 import { Link } from '../Link'
+import { useLocation } from '@solidjs/router'
 
 /**
  * set document title

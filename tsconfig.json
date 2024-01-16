@@ -1,17 +1,20 @@
 {
   "compilerOptions": {
-    "allowSyntheticDefaultImports": true,
-    "resolveJsonModule": true,
-    "esModuleInterop": true,
-    "noImplicitAny": false,
-    "skipLibCheck": true,
     "target": "ESNext",
     "module": "ESNext",
     "moduleResolution": "node",
-    "jsxImportSource": "solid-js",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "noImplicitAny": false,
     "jsx": "preserve",
+    "jsxImportSource": "solid-js",
+    "allowJs": true,
     "strict": true,
-    "types": ["solid-start/env"],
-    "lib": ["DOM", "ESNext", "ES2023"]
+    "noEmit": true,
+    "types": ["vinxi/client", "vitest/globals"],
+    "isolatedModules": true,
+    "paths": {
+      "~/*": ["./src/*"]
+    }
   }
 }

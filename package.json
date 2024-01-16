@@ -1,29 +1,41 @@
 {
   "name": "conveyor",
   "scripts": {
-    "dev": "solid-start dev --port 3001 --host --inspect",
-    "build": "solid-start build",
-    "start": "solid-start start",
+    "dev": "vinxi dev --port 3001 --host --inspect",
+    "build": "vinxi build",
+    "start": "vinxi start",
+    "test": "vitest run",
+    "test-watch": "vitest",
+    "test-ui": "vitest --ui",
+    "coverage": "vitest run --coverage",
     "type-check": "tsc --skipLibCheck --pretty --noEmit",
     "prettier": "pnpx prettier --write ."
   },
   "type": "module",
   "devDependencies": {
+    "@solidjs/testing-library": "^0.8.5",
+    "@testing-library/jest-dom": "^6.2.0",
+    "@testing-library/user-event": "^14.5.2",
     "@types/babel__core": "^7.20.5",
     "@types/debug": "^4.1.12",
     "@types/node": "^20.11.4",
-    "solid-start-node": "^0.3.10",
+    "@vitest/ui": "^1.2.0",
+    "jsdom": "^23.2.0",
+    "postcss": "^8.4.33",
+    "solid-js": "^1.8.11",
     "typescript": "^5.3.3",
-    "vite": "^5.0.11"
+    "vinxi": "^0.1.4",
+    "vite": "^5.0.11",
+    "vite-plugin-solid": "^2.8.0",
+    "vitest": "^1.2.0"
   },
   "dependencies": {
     "@edsolater/fnkit": "^0.1.65",
     "@solidjs/meta": "^0.29.3",
     "@solidjs/router": "^0.10.9",
-    "mongodb": "^6.3.0",
+    "@solidjs/start": "^0.4.9",
     "solid-js": "^1.8.11",
-    "solid-start": "^0.3.10",
-    "solid-styled-components": "^0.28.5",
-    "vitest": "^1.2.0"
+    "solid-styled": "^0.11.0",
+    "solid-styled-components": "^0.28.5"
   }
 }

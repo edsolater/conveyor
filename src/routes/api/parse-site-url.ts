@@ -1,4 +1,4 @@
-import { APIEvent } from 'solid-start'
+import { APIEvent } from '@solidjs/start/server/types'
 import { getPostJSONData } from '../../packages/networkkit/getPostBodyFromData'
 import { createNewResponse } from '../../packages/networkkit/wrapToNewResponse'
 
