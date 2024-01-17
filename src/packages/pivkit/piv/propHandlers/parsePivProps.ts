@@ -22,12 +22,15 @@ export type NativeProps = ReturnType<typeof parsePivProps>['props']
 function getPropsInfoOfRawPivProps(raw: Partial<PivProps>) {
   const parsedPivProps = pipe(
     raw as Partial<PivProps>,
+
+    // TODO: should recursively handle shadowProps and plugin. DO NOT manually handle them
     handleShadowProps,
     handlePluginProps,
     handleShadowProps,
+
     parsePivRenderPrependChildren,
     parsePivRenderAppendChildren,
-    handleMergifyOnCallbackProps,
+    handleMergifyOnCallbackProps
   )
   const controller = (parsedPivProps.innerController ?? {}) as ValidController
   const ifOnlyNeedRenderChildren = 'if' in parsedPivProps ? () => Boolean(shrinkFn(parsedPivProps.if)) : undefined
@@ -69,6 +72,10 @@ function getNativeHTMLPropsFromParsedPivProp(props: any, controller: ValidContro
       }
     : {
         get class() {
+          if (props.debugLog?.includes('icss')) {
+            console.log('props.icss: ', props.icss)
+            console.log('controller: ', controller)
+          }
           // get ter for lazy solidjs render
           return (
             shakeFalsy([classname(props.class, controller), handleICSSProps(props.icss, controller)]).join(' ') ||
@@ -100,7 +107,6 @@ export function parsePivProps(rawProps: PivProps<any>) {
   const contextProps = getPropsFromPropContextContext({ componentName: 'Piv' })
   const addPropsContextProps = getPropsFromAddPropContext({ componentName: 'Piv' })
   const mergedContextProps = mergeProps(rawProps, contextProps, addPropsContextProps)
-
   const { parsedPivProps, controller, ifOnlyNeedRenderChildren, selfCoverNode, ifOnlyNeedRenderSelf } =
     getPropsInfoOfRawPivProps(mergedContextProps)
   debugLog(mergedContextProps, parsedPivProps, controller)
@@ -184,7 +190,7 @@ function debugLog(rawProps: PivProps<any>, props: PivProps<any>, controller: Val
       console.debug(
         '[piv debug] onClick (raw → parsed): ',
         props.onClick,
-        'onClick' in props && parseOnClick(props.onClick!, controller),
+        'onClick' in props && parseOnClick(props.onClick!, controller)
       )
     }
     if (props.debugLog.includes('children')) {

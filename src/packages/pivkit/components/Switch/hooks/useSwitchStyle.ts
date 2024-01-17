@@ -8,8 +8,9 @@ import { SwitchProps } from '../Switch'
  */
 export function useSwitchStyle(params: { props: DeKitProps<SwitchProps> }) {
   const wrapperLabelStyleProps = {
-    icss: ({ isChecked }) => {
-      console.log('isChecked: ', isChecked)
+    icss: (controller) => {
+      const { isChecked } = controller
+      console.log('controller: ', Object.keys(controller))
       return ({
         '@layer default-variable': {
           '--accent-color': cssColors.accentColor,

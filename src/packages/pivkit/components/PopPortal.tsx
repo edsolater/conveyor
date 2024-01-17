@@ -21,7 +21,6 @@ export function PopPortal(props: { name: string; children?: RawChild }) {
 function createPopStackHTMLElement(name: string) {
   if (!isClientSide()) return
   const el = document.querySelector(`#${name}`)
-  console.log('name: ', name)
   if ('document' in globalThis && !el) {
     const div = document.createElement('div')
     div.id = name
