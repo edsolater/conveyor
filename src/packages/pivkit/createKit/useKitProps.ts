@@ -101,8 +101,7 @@ export function useKitProps<
     { controller: (props: ParsedKitProps<RawProps>) => getControllerCreator(props) },
     options
   )
-  const { props, methods } = getParsedKitProps(kitProps, newOptions) as any
-  const shadowProps = options?.selfProps ? omit(props, options.selfProps) : props
+  const { props, methods, shadowProps } = getParsedKitProps(kitProps, newOptions) as any
 
   return {
     props,
@@ -113,7 +112,6 @@ export function useKitProps<
   }
 }
 
-let addedTime = 0
 /**
  * parse some special props of component. such as shadowProps, plugin, controller, etc.
  */
@@ -129,8 +127,11 @@ function getParsedKitProps<
   props: ParsedKitProps<AddDefaultPivProps<RawProps, DefaultProps>> &
     Omit<PivProps<HTMLTag, Controller>, keyof RawProps>
   methods: AddDefaultPivProps<RawProps, DefaultProps>
+  shadowProps: any
 } {
-  const proxyController = options?.controller ? runtimeObjectFromAccess(() => options.controller!(controlledProps)) : {}
+  const proxyController = options?.controller
+    ? runtimeObjectFromAccess(() => options.controller!(accessifiedProps))
+    : {}
 
   // const startTime = performance.now()
   // merge kit props
@@ -162,36 +163,27 @@ function getParsedKitProps<
     (props) => handleMergifyOnCallbackProps(props)
   ) as any /* too difficult to type */
 
-  const controlledProps = pipe(
-    methods,
-    (props) => {
-      const verboseAccessifyProps =
-        options?.needAccessify ??
-        (options?.noNeedDeAccessifyChildren
-          ? omitItem(Object.getOwnPropertyNames(props), ['children'])
-          : Object.getOwnPropertyNames(props))
-      const needAccessifyProps = options?.noNeedDeAccessifyProps
-        ? omitItem(verboseAccessifyProps, options.noNeedDeAccessifyProps)
-        : verboseAccessifyProps
-      const controller = props.innerController ? mergeObjects(proxyController, props.innerController) : proxyController
-      return useAccessifiedProps(props, controller, needAccessifyProps)
-    },
-    // inject controller to props:innerController (📝!!!important notice, for lazyLoadController props:innerController will always be a prop of any component useKitProps)
-    (props) =>
-      mergeProps(props, {
-        innerController: props.innerController ? mergeObjects(proxyController, props.innerController) : proxyController,
-      } as PivProps)
-  ) as any /* too difficult to type */
+  const controller = methods.innerController ? mergeObjects(proxyController, methods.innerController) : proxyController
+  // inject controller to props:innerController (📝!!!important notice, for lazyLoadController props:innerController will always be a prop of any component useKitProps)
+  const shadowProps = mergeObjects(methods, { innerController: controller } as PivProps)
+  const accessifiedProps = pipe(methods, (props) => {
+    const verboseAccessifyProps =
+      options?.needAccessify ??
+      (options?.noNeedDeAccessifyChildren
+        ? omitItem(Object.getOwnPropertyNames(props), ['children'])
+        : Object.getOwnPropertyNames(props))
+    const needAccessifyProps = options?.noNeedDeAccessifyProps
+      ? omitItem(verboseAccessifyProps, options.noNeedDeAccessifyProps)
+      : verboseAccessifyProps
+    return useAccessifiedProps(props, controller, needAccessifyProps)
+  }) as any /* too difficult to type */
 
-  // const endTime = performance.now()
-  // addedTime += endTime - startTime
-  // console.log('sortTime', addedTime)
-  // load controller
-  if (options?.controller) loadPropsControllerRef(controlledProps, proxyController)
+  // fullfill input props:controllerRef
+  if (controller) loadPropsControllerRef(accessifiedProps, proxyController)
 
   registerControllerInCreateKit(proxyController, rawProps.id)
 
-  return { props: controlledProps, methods }
+  return { props: accessifiedProps, methods, shadowProps }
 }
 
 /**

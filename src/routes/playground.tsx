@@ -34,6 +34,7 @@ import {
   useHoverPlugin,
   useKitProps,
 } from '../packages/pivkit'
+import { Select } from '../packages/pivkit/components/Select'
 import { PropContext } from '../packages/pivkit/piv/PropContext'
 
 export default function PlaygroundPage() {
@@ -78,9 +79,9 @@ function ComponentSpecList() {
         <ModalExample />
       </ExamplePanel>
 
-      <ExamplePanel name='List'>
+      {/* <ExamplePanel name='List'>
         <ListExample />
-      </ExamplePanel>
+      </ExamplePanel> */}
 
       <ExamplePanel name='Switch'>
         <SwitchExample />
@@ -94,9 +95,9 @@ function ComponentSpecList() {
         <PopoverExample />
       </ExamplePanel>
 
-      <ExamplePanel name='ComponentFactory'>
+      {/* <ExamplePanel name='ComponentFactory'>
         <ComponentFactoryExample />
-      </ExamplePanel>
+      </ExamplePanel> */}
 
       <ExamplePanel name='upload'>
         <UploadExample />
@@ -108,6 +109,10 @@ function ComponentSpecList() {
 
       <ExamplePanel name='PropContext + ControllerContext'>
         <PropContextExample />
+      </ExamplePanel>
+
+      <ExamplePanel name='Select'>
+        <SelectExample />
       </ExamplePanel>
       {/* <Foo /> */}
     </Box>
@@ -525,3 +530,7 @@ function useTabs() {
  * should can strightforward get plugin's core function\state\etc.
  */
 function usePlugin(plugin: PluginObj<object>) {}
+
+function SelectExample() {
+  return <Select name={'example'} items={['3', 'void'] as const} />
+}

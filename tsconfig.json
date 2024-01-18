@@ -14,7 +14,7 @@
     "types": ["vinxi/client", "vitest/globals"],
     "isolatedModules": true,
     "paths": {
-      "~/*": ["./src/*"]
+      // "~/*": ["./src/*"]
     }
   }
 }

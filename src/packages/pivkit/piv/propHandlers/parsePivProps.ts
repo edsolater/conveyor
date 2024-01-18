@@ -72,10 +72,6 @@ function getNativeHTMLPropsFromParsedPivProp(props: any, controller: ValidContro
       }
     : {
         get class() {
-          if (props.debugLog?.includes('icss')) {
-            console.log('props.icss: ', props.icss)
-            console.log('controller: ', controller)
-          }
           // get ter for lazy solidjs render
           return (
             shakeFalsy([classname(props.class, controller), handleICSSProps(props.icss, controller)]).join(' ') ||
