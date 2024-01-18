@@ -1,7 +1,6 @@
 import {
   AnyFn,
   AnyObj,
-  MayArray,
   MayDeepArray,
   MayFn,
   filter,
@@ -10,13 +9,12 @@ import {
   getKeys,
   isObject,
   isString,
-  mergeObjects,
   mergeObjectsWithConfigs,
   overwriteFunctionName,
-  shrinkFn,
+  shrinkFn
 } from '@edsolater/fnkit'
+import { CSSAttribute, css } from 'goober'
 import { ConfigableFunction, createConfigableFunction } from '../../../fnkit/configableFunction'
-import { CSSAttribute, css } from 'solid-styled-components'
 
 type ValidController = AnyObj
 type LoadController<Target, Controller extends ValidController | unknown = unknown> = MayFn<Target, [Controller]>
