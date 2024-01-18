@@ -73,7 +73,7 @@ export function Switch(rawProps: SwitchProps) {
   lazyLoadController(switchController)
 
   return (
-    <Piv // FIXME: why <Piv> is ok? but <Box> is not ok?
+    <Box 
       debugLog={['icss']}
       innerController={switchController}
       shadowProps={[wrapperLabelStyleProps, shadowProps, props['anatomy:ContainerBox']]}
@@ -110,6 +110,6 @@ export function Switch(rawProps: SwitchProps) {
         //   )
         // }}
       />
-    </Piv>
+    </Box>
   )
 }

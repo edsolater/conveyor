@@ -21,12 +21,12 @@ import { omitItem } from './utils'
 export type KitPropsOptions<
   KitProps extends ValidProps,
   Controller extends ValidController | unknown = unknown,
-  DefaultProps extends Partial<KitProps> = {},
+  DefaultProps extends Partial<KitProps> = {}
 > = {
   name?: string
 
   controller?: (
-    props: ParsedKitProps<KitProps>,
+    props: ParsedKitProps<KitProps>
   ) => any /* use any to avoid this type check (type check means type infer) */
   defaultProps?: DefaultProps
   plugin?: MayArray<Plugin<any>>
@@ -66,18 +66,18 @@ export type ParsedKitProps<RawProps extends ValidProps> = Omit<RawProps, 'plugin
 export function useKitProps<
   P extends ValidProps,
   Controller extends ValidController = ValidController,
-  DefaultProps extends Partial<DeAccessifyProps<P>> = {},
+  DefaultProps extends Partial<DeAccessifyProps<P>> = {}
 >(
   kitProps: P,
-  options?: KitPropsOptions<DeAccessifyProps<P>, Controller, DefaultProps>,
+  options?: KitPropsOptions<DeAccessifyProps<P>, Controller, DefaultProps>
 ): {
   /** not declared self props means it's shadowProps */
   shadowProps: any
-  /** 
+  /**
    * TODO: access the props of this will omit the props of output:shadowProps
    */
   props: DeKitProps<P, Controller, DefaultProps>
-  /** 
+  /**
    * TODO: access the props of this will omit the props of output:shadowProps
    * will not inject controller(input function will still be function, not auto-invoke, often used in `on-like` or )
    */
@@ -99,7 +99,7 @@ export function useKitProps<
   const { loadController, getControllerCreator } = createComponentController<RawProps, Controller>()
   const newOptions = mergeObjects(
     { controller: (props: ParsedKitProps<RawProps>) => getControllerCreator(props) },
-    options,
+    options
   )
   const { props, methods } = getParsedKitProps(kitProps, newOptions) as any
   const shadowProps = options?.selfProps ? omit(props, options.selfProps) : props
@@ -120,11 +120,11 @@ let addedTime = 0
 function getParsedKitProps<
   RawProps extends ValidProps,
   Controller extends ValidController = ValidController,
-  DefaultProps extends Partial<RawProps> = {},
+  DefaultProps extends Partial<RawProps> = {}
 >(
   // too difficult to type here
   rawProps: any,
-  options?: KitPropsOptions<RawProps, Controller, DefaultProps>,
+  options?: KitPropsOptions<RawProps, Controller, DefaultProps>
 ): {
   props: ParsedKitProps<AddDefaultPivProps<RawProps, DefaultProps>> &
     Omit<PivProps<HTMLTag, Controller>, keyof RawProps>
@@ -150,7 +150,7 @@ function getParsedKitProps<
       handlePluginProps(
         props,
         () => options?.plugin,
-        () => hasProperty(options, 'plugin'),
+        () => hasProperty(options, 'plugin')
       ), // defined-time (parsing option)
     (props) => (hasProperty(options, 'name') ? mergeProps(props, { class: options!.name }) : props), // defined-time (parsing option)
     (props) => handleShadowProps(props, options?.selfProps), // outside-props-run-time(parsing props) // TODO: assume can't be promisify
@@ -159,7 +159,7 @@ function getParsedKitProps<
      * handle `merge:` props
      * not elegent to have this, what about export a function `flagMerge` to make property can merge each other? 🤔
      */
-    (props) => handleMergifyOnCallbackProps(props),
+    (props) => handleMergifyOnCallbackProps(props)
   ) as any /* too difficult to type */
 
   const controlledProps = pipe(
@@ -173,10 +173,14 @@ function getParsedKitProps<
       const needAccessifyProps = options?.noNeedDeAccessifyProps
         ? omitItem(verboseAccessifyProps, options.noNeedDeAccessifyProps)
         : verboseAccessifyProps
-      return useAccessifiedProps(props, proxyController, needAccessifyProps)
+      const controller = props.innerController ? mergeObjects(proxyController, props.innerController) : proxyController
+      return useAccessifiedProps(props, controller, needAccessifyProps)
     },
     // inject controller to props:innerController (📝!!!important notice, for lazyLoadController props:innerController will always be a prop of any component useKitProps)
-    (props) => mergeProps(props, { innerController: proxyController } as PivProps),
+    (props) =>
+      mergeProps(props, {
+        innerController: props.innerController ? mergeObjects(proxyController, props.innerController) : proxyController,
+      } as PivProps)
   ) as any /* too difficult to type */
 
   // const endTime = performance.now()
@@ -214,6 +218,6 @@ function createComponentController<RawProps extends ValidProps, Controller exten
 export type DeKitProps<
   P extends ValidProps,
   Controller extends ValidController = ValidController,
-  DefaultProps extends Partial<DeAccessifyProps<P>> = {},
+  DefaultProps extends Partial<DeAccessifyProps<P>> = {}
 > = ParsedKitProps<AddDefaultPivProps<DeAccessifyProps<P>, DefaultProps>> &
   Omit<PivProps<HTMLTag, Controller>, keyof DeAccessifyProps<P>>
