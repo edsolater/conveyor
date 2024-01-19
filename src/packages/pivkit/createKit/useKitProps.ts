@@ -1,5 +1,5 @@
 import { hasProperty, MayArray, mergeObjects, pipe } from '@edsolater/fnkit'
-import { DeAccessifyProps, getUIKitTheme, hasUIKitTheme, KitProps, useAccessifiedProps } from '..'
+import { DeAccessifyProps, getUIKitTheme, hasUIKitTheme, useAccessifiedProps } from '..'
 import { LazyLoadObj, runtimeObjectFromAccess } from '../../fnkit'
 import { getPropsFromAddPropContext } from '../piv/AddProps'
 import { getControllerObjFromControllerContext } from '../piv/ControllerContext'
@@ -14,7 +14,6 @@ import { handleShadowProps } from '../piv/propHandlers/shadowProps'
 import { HTMLTag, ValidController, ValidProps } from '../piv/typeTools'
 import { mergeProps } from '../piv/utils'
 import { AddDefaultPivProps, addDefaultPivProps } from '../piv/utils/addDefaultProps'
-import { omit } from '../piv/utils/omit'
 import { omitItem } from './utils'
 
 /** used for {@link useKitProps}'s option */

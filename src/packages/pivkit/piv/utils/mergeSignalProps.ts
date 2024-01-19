@@ -10,20 +10,20 @@ export function mergeSignalProps<P1 = SignalizeProps<ValidProps>, P2 = Signalize
 export function mergeSignalProps<
   P1 = SignalizeProps<ValidProps>,
   P2 = SignalizeProps<ValidProps>,
-  P3 = SignalizeProps<ValidProps>,
+  P3 = SignalizeProps<ValidProps>
 >(...propsObjs: [P1, P2, P3]): Exclude<P1 & P2 & P3, undefined>
 export function mergeSignalProps<
   P1 = SignalizeProps<ValidProps>,
   P2 = SignalizeProps<ValidProps>,
   P3 = SignalizeProps<ValidProps>,
-  P4 = SignalizeProps<ValidProps>,
+  P4 = SignalizeProps<ValidProps>
 >(...propsObjs: [P1, P2, P3, P4]): Exclude<P1 & P2 & P3 & P4, undefined>
 export function mergeSignalProps<
   P1 = SignalizeProps<ValidProps>,
   P2 = SignalizeProps<ValidProps>,
   P3 = SignalizeProps<ValidProps>,
   P4 = SignalizeProps<ValidProps>,
-  P5 = SignalizeProps<ValidProps>,
+  P5 = SignalizeProps<ValidProps>
 >(...propsObjs: [P1, P2, P3, P4, P5]): Exclude<P1 & P2 & P3 & P4 & P5, undefined>
 export function mergeSignalProps<P extends SignalizeProps<ValidProps> | undefined>(
   ...propsObjs: P[]
@@ -42,7 +42,7 @@ export function mergeSignalProps<P extends SignalizeProps<ValidProps> | undefine
       key,
       [
         // special div props
-        ['domRef', () => (v1 && v2 ? () => mergeRefs(v1(), v2()) : v1 ?? v2)],
+        ['domRef', () => (v1 && v2 ? () => [v1(), v2()].flat() : v1 ?? v2)],
         ['class', () => (v1 && v2 ? () => [v1(), v2()].flat() : v1 ?? v2)],
         ['style', () => (v1 && v2 ? () => [v1(), v2()].flat() : v1 ?? v2)],
         ['icss', () => (v1 && v2 ? () => [v1(), v2()].flat() : v1 ?? v2)],
@@ -55,8 +55,8 @@ export function mergeSignalProps<P extends SignalizeProps<ValidProps> | undefine
         ['render:lastChild', () => (v1 && v2 ? () => [v1(), v2()].flat() : v1 ?? v2)],
         ['controller', () => (v1 && v2 ? () => [v1(), v2()].flat() : v1 ?? v2)],
       ],
-      v1 && v2 ? () => v2() ?? v1() : v2 ?? v1,
-    ),
+      v1 && v2 ? () => v2() ?? v1() : v2 ?? v1
+    )
   )
   // @ts-ignore
   return mergedResult
