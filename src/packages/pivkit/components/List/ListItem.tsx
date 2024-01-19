@@ -48,12 +48,19 @@ export function ListItem(originalProps: ListItemProps) {
   //=== render children
   const childContent = createMemo(() => children())
 
+  createEffect(() => {
+    console.log('innerHeight(): ', innerHeight())
+    console.log('innerWidth(): ', innerWidth())
+  })
   return (
     <Piv
       class='ListItem'
       domRef={[setItemDom, setSizeDetectorTarget]} // FIXME: why ref not setted🤔?
       shadowProps={omit(props, 'children')} // FIXME: should not use tedius omit
-      style={isIntersecting() ? undefined : { height: `${innerHeight()}px`, width: `${innerWidth()}px` }}
+      style={
+        // isIntersecting() ? undefined : { height: `${innerHeight()}px`, width: `${innerWidth()}px` } //FIXME: why set is will cause error?🤔
+        undefined
+      }
       icss={{ contentVisibility: isIntersecting() ? 'visible' : 'hidden', width: '100%' }}
     >
       {childContent}
@@ -78,10 +85,10 @@ function useElementSizeDetector() {
 
     if (!('clientWidth' in el)) return
     console.log('el: ', el)
-    // setInnerWidth(el.clientWidth) //FIXME: why set is will cause error?🤔
+    setInnerWidth(el.clientWidth)
 
     if (!('clientHeight' in el)) return
-    // setInnerHeight(el.clientHeight) //FIXME: why set is will cause error?🤔
+    setInnerHeight(el.clientHeight)
   }
   return { setRef, innerWidth, innerHeight }
 }
