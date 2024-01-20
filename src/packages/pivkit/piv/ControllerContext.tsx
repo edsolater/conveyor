@@ -34,7 +34,7 @@ function getControllerContext(name?: ComponentName) {
 const getAllControllerContext = () => {
   const allIterators = contactIterableIterators(
     controllerContextStore.values(),
-    anonymousComponentControllerContextStore.values(),
+    anonymousComponentControllerContextStore.values()
   )
   return Array.from(allIterators)
 }

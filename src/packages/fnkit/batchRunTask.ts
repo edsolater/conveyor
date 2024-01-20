@@ -3,7 +3,7 @@ import { MayPromise, assert, isObject } from '@edsolater/fnkit'
 type TaskPayload = any
 type TaskResult = any
 type TaskHandler<Payload extends TaskPayload = TaskPayload, Result extends TaskResult = TaskResult> = (
-  payloads: Set<Payload>,
+  payloads: Set<Payload>
 ) => MayPromise<Map<Payload, Result>>
 
 const _taskPayloadQueue = new WeakMap<TaskHandler, Set<TaskPayload>>()
@@ -19,7 +19,7 @@ const _taskHandlersTimoutids = new WeakMap<TaskHandler, ReturnType<typeof setTim
  */
 export function batchRunTask<Payload extends TaskPayload = TaskPayload, Result extends TaskResult = TaskResult>(
   taskHandler: TaskHandler<Payload, Result>,
-  taskPayload: Payload,
+  taskPayload: Payload
 ): Promise<Result> {
   assert(isObject(taskPayload), 'taskPayload must be an object')
 

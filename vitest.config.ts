@@ -1,5 +1,5 @@
-import solid from "vite-plugin-solid";
-import { defineConfig } from "vitest/config";
+import solid from 'vite-plugin-solid'
+import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
   plugins: [solid()],
@@ -11,12 +11,12 @@ export default defineConfig({
         },
       },
     },
-    environment: "jsdom",
+    environment: 'jsdom',
     globals: true,
-    setupFiles: ["./setupVitest.ts"],
-    testTransformMode: { web: ["/.[jt]sx?$/"] },
+    setupFiles: ['./setupVitest.ts'],
+    testTransformMode: { web: ['/.[jt]sx?$/'] },
   },
   resolve: {
-    conditions: ["development", "browser"],
+    conditions: ['development', 'browser'],
   },
-});
+})

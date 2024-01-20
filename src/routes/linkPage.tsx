@@ -18,7 +18,7 @@ import {
   icssCard,
   icssGrid,
   icssGridItem,
-  icssRow
+  icssRow,
 } from '../packages/pivkit'
 
 export default function LinksPage() {

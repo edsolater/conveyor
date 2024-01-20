@@ -158,7 +158,7 @@ export const plugin_modalTitle = createPlugin(
       },
     } satisfies PivProps
   },
-  { name: 'modalTitle' },
+  { name: 'modalTitle' }
 )
 
 /**

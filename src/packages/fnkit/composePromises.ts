@@ -31,5 +31,5 @@ export type ConcateArrayToSingle<T1 extends unknown[] | unknown, T2 extends unkn
     ? [...T1, ...T2]
     : [...T1, T2]
   : T2 extends unknown[]
-  ? [T1, ...T2]
-  : [T1, T2]
+    ? [T1, ...T2]
+    : [T1, T2]

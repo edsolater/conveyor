@@ -16,7 +16,7 @@ export function createController<C extends ValidController>(
   creator: {
     [K in keyof C]?: C[K] | (() => C[K] | undefined)
   },
-  options?: RuntimeObjectOption<C>,
+  options?: RuntimeObjectOption<C>
 ): C {
   return runtimeObject(creator, options) as C
 }

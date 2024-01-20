@@ -71,7 +71,7 @@ export const TabsControllerContext = createContext<TabsController>(TabsControlle
  *   </Tab.List>
  *   <Tab.Panels>
  *     <Tab.Panel>Content 1</Tab.Panel>
- *     <Tab.Panel>Content 2</Tab.Panel> 
+ *     <Tab.Panel>Content 2</Tab.Panel>
  *     <Tab.Panel>Content 3</Tab.Panel>
  *   </Tab.Panels>
  * </Tabs>

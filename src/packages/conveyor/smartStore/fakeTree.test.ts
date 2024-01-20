@@ -22,8 +22,9 @@ test('basic usage', () => {
     { a: 1, b: { c: 2 } },
     {
       createLeaf: (rawValue) => createShuck(rawValue),
-      injectValueToExistLeaf: (leaf, val) => leaf.set((p) => (isObject(val) && isObject(p) ? mergeObjects(p, val) : val)),
-    },
+      injectValueToExistLeaf: (leaf, val) =>
+        leaf.set((p) => (isObject(val) && isObject(p) ? mergeObjects(p, val) : val)),
+    }
   )
   expect(rawObj, 'rawObj will not change').toEqual({ a: 1, b: { c: 2 } })
 

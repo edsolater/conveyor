@@ -16,7 +16,7 @@ const fakeSelfObject = new Proxy(
     apply(target, thisArg, argArray) {
       return fakeSelfObject
     },
-  },
+  }
 )
 
 export function isFakeEmptyObject(obj: any): boolean {
@@ -42,6 +42,6 @@ export function createFakeEmptyObject<T extends object>(getRealObject?: () => T)
           return createFakeEmptyObject(() => getRealObject?.()[p] ?? {})
         }
       },
-    },
+    }
   ) as FakeEmptyObject<T>
 }

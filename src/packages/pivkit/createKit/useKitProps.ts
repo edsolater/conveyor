@@ -20,7 +20,7 @@ import { omitItem } from './utils'
 export type KitPropsOptions<
   KitProps extends ValidProps,
   Controller extends ValidController | unknown = unknown,
-  DefaultProps extends Partial<KitProps> = {}
+  DefaultProps extends Partial<KitProps> = {},
 > = {
   name?: string
 
@@ -65,7 +65,7 @@ export type ParsedKitProps<RawProps extends ValidProps> = Omit<RawProps, 'plugin
 export function useKitProps<
   P extends ValidProps,
   Controller extends ValidController = ValidController,
-  DefaultProps extends Partial<DeAccessifyProps<P>> = {}
+  DefaultProps extends Partial<DeAccessifyProps<P>> = {},
 >(
   kitProps: P,
   options?: KitPropsOptions<DeAccessifyProps<P>, Controller, DefaultProps>
@@ -117,7 +117,7 @@ export function useKitProps<
 function getParsedKitProps<
   RawProps extends ValidProps,
   Controller extends ValidController = ValidController,
-  DefaultProps extends Partial<RawProps> = {}
+  DefaultProps extends Partial<RawProps> = {},
 >(
   // too difficult to type here
   rawProps: any,
@@ -209,6 +209,6 @@ function createComponentController<RawProps extends ValidProps, Controller exten
 export type DeKitProps<
   P extends ValidProps,
   Controller extends ValidController = ValidController,
-  DefaultProps extends Partial<DeAccessifyProps<P>> = {}
+  DefaultProps extends Partial<DeAccessifyProps<P>> = {},
 > = ParsedKitProps<AddDefaultPivProps<DeAccessifyProps<P>, DefaultProps>> &
   Omit<PivProps<HTMLTag, Controller>, keyof DeAccessifyProps<P>>

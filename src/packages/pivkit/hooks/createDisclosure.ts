@@ -25,7 +25,7 @@ export function createDisclosure(
     onOpen?(): void
     /* usually it is for debug */
     onToggle?(isOn: boolean): void
-  } = {},
+  } = {}
 ): CreateDisclosureReturn {
   const defaultOptions = { delay: 800 }
   const opts = addDefaultProps(options, defaultOptions)

@@ -31,16 +31,13 @@ export function debounce<F extends (...args: any[]) => any>(fn: F, options?: Deb
       hasFirstInvoke = true
       return fn()
     }
-    setTimeoutController.set(
-      () => {
-        try {
-          promiseController.resolve(fn())
-        } catch {
-          promiseController.reject('debounce task failed')
-        }
-      },
-      options?.delay ?? defaultDebouneDelay,
-    )
+    setTimeoutController.set(() => {
+      try {
+        promiseController.resolve(fn())
+      } catch {
+        promiseController.reject('debounce task failed')
+      }
+    }, options?.delay ?? defaultDebouneDelay)
     return promiseController.result
   }
 
@@ -136,7 +133,7 @@ function empolyPromise<T = any>(): {
 
 function promisedSetTimeout<T>(
   fn: () => T | Promise<T>,
-  delay: number,
+  delay: number
 ): { timer: Promise<ReturnType<typeof setTimeout>>; result: Promise<Awaited<T>> } {
   let timerPromiseResolve: (value: ReturnType<typeof setTimeout>) => void
   const timer = new Promise<ReturnType<typeof setTimeout>>((resolve, reject) => {

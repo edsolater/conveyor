@@ -20,7 +20,7 @@ export type BranchStore<T extends object> = {
  * {@link createFakeTree} + {@link createShuck}
  *
  * Branch is composed by multi shucks
- * 
+ *
  * branch means taskSubscribable nodes
  * CORE, should platform-less (no solidjs or React or Vue)
  * 🚧 use solid system to hold reactive system

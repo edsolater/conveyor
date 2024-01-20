@@ -15,7 +15,7 @@ function getSolidJSXNode(type: HTMLTag, parsedProps: NativeProps, additionalProp
 export const renderHTMLDOM = (
   type: HTMLTag,
   rawProps: PivProps<any, any>,
-  additionalProps?: Record<any, any>,
+  additionalProps?: Record<any, any>
 ): JSXElement => {
   const { props, ifOnlyNeedRenderChildren, ifOnlyNeedRenderSelf, selfCoverNode } = parsePivProps(rawProps)
 

@@ -35,7 +35,7 @@ export type DetailKeyboardShortcutSetting = Record<
 
 // hook info store, store registered keyboard shortcuts
 const [registeredKeyboardShortcut, registeredKeyboardShortcutSubscribable] = makeSubscriable(
-  new WeakerMap<HTMLElement, DetailKeyboardShortcutSetting>(),
+  new WeakerMap<HTMLElement, DetailKeyboardShortcutSetting>()
 )
 
 function registerLocalKeyboardShortcut(el: HTMLElement, settings: DetailKeyboardShortcutSetting): { remove(): void } {
@@ -76,7 +76,7 @@ export function useKeyboardShortcut(
     when?: MayFn<boolean>
     disabled?: MayFn<boolean>
     enabled?: Accessify<boolean>
-  },
+  }
 ) {
   const [currentSettings, setCurrentSettings] = createSignal(settings ?? {})
   const isFeatureEnabled = () => {
@@ -131,7 +131,7 @@ export function useKeyboardGlobalShortcut(settings?: DetailKeyboardShortcutSetti
     setNewSettings(
       newSettings:
         | DetailKeyboardShortcutSetting
-        | ((prev: DetailKeyboardShortcutSetting) => DetailKeyboardShortcutSetting),
+        | ((prev: DetailKeyboardShortcutSetting) => DetailKeyboardShortcutSetting)
     ) {
       setCurrentSettings(newSettings)
     },
@@ -148,7 +148,7 @@ function parseShortcutConfigFromSettings(settings: DetailKeyboardShortcutSetting
       return isArray(keyboardShortcut)
         ? keyboardShortcut.map((key) => (key ? [key, fn] : undefined))
         : [[keyboardShortcut, fn]]
-    }),
+    })
   )
   return Object.fromEntries(configLists) as KeyboardShortcutSettings
 }
@@ -156,7 +156,7 @@ function parseShortcutConfigFromSettings(settings: DetailKeyboardShortcutSetting
 // TODO: should move to /fnkit
 function mapObjectEntry<T extends AnyObj, NK extends keyof any, NV>(
   o: T,
-  fn: (value: T[keyof T], key: keyof T) => [NK, NV],
+  fn: (value: T[keyof T], key: keyof T) => [NK, NV]
 ): Record<NK, NV> {
   return Object.fromEntries(Object.entries(o).map(([key, value]) => fn(value, key as keyof T))) as Record<NK, NV>
 }
@@ -198,7 +198,7 @@ export function useSubscribable<T>(subscribable: Subscribable<T>, defaultValue?:
  * @returns [proxiedObject, subscribable]
  */
 export function makeSubscriable<T extends AnyObj>(
-  originalObject: T,
+  originalObject: T
 ): [proxiedObject: T, subscribable: Subscribable<T>] {
   const mayCauseChangeKeys =
     originalObject instanceof Array

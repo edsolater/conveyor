@@ -22,7 +22,7 @@ export function createFakeTree<O extends object, FakeNodeTree extends object = F
   options?: {
     createLeaf?: (rawValue: any) => any
     injectValueToExistLeaf?: (loadedNode: any, rawValue: any) => void
-  },
+  }
 ) {
   const rawObj = cloneObject(defaultRawObject)
   const tree = createTreeableInfinityNode({
@@ -48,7 +48,7 @@ export function createFakeTree<O extends object, FakeNodeTree extends object = F
             : value
           : options?.createLeaf
             ? options?.createLeaf?.(rawValue)
-            : rawValue,
+            : rawValue
       )
     })
   }

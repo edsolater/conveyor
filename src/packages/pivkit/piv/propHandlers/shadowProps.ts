@@ -59,8 +59,8 @@ function getNeedToMergeKeys(props: Partial<PivProps<any>>) {
     return isArray(props.shadowProps)
       ? props.shadowProps.flatMap((p) => (isObject(p) ? Object.getOwnPropertyNames(p) : []))
       : isObject(props.shadowProps)
-      ? Object.getOwnPropertyNames(props.shadowProps)
-      : []
+        ? Object.getOwnPropertyNames(props.shadowProps)
+        : []
   }
   const shadowKeys = getShadowPropKeys(props)
   const selfProps = Object.getOwnPropertyNames(omit(props, ['shadowProps']))

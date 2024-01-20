@@ -36,7 +36,7 @@ export function makeElementMoveSmooth(options: {
         deltaY != null &&
         el.animate(
           [{ transform: `translate(${-deltaX}px, ${-deltaY}px)` }, { transform: '', offset: 1 }],
-          animateOptions, // iteration 1 can use to moke transition
+          animateOptions // iteration 1 can use to moke transition
         )
 
       onCleanup(() => {
@@ -54,7 +54,7 @@ export function makeElementMoveSmooth(options: {
           animationControl?.cancel()
         }
       })
-    }),
+    })
   )
 
   return { setMotionTargetRef: setSquareRef }

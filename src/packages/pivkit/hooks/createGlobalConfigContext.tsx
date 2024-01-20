@@ -22,7 +22,7 @@ export function createGlobalConfigContext<Config extends AnyObj>(defaultGlobalCo
   }
 
   return {
-    /** just a normal context */ 
+    /** just a normal context */
     GlobalConfigProvider,
     useGlobalConfigContext,
     setStoredGlobalConfig,

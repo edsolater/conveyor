@@ -16,7 +16,7 @@ export function walkThroughObject(
     canDeepWalk: boolean
     /** only useful when canDeepWalk is true */
     needDeepWalk(needTo: boolean): void
-  }) => void,
+  }) => void
 ) {
   function walk(obj: object, keyPaths: (keyof any)[] = []) {
     Object.keys(obj).forEach((key) => {
@@ -72,7 +72,7 @@ export function setByPath(
   obj: object,
   path: (keyof any)[],
   value: any,
-  mergeRule: (prev: any, input: any) => any = () => value,
+  mergeRule: (prev: any, input: any) => any = () => value
 ): boolean {
   if (path.length === 0) return false
   if (path.length === 1) {

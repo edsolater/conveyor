@@ -79,12 +79,12 @@ export function Button(kitProps: ButtonKitProps) {
   const failedTestValidator = createMemo(() =>
     isMeanfulArray(props.validators) || props.validators
       ? flap(props.validators!).find(({ should }) => !shrinkFn(should))
-      : undefined,
+      : undefined
   )
   const mergedProps = mergeProps(props, failedTestValidator()?.fallbackProps)
 
   const isActive = createMemo(
-    () => failedTestValidator()?.forceActive || (!failedTestValidator() && !mergedProps.disabled),
+    () => failedTestValidator()?.forceActive || (!failedTestValidator() && !mergedProps.disabled)
   )
 
   const mainBgColor = props.theme?.mainBgColor ?? cssColors.component_button_bg_primary

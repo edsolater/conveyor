@@ -5,7 +5,7 @@ import { KitProps, useKitProps } from '../../createKit'
 import { createDomRef } from '../../hooks'
 import { createRef } from '../../hooks/createRef'
 import { createDisclosure } from '../../hooks/createDisclosure'
-import { Piv, PivProps, } from '../../piv'
+import { Piv, PivProps } from '../../piv'
 import { renderHTMLDOM } from '../../piv/propHandlers/renderHTMLDOM'
 import { useKeyboardShortcut } from '../../plugins/useKeyboardShortcut'
 import { DeAccessifyProps } from '../../utils/accessifyProps'
@@ -81,7 +81,7 @@ export function Input(rawProps: InputKitProps) {
         keyboardShortcut: 'Enter',
       },
     },
-    { when: isFocused, disabled: !hasProperty(props, 'onEnter') },
+    { when: isFocused, disabled: !hasProperty(props, 'onEnter') }
   )
 
   return (
@@ -89,7 +89,7 @@ export function Input(rawProps: InputKitProps) {
       domRef={setDom}
       htmlProps={{
         placeholder: props.placeholder,
-      }}  
+      }}
       render:self={(selfProps) => renderHTMLDOM('input', selfProps)}
       shadowProps={[props, additionalProps()]}
       icss={[
@@ -167,8 +167,8 @@ function useInputInnerValue(props: DeAccessifyProps<InputKitProps>, controller: 
       () => props.value,
       (newValue) => {
         updateTextDOM(newValue)
-      },
-    ),
+      }
+    )
   )
 
   // update when lose focus
@@ -177,8 +177,8 @@ function useInputInnerValue(props: DeAccessifyProps<InputKitProps>, controller: 
       () => isFocused() === false,
       () => {
         setCachedOutsideValue(props.value)
-      },
-    ),
+      }
+    )
   )
 
   const additionalProps = createMemo(
@@ -202,7 +202,7 @@ function useInputInnerValue(props: DeAccessifyProps<InputKitProps>, controller: 
           onFocus: focusInput,
           onBlur: unfocusInput,
         },
-      }) as PivProps<'input'>,
+      }) as PivProps<'input'>
   )
   return [
     additionalProps,

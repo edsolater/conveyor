@@ -5,7 +5,7 @@ import { shrinkFn } from '@edsolater/fnkit'
 
 export function createSignalFromBranch<T extends object, U>(
   branch: Branch<T>,
-  get: (store: Branch<T>) => Shuck<U>,
+  get: (store: Branch<T>) => Shuck<U>
 ): [Accessor<U>, SetFn<U>] {
   const leaf = get(branch)
   const [accessor, set] = createSignal(leaf())

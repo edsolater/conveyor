@@ -19,7 +19,7 @@ export function wrapLeaves<Result = any>(
     targetIsLeaf?: (node: any) => boolean
     onWrapLeaf?: (value: any) => void
     onWrapperDeepObjectLiteral?: (key: keyof any) => void
-  },
+  }
 ): Result {
   const cache = cloneObject(target)
   const targetIsLeaf = options.targetIsLeaf ?? ((node) => !isArray(node) && !isObjectLiteral(node))
@@ -112,7 +112,7 @@ function _wrapLeaves<Result = any>({
         },
       ],
     ],
-    () => target,
+    () => target
   )
 }
 

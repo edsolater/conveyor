@@ -1,9 +1,5 @@
 import { Accessor, createEffect, createSignal, on, Setter } from 'solid-js'
-import {
-  createShuck,
-  CreateShuckOptions,
-  Shuck,
-} from '../smartStore/shuck'
+import { createShuck, CreateShuckOptions, Shuck } from '../smartStore/shuck'
 import { asynclyCreateEffect } from './createAsyncEffect'
 
 export function createLeafFromAccessor<T>(accessor: () => T, options?: CreateShuckOptions<T>) {
@@ -24,7 +20,7 @@ export function useLeaf<T>(subscribable: Shuck<T>): [Accessor<T>, Setter<T>] {
   createEffect(
     on(accessor, (v) => {
       subscribable.set(v)
-    }),
+    })
   )
 
   return [accessor, setter]

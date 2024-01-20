@@ -50,7 +50,7 @@ const simpleObectAssign = ({
 export function assignObjectWithConfigs<T extends object>(
   originalObject: T,
   patchObject: object,
-  attachRule: AttachFn = simpleObectAssign,
+  attachRule: AttachFn = simpleObectAssign
 ): T {
   Reflect.ownKeys(patchObject).forEach((key) => {
     const originalValueDescriptor = Object.getOwnPropertyDescriptor(originalObject, key)

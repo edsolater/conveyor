@@ -4,7 +4,7 @@ import { ElementRefs, parseRefs } from '../utils/getElementsFromRefs'
 import { shrinkFn } from '@edsolater/fnkit'
 
 type OnClickOutSideCallback = (
-  payload: EventCallback<keyof HTMLElementEventMap, HTMLElement | Document | Window | undefined | null>,
+  payload: EventCallback<keyof HTMLElementEventMap, HTMLElement | Document | Window | undefined | null>
 ) => void
 
 export type UseClickOutsideOptions =
@@ -31,7 +31,7 @@ export function useClickOutside(els: ElementRefs, options?: UseClickOutsideOptio
         if (isTargetInPath) return
         parasedOptions?.onClickOutSide?.(payload)
       },
-      { capture: true },
+      { capture: true }
     )
     onCleanup(cancel)
   })

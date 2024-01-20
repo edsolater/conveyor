@@ -41,7 +41,7 @@ export function runtimeObject<T extends object>(
   objWithRule: {
     [K in keyof T]?: T[K] | (() => T[K] | undefined)
   },
-  options?: RuntimeObjectOption<T>,
+  options?: RuntimeObjectOption<T>
 ): T {
   let cache: undefined | Map<any, any> = undefined
   const needCache = (p: keyof any) => options?.cachableKeys?.includes(p as any)

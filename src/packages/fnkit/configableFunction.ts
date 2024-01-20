@@ -10,7 +10,7 @@ export type ConfigableFunction<F extends AnyFn = AnyFn> = F & {
     arg1: Partial<Parameters<F>[0]>,
     arg2: Partial<Parameters<F>[1]>,
     arg3: Partial<Parameters<F>[2]>,
-    arg4: Partial<Parameters<F>[3]>,
+    arg4: Partial<Parameters<F>[3]>
   ): F
   config(...args: Parameters<F>): F
 }
@@ -21,7 +21,7 @@ export type ConfigableFunction<F extends AnyFn = AnyFn> = F & {
  */
 export function createConfigableFunction<F extends AnyFn>(
   coreFn: F,
-  settings?: { defaultParams?: any[]; label?: symbol },
+  settings?: { defaultParams?: any[]; label?: symbol }
 ): ConfigableFunction<F> {
   /**
    * to without effect old params

@@ -73,7 +73,7 @@ export function Switch(rawProps: SwitchProps) {
   lazyLoadController(switchController)
 
   return (
-    <Box 
+    <Box
       debugLog={['icss']}
       innerController={switchController}
       shadowProps={[wrapperLabelStyleProps, shadowProps, props['anatomy:ContainerBox']]}

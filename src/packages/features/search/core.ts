@@ -36,7 +36,7 @@ export function searchItems<T>(items: T[], options?: SearchOptions<T>): T[] {
   if (!options) return items
   if (!options.text) return items
   const allMatchedStatusInfos = shakeNil(
-    items.map((item) => getMatchedInfos(item, options.text!, options?.matchConfigs ?? extractItemBeSearchedText(item))),
+    items.map((item) => getMatchedInfos(item, options.text!, options?.matchConfigs ?? extractItemBeSearchedText(item)))
   )
   const meaningfulMatchedInfos = allMatchedStatusInfos.filter((m) => m?.matched)
   const sortedMatchedInfos = sortByMatchedInfos<T>(meaningfulMatchedInfos)
@@ -47,7 +47,7 @@ function extractItemBeSearchedText(item: unknown): SearchConfigItemObj[] {
   if (isString(item) || isNumber(item)) return [{ text: String(item) } as SearchConfigItemObj]
   if (isObject(item)) {
     const obj = map(omit(item as any, ['id', 'key']), (value) =>
-      isString(value) || isNumber(value) ? ({ text: String(value) } as SearchConfigItemObj) : undefined,
+      isString(value) || isNumber(value) ? ({ text: String(value) } as SearchConfigItemObj) : undefined
     )
     return shakeNil(Object.values(obj))
   }
@@ -60,7 +60,7 @@ function getMatchedInfos<T>(item: T, searchText: string, searchTarget: NonNullab
     flap(searchTarget)
       .map((i) => shrinkFn(i, [item]))
       .flatMap((i) => flap(i))
-      .map((c) => (isString(c) ? { text: c } : c)),
+      .map((c) => (isString(c) ? { text: c } : c))
   )
   return patchSearchInfos({ item, searchKeyWords, searchConfigs })
 }
@@ -116,7 +116,7 @@ function patchSearchInfos<T>(options: {
 }
 function sortByMatchedInfos<T>(matchedInfos: MatchedStatus<T>[]) {
   return [...matchedInfos].sort(
-    (matchedInfoA, matchedInfoB) => toMatchedStatusSignature(matchedInfoB) - toMatchedStatusSignature(matchedInfoA),
+    (matchedInfoA, matchedInfoB) => toMatchedStatusSignature(matchedInfoB) - toMatchedStatusSignature(matchedInfoA)
   )
 }
 /**
@@ -146,7 +146,7 @@ function toMatchedStatusSignature<T>(matchedInfo: MatchedStatus<T>): number {
     const max = Math.max(...sequence)
     return sequence.reduce(
       (acc, currentValue, currentIdx) => acc + currentValue * (max + 1) ** (sequence.length - currentIdx),
-      0,
+      0
     )
   }
   const characteristicSequence = calcCharateristicN([

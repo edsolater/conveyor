@@ -104,7 +104,7 @@ export function CollapseFace(
       controller: CollapseBoxController
       htmlPropsTagName: 'summary'
     }
-  >,
+  >
 ) {
   const controller = useContext(CollapseContext)
   const { props } = useKitProps(rawProps, { name: 'CollapseFase', controller: () => controller })

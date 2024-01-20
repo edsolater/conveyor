@@ -40,7 +40,7 @@ export function useAccessifiedProps<P extends AnyObj, Controller extends ValidCo
   props: P,
   controller?: Controller,
   /** default is on* and domRef and controllerRef, but you can add more */
-  needAccessifyProps?: string[],
+  needAccessifyProps?: string[]
 ): DeAccessifyProps<P> {
   // why slower than just reduce? 🤔
   return changeObject(props, ({ value, key }) => {

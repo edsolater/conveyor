@@ -34,15 +34,15 @@ type SubscribableSetValueDispatcher<T> = MayPromise<T> | ((oldValue: T) => MayPr
  */
 export function createSubscribable<T>(
   defaultValue: T | (() => T),
-  options?: { subscribeFns?: MayArray<SubscribeFn<T>> },
+  options?: { subscribeFns?: MayArray<SubscribeFn<T>> }
 ): Subscribable<T>
 export function createSubscribable<T>(
   defaultValue?: T | undefined | (() => T | undefined),
-  options?: { subscribeFns?: MayArray<SubscribeFn<T | undefined>> },
+  options?: { subscribeFns?: MayArray<SubscribeFn<T | undefined>> }
 ): Subscribable<T | undefined>
 export function createSubscribable<T>(
   defaultValue?: T | (() => T),
-  options?: { subscribeFns?: MayArray<SubscribeFn<T>> },
+  options?: { subscribeFns?: MayArray<SubscribeFn<T>> }
 ): Subscribable<T | undefined> {
   const subscribeFns = new Set<SubscribeFn<T>>(options?.subscribeFns ? flap(options.subscribeFns) : undefined)
   const cleanFnMap = new Map<SubscribeFn<T>, AnyFn>()
