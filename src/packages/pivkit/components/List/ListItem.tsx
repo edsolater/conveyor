@@ -47,19 +47,15 @@ export function ListItem(originalProps: ListItemProps) {
 
   //=== render children
   const childContent = createMemo(() => children())
-
-  createEffect(() => {
-    console.log('innerHeight(): ', innerHeight())
-    console.log('innerWidth(): ', innerWidth())
-  })
   return (
     <Piv
       class='ListItem'
       domRef={[setItemDom, setSizeDetectorTarget]} // FIXME: why ref not setted🤔?
       shadowProps={omit(props, 'children')} // FIXME: should not use tedius omit
       style={
-        // isIntersecting() ? undefined : { height: `${innerHeight()}px`, width: `${innerWidth()}px` } //FIXME: why set is will cause error?🤔
-        undefined
+        !isIntersecting() 
+          ? { height: `${innerHeight()}px`, width: `${innerWidth()}px` }//FIXME: why set is will cause error?🤔, hydrate in server is different from in client?🤔
+          : undefined 
       }
       icss={{ contentVisibility: isIntersecting() ? 'visible' : 'hidden', width: '100%' }}
     >
@@ -81,14 +77,17 @@ function useElementSizeDetector() {
 
   function detectSize(el: HTMLElement) {
     if (!el) return
-    if (!isClientSide()) return
+    if (!isClientSide()) {
+      setInnerWidth(undefined)
+      setInnerHeight(undefined)
+      return
+    } else {
+      if (!('clientWidth' in el)) return
+      setInnerWidth(el.clientWidth)
 
-    if (!('clientWidth' in el)) return
-    console.log('el: ', el)
-    setInnerWidth(el.clientWidth)
-
-    if (!('clientHeight' in el)) return
-    setInnerHeight(el.clientHeight)
+      if (!('clientHeight' in el)) return
+      setInnerHeight(el.clientHeight)
+    }
   }
   return { setRef, innerWidth, innerHeight }
 }
