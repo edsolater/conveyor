@@ -1,24 +1,27 @@
-
-dist
-.solid
-.output
+node_modules
+# Keep environment variables out of version control
+.env
 .vercel
+.output
+.nitro
+.build
+playwright-report
+stats.html
+.fixtures
+*.code-workspace
+
+.vinxi
+
+# Local Netlify folder
 .netlify
-netlify
+dist
 
-# dependencies
-/node_modules
+# Local solid folder
+.solid
 
-# IDEs and editors
-/.idea
-.project
-.classpath
-*.launch
-.settings/
+docs/.vitepress/dist
+docs/.vitepress/cache
+.vitepress
+tmp
 
-# Temp
-gitignore
-
-# System Files
 .DS_Store
-Thumbs.db
