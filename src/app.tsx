@@ -6,7 +6,7 @@ import { Suspense, createEffect } from 'solid-js'
 import './app.css'
 import { NavBox } from './components/NavBox'
 import { appConfig } from './configs/appConfig'
-import { links } from './kv/signals'
+import { allDBKeys, links } from './kv/signals'
 import { createGlobalConfigContext } from './packages/pivkit/hooks/createGlobalConfigContext'
 
 export const { setStoredGlobalConfig, useGlobalConfigContext, storedGlobalConfig, GlobalConfigProvider } =
@@ -15,6 +15,9 @@ export const { setStoredGlobalConfig, useGlobalConfigContext, storedGlobalConfig
 export default function App() {
   createEffect(() => {
     console.log('links: ', links())
+  })
+  createEffect(() => {
+    console.log('allDBKeys(): ', allDBKeys())
   })
   return (
     <Router
