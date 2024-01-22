@@ -1,5 +1,5 @@
-import { createAsync } from '@solidjs/router'
 import { LinkItem } from '../configs/links'
-import { kvDB } from './instance'
+import { createAsyncMemo } from '../packages/pivkit/hooks/createAsyncMemo'
+import { myDB } from './instance'
 
-export const links = createAsync(() => kvDB.get<LinkItem[]>('site-links'))
+export const links = createAsyncMemo(() => myDB.get<LinkItem[]>('site-links'))

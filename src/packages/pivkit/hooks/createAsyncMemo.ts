@@ -9,5 +9,3 @@ export function createAsyncMemo<V, F = never>(
   Promise.resolve(asyncGetValue()).then((v) => setter(v as any))
   return accessor as any
 }
-
-type T = never | string
