@@ -59,12 +59,17 @@ export default function Home() {
   return (
     <Piv>
       <Section name='content' icss={{ display: 'grid', padding: '32px' }}>
-        <Box icss={[icssRow({ gap: '4px' }), { marginBottom: '8px', fontSize: '2em' }]}>
+        <Box icss={[icssRow({ gap: '4px' , align:'center'}), { marginBottom: '8px', fontSize: '1em' }]}>
           <Text>search tags:</Text>
-          <Input icss={{ border: 'solid' }} onUserInput={(text) => setSearchText(text)} />
+          <Input
+            autoFocus
+            icss={{ border: 'solid', borderRadius: '100vw' }}
+            renderPrefix={'🔎'}
+            onUserInput={(text) => setSearchText(text)}
+          />
         </Box>
 
-        <Loading isLoading={isFetching} fallback={<Text>loading...</Text>}>
+        <Loading isLoading={isFetching} fallback={<Text>fetching...</Text>}>
           <Loop of={visiableLinks} icss={icssGrid({ gap: '24px' })}>
             {(item) => <SiteItem item={item} />}
           </Loop>

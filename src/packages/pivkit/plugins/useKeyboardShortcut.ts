@@ -20,7 +20,7 @@ import {
   bindKeyboardShortcutEventListener,
 } from '../domkit'
 import { createSharedSignal } from '../hooks/createSharedSignal'
-import { Accessify, ElementRefs, parseRefs } from '../utils'
+import { Accessify, ElementRefs, getElementFromRefs } from '../utils'
 import useResizeObserver from '../hooks/useResizeObserver'
 
 type Description = string
@@ -87,7 +87,7 @@ export function useKeyboardShortcut(
   }
   // register keyboard shortcut
   createEffect(() => {
-    const els = parseRefs(ref)
+    const els = getElementFromRefs(ref)
     if (!els.length) return
     if (!isFeatureEnabled()) return
     const shortcuts = parseShortcutConfigFromSettings(currentSettings())

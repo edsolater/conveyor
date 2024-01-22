@@ -3,12 +3,15 @@ import { Accessor, createEffect, createMemo, createSignal, on } from 'solid-js'
 import { runtimeObject } from '../../../fnkit/runtimeObject'
 import { KitProps, useKitProps } from '../../createKit'
 import { createDomRef } from '../../hooks'
-import { createRef } from '../../hooks/createRef'
 import { createDisclosure } from '../../hooks/createDisclosure'
-import { Piv, PivProps } from '../../piv'
+import { createRef } from '../../hooks/createRef'
+import { Piv, PivChild, PivProps } from '../../piv'
 import { renderHTMLDOM } from '../../piv/propHandlers/renderHTMLDOM'
 import { useKeyboardShortcut } from '../../plugins/useKeyboardShortcut'
+import { icssRow } from '../../styles'
+import { ElementRefs, getElementFromRefs } from '../../utils'
 import { DeAccessifyProps } from '../../utils/accessifyProps'
+import { Box } from '../Boxes'
 import { useFocus } from './hooks/useFocus'
 
 export interface InputController {
@@ -30,7 +33,7 @@ export type InputProps = {
   defaultValue?: string
   /** when change, affact to ui*/
   value?: string
-
+  autoFocus?: boolean
   placeholder?: string
   /** default is true */
   disableOutsideValueUpdateWhenUserInput?: boolean
@@ -46,6 +49,8 @@ export type InputProps = {
   // onUserInput + onProgramInput
   onInput?(text: string | undefined, controller: InputController & { byUser: boolean }): void
   onEnter?(text: string | undefined, controller: InputController): void
+  renderPrefix?: PivChild
+  renderSuffix?: PivChild
 }
 
 export type InputKitProps = KitProps<InputProps, { controller: InputController }>
@@ -55,8 +60,8 @@ export type InputKitProps = KitProps<InputProps, { controller: InputController }
  * TODO: enter should send related button, but shift+enter should "just enter"
  */
 export function Input(rawProps: InputKitProps) {
-  const { dom, setDom } = createDomRef<HTMLInputElement>()
-  const isFocused = useFocus(dom)
+  const { dom: inputBodyDom, setDom: setInputBodyDom } = createDomRef<HTMLInputElement>()
+  const isFocused = useFocus(inputBodyDom)
 
   const controller = runtimeObject<InputController>({
     text: () => innerText(),
@@ -64,7 +69,7 @@ export function Input(rawProps: InputKitProps) {
     isFocused: () => isFocused,
   })
 
-  const { props } = useKitProps(rawProps, {
+  const { props, shadowProps } = useKitProps(rawProps, {
     name: 'Input',
     controller: () => controller,
   })
@@ -72,7 +77,7 @@ export function Input(rawProps: InputKitProps) {
   const [additionalProps, { innerText, updateText }] = useInputInnerValue(props, controller)
 
   useKeyboardShortcut(
-    dom,
+    inputBodyDom,
     {
       'enter': {
         fn: () => {
@@ -84,21 +89,47 @@ export function Input(rawProps: InputKitProps) {
     { when: isFocused, disabled: !hasProperty(props, 'onEnter') }
   )
 
+  // ---------------- auto focus ----------------
+  if (props.autoFocus) useAutoFocus(inputBodyDom)
+
   return (
-    <Piv<'input'>
-      domRef={setDom}
-      htmlProps={{
-        placeholder: props.placeholder,
-      }}
-      render:self={(selfProps) => renderHTMLDOM('input', selfProps)}
-      shadowProps={[props, additionalProps()]}
-      icss={[
-        { flex: 1, background: 'transparent', minWidth: props.isFluid ? undefined : '14em' },
-        /* initialize */
-        { border: 'none', padding: '8px', fontSize: '0.8333em' },
-      ]}
-    />
+    <Box
+      shadowProps={shadowProps}
+      icss={[icssRow({ align: 'center' }), { padding: '4px', '&:focus-within': { outline: 'solid' } }]}
+    >
+      {props.renderPrefix}
+      <Piv<'input'>
+        domRef={setInputBodyDom}
+        htmlProps={{
+          placeholder: props.placeholder,
+          autofocus: props.autoFocus,
+        }}
+        render:self={(selfProps) => renderHTMLDOM('input', selfProps)}
+        shadowProps={additionalProps()}
+        icss={[
+          { flex: 1, background: 'transparent', minWidth: props.isFluid ? undefined : '14em' },
+          /* initialize */
+          { border: 'none', outline: 'none', padding: '4px', fontSize: '0.8333em' },
+        ]}
+      />
+      {props.renderSuffix}
+    </Box>
   )
+}
+
+function useAutoFocus(refs: ElementRefs) {
+  createEffect(() => {
+    const els = getElementFromRefs(refs)
+    els.forEach((el) => {
+      if (el) {
+        focusElement(el)
+      }
+    })
+  })
+}
+
+function focusElement(el: HTMLElement) {
+  el.focus()
 }
 
 /**
@@ -202,7 +233,7 @@ function useInputInnerValue(props: DeAccessifyProps<InputKitProps>, controller: 
           onFocus: focusInput,
           onBlur: unfocusInput,
         },
-      }) as PivProps<'input'>
+      } as PivProps<'input'>)
   )
   return [
     additionalProps,

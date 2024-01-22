@@ -1,7 +1,7 @@
 import { createEffect, onCleanup } from 'solid-js'
 import { addEventListener } from '..'
 import { EventListenerController } from '..'
-import { ElementRefs, GetElementsFromElementRefs, parseRefs } from '../../utils/getElementsFromRefs'
+import { ElementRefs, GetElementsFromElementRefs, getElementFromRefs } from '../../utils/getElementsFromRefs'
 
 /**
  * register DOM Event Listener
@@ -19,7 +19,7 @@ export function useDOMEventListener<El extends ElementRefs, K extends keyof HTML
   options?: EventListenerOptions
 ) {
   createEffect(() => {
-    const els = parseRefs(el)
+    const els = getElementFromRefs(el)
     els.forEach((el) => {
       // @ts-expect-error no need to check
       const { abort: cancel } = addEventListener(el, eventName, fn, options)
