@@ -3,7 +3,7 @@ import { createSignal, Suspense } from 'solid-js'
 import { Link } from '../components/Link'
 import { LinkItem, LinkItemScreenshot } from '../configs/links'
 import { useDB } from '../kv/hook'
-import { queryDBLinks } from '../kv/fetchers'
+import { queryLinks } from '../kv/fetchers'
 import { useSearch } from '../packages/features/searchItems'
 import {
   Box,
@@ -26,11 +26,12 @@ import { Loading } from '../packages/pivkit/components/Loading'
 
 export default function Home() {
   const [searchText, setSearchText] = createSignal<string>()
-  const { data: links, isFetching } = useDB(queryDBLinks, {
+  const { data: links, isFetching } = useDB(queryLinks, {
     initDefaultValue: [] as LinkItem[],
     failedFetchFallbackValue: [] as LinkItem[],
   })
 
+  
   const { searchedItems: searchedLinks } = useSearch(links, searchText, {
     matchConfigs: [(i) => i.name, (i) => i.keywords],
   })

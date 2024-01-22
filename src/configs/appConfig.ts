@@ -9,14 +9,19 @@ export type AppConfig = {
   }
 }
 
-const appName = 'Conveyor'
-const routes = {
-  Home: '/',
-  Playground: '/playground',
-  LinkPage: '/linkPage',
-}
-
 export const appConfig: AppConfig = {
-  appName: appName,
-  navigator: { navButtons: Object.entries(routes).map(([name, path]) => ({ isHome: name === 'Home', name, path })) },
+  appName: 'Conveyor',
+  navigator: {
+    navButtons: [
+      {
+        name: 'Home',
+        path: '/',
+        isHome: true,
+      },
+      {
+        name: 'Playground',
+        path: '/playground',
+      },
+    ],
+  },
 }
