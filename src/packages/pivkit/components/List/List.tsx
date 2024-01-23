@@ -80,7 +80,7 @@ export function List<T>(kitProps: ListKitProps<T>) {
   const _allItems = props.lazy
     ? createAsyncMemo(() => toArray(shrinkFn(props.items ?? [])), [] as T[])
     : createMemo(() => toArray(shrinkFn(props.items ?? [])))
-  const allItems = createDeferred(_allItems) // to smoother the render
+  const allItems = createDeferred(_allItems) // ⚡ to smoother the render
   const increaseRenderCount = createMemo(
     () => props.increaseRenderCount ?? Math.min(Math.floor(allItems().length / 10), 30)
   )
