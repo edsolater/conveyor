@@ -3,7 +3,7 @@ import { createSignal, Suspense } from 'solid-js'
 import { Link } from '../components/Link'
 import { LinkItem, LinkItemScreenshot } from '../configs/links'
 import { useDB } from '../kv/hook'
-import { queryLinks } from '../kv/fetchers'
+import { queryLinks } from '../kv/actions'
 import { useSearch } from '../packages/features/searchItems'
 import {
   Box,
