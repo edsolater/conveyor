@@ -1,5 +1,5 @@
 import { hasProperty, MayArray, mergeObjects, pipe } from '@edsolater/fnkit'
-import { DeAccessifyProps, getUIKitTheme, hasUIKitTheme, useAccessifiedProps } from '..'
+import { DeAccessifyProps, getUIKitTheme, hasUIKitTheme, accessifyProps } from '..'
 import { LazyLoadObj, runtimeObjectFromAccess } from '../../fnkit'
 import { getPropsFromAddPropContext } from '../piv/AddProps'
 import { getControllerObjFromControllerContext } from '../piv/ControllerContext'
@@ -20,7 +20,7 @@ import { omitItem } from './utils'
 export type KitPropsOptions<
   KitProps extends ValidProps,
   Controller extends ValidController | unknown = unknown,
-  DefaultProps extends Partial<KitProps> = {},
+  DefaultProps extends Partial<KitProps> = {}
 > = {
   name?: string
 
@@ -49,6 +49,8 @@ export type KitPropsOptions<
    * by default, all props are shadowProps(which can pass to shadowProps="")
    */
   selfProps?: string[]
+  /** start with debug is special */
+  debugName?: string
 }
 
 /** return type of useKitProps */
@@ -65,7 +67,7 @@ export type ParsedKitProps<RawProps extends ValidProps> = Omit<RawProps, 'plugin
 export function useKitProps<
   P extends ValidProps,
   Controller extends ValidController = ValidController,
-  DefaultProps extends Partial<DeAccessifyProps<P>> = {},
+  DefaultProps extends Partial<DeAccessifyProps<P>> = {}
 >(
   kitProps: P,
   options?: KitPropsOptions<DeAccessifyProps<P>, Controller, DefaultProps>
@@ -117,7 +119,7 @@ export function useKitProps<
 function getParsedKitProps<
   RawProps extends ValidProps,
   Controller extends ValidController = ValidController,
-  DefaultProps extends Partial<RawProps> = {},
+  DefaultProps extends Partial<RawProps> = {}
 >(
   // too difficult to type here
   rawProps: any,
@@ -174,7 +176,7 @@ function getParsedKitProps<
     const needAccessifyProps = options?.noNeedDeAccessifyProps
       ? omitItem(verboseAccessifyProps, options.noNeedDeAccessifyProps)
       : verboseAccessifyProps
-    return useAccessifiedProps(props, controller, needAccessifyProps)
+    return  accessifyProps(props, controller, needAccessifyProps, Boolean(options?.debugName))
   }) as any /* too difficult to type */
 
   // fullfill input props:controllerRef
@@ -209,6 +211,6 @@ function createComponentController<RawProps extends ValidProps, Controller exten
 export type DeKitProps<
   P extends ValidProps,
   Controller extends ValidController = ValidController,
-  DefaultProps extends Partial<DeAccessifyProps<P>> = {},
+  DefaultProps extends Partial<DeAccessifyProps<P>> = {}
 > = ParsedKitProps<AddDefaultPivProps<DeAccessifyProps<P>, DefaultProps>> &
   Omit<PivProps<HTMLTag, Controller>, keyof DeAccessifyProps<P>>

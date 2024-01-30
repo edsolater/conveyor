@@ -26,7 +26,7 @@
     "vitest": "^1.2.1"
   },
   "dependencies": {
-    "@edsolater/fnkit": "^0.1.65",
+    "@edsolater/fnkit": "^0.1.66",
     "@solidjs/meta": "^0.29.3",
     "@solidjs/router": "^0.10.9",
     "@solidjs/start": "^0.4.10",

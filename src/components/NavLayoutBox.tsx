@@ -9,20 +9,24 @@ export type NavLayoutBoxProps = {
 }
 export type NavLayoutBoxKitProps = KitProps<NavLayoutBoxProps, { needAccessifyProps: ['layoutType'] }>
 
-export function NavLayoutBox(props: NavLayoutBoxProps) {
-  const gridTemplate = () =>
-    switchCase(props.layoutType ?? 'aside-content', {
-      'top-content': `
+export function NavLayoutBox(kitProps: NavLayoutBoxKitProps) {
+  const { props, shadowProps } = useKitProps(kitProps, {
+    defaultProps: { layoutType: 'top-content' },
+    debugName: 'hello',
+  })
+  // why use Kit props is not ok?
+  const gridTemplate = switchCase(props.layoutType, {
+    'top-content': `
         "top" auto
         "content" 1fr / 1fr`,
-      'aside-content': `
+    'aside-content': `
         "aside content" 1fr / 100px 1fr`,
-      'top-aside-content': `
+    'top-aside-content': `
         "top top" auto
         "aside content" 1fr / 100px 1fr`,
-    })
-  const isTopVisiable = () => props.layoutType === 'top-content' || props.layoutType === 'top-aside-content'
-  const isAsideVisiable = () => props.layoutType === 'aside-content' || props.layoutType === 'top-aside-content'
+  })
+  const isTopVisiable = props.layoutType === 'top-content' || props.layoutType === 'top-aside-content'
+  const isAsideVisiable = props.layoutType === 'aside-content' || props.layoutType === 'top-aside-content'
 
   return (
     <Box
@@ -31,12 +35,12 @@ export function NavLayoutBox(props: NavLayoutBoxProps) {
         minHeight: '100dvh',
         maxWidth: '100dvw',
         display: 'grid',
-        gridTemplate: gridTemplate(),
+        gridTemplate: gridTemplate,
       }}
       // shadowProps={shadowProps}
     >
-      {props.renderTopBar && isTopVisiable() && <Box icss={{ gridArea: 'top' }}>{props.renderTopBar}</Box>}
-      {props.renderAsideBar && isAsideVisiable() && <Box icss={{ gridArea: 'aside' }}>{props.renderAsideBar}</Box>}
+      {props.renderTopBar && isTopVisiable && <Box icss={{ gridArea: 'top' }}>{props.renderTopBar}</Box>}
+      {props.renderAsideBar && isAsideVisiable && <Box icss={{ gridArea: 'aside' }}>{props.renderAsideBar}</Box>}
       {props.renderContent && <Box icss={{ gridArea: 'content' }}>{props.renderContent}</Box>}
     </Box>
   )

@@ -5,7 +5,7 @@ import { addEventListener } from '../domkit'
 import { createDomRef } from '../hooks'
 import { createRef } from '../hooks/createRef'
 import { createPlugin, CSSObject, mergeProps, PivProps } from '../piv'
-import { Accessify, useAccessifiedProps } from '../utils/accessifyProps'
+import { Accessify, accessifyProps } from '../utils/accessifyProps'
 import { createController2 } from '../utils/createController'
 
 type TransitionPhase =
@@ -72,7 +72,7 @@ export function useCSSTransition(additionalOpts: CSSTransactionOptions = {}) {
     to: targetPhase,
     contentDom,
   }))
-  const opts = useAccessifiedProps(additionalOpts, controller)
+  const opts = accessifyProps(additionalOpts, controller)
   const [contentDom, setContentDom] = createRef<HTMLElement>()
   const transitionPhaseProps = createMemo(() => {
     const basic = {
