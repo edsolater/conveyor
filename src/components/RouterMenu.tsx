@@ -16,11 +16,17 @@ function setMetaTitle(title?: string) {
   }
 }
 
+type RouterMenuProps = {
+  variant: 'aside' | 'top'
+}
+
+type RouterMenuKitProps = KitProps<RouterMenuProps>
+
 /**
  * {@link appConfig.navigator}
  */
-export function TopMenuBar(rawProps: KitProps) {
-  const { shadowProps } = useKitProps(rawProps, { name: TopMenuBar.name })
+export function RouterMenu(rawProps: RouterMenuKitProps) {
+  const { shadowProps, props } = useKitProps(rawProps, { name: RouterMenu.name })
   const { appConfig, setAppConfig } = useGlobalConfigContext()
 
   const { pathname } = useLocation()
@@ -49,15 +55,16 @@ export function TopMenuBar(rawProps: KitProps) {
       </Box>
 
       {/* tabs */}
-      <Box icss={{ display: 'flex', gap: '16px' }}>
-        <Loop of={appConfig.navigator.navButtons} icss={{ display: 'flex', gap: '8px' }}>
-          {({ name, path }) => (
-            <Link href={path} innerRoute>
-              {name}
-            </Link>
-          )}
-        </Loop>
-      </Box>
+      <Loop
+        of={appConfig.navigator.navButtons}
+        icss={{ display: 'flex', flexDirection: props.variant == 'aside' ? 'column' : 'row', gap: '8px' }}
+      >
+        {({ name, path }) => (
+          <Link href={path} innerRoute>
+            {name}
+          </Link>
+        )}
+      </Loop>
     </Piv>
   )
 }

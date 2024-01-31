@@ -5,10 +5,9 @@ import { FileRoutes } from '@solidjs/start'
 import { Suspense } from 'solid-js'
 import './app.css'
 import { NavLayoutBox } from './components/NavLayoutBox'
+import { RouterMenu } from './components/RouterMenu'
 import { appConfig } from './configs/appConfig'
 import { createGlobalConfigContext } from './packages/pivkit/hooks/createGlobalConfigContext'
-import { TopMenuBar } from './components/TopMenuBar'
-import { AsideMenuBar } from './components/AsideMenuBar'
 
 export const { setStoredGlobalConfig, useGlobalConfigContext, storedGlobalConfig, GlobalConfigProvider } =
   createGlobalConfigContext(appConfig)
@@ -20,11 +19,11 @@ export default function App() {
         <GlobalConfigProvider>
           <NavLayoutBox
             layoutType='aside-content'
-            renderTopBar={<TopMenuBar />}
-            renderAsideBar={<AsideMenuBar />}
+            renderTopBar={<RouterMenu variant={'top'} />}
+            renderAsideBar={<RouterMenu variant={'aside'} />}
             renderContent={
               <MetaProvider>
-                <Title>Conveyor</Title>
+                <Title>{appConfig.appName}</Title>
                 <Link rel='icon' type='image/svg' href='favicon.svg' />
                 <Suspense>{props.children}</Suspense>
               </MetaProvider>
