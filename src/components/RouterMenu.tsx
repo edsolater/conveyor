@@ -1,9 +1,9 @@
-import { createEffect, createMemo } from 'solid-js'
-import { threeGridSlotBoxICSS } from '../icssBlocks/threeGridSlotBoxICSS'
-import { Box, Icon, KitProps, Loop, Piv, icssRow, renderHTMLDOM, useKitProps } from '../packages/pivkit'
-import { useGlobalConfigContext } from '../app'
-import { Link } from './Link'
 import { useLocation } from '@solidjs/router'
+import { createEffect, createMemo } from 'solid-js'
+import { useGlobalConfigContext } from '../app'
+import { threeGridSlotBoxICSS } from '../icssBlocks/threeGridSlotBoxICSS'
+import { Box, Icon, KitProps, Loop, Piv, Text, icssRow, renderHTMLDOM, useKitProps } from '../packages/pivkit'
+import { Link } from './Link'
 
 /**
  * set document title
@@ -47,12 +47,12 @@ export function RouterMenu(rawProps: RouterMenuKitProps) {
       shadowProps={shadowProps}
       render:self={(selfProps) => renderHTMLDOM('nav', selfProps)}
     >
-      <Box icss={icssRow({ gap: '32px' })}>
+      {/* <Box icss={icssRow({ gap: '32px' })}>
         <Link href='/' innerRoute>
           <Icon src='/logo-with-text.svg' icss={{ height: '32px' }} />
         </Link>
-        {/* <Text icss={{ fontSize: '36px', fontWeight: '800px' }}>{props.title}</Text> */}
-      </Box>
+        <Text icss={{ fontSize: '36px', fontWeight: '800px' }}>{props.title}</Text>
+      </Box> */}
 
       {/* tabs */}
       <Loop
@@ -68,3 +68,4 @@ export function RouterMenu(rawProps: RouterMenuKitProps) {
     </Piv>
   )
 }
+
