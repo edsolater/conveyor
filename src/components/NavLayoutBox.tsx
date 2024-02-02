@@ -40,7 +40,9 @@ export function NavLayoutBox(kitProps: NavLayoutBoxKitProps) {
       // shadowProps={shadowProps}
     >
       {props.renderTopBar && isTopVisiable && <Box icss={{ gridArea: 'top' }}>{props.renderTopBar}</Box>}
-      {props.renderAsideBar && isAsideVisiable && <Box icss={{ gridArea: 'aside' }}>{props.renderAsideBar}</Box>}
+      {props.renderAsideBar && isAsideVisiable && (
+        <Box icss={{ gridArea: 'aside', overflow: 'clip' }}>{props.renderAsideBar}</Box>
+      )}
       {props.renderContent && <Box icss={{ gridArea: 'content' }}>{props.renderContent}</Box>}
     </Box>
   )
