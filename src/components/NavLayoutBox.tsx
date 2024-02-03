@@ -1,5 +1,5 @@
 import { switchCase } from '@edsolater/fnkit'
-import { Box, KitProps, PivChild, useKitProps } from '../packages/pivkit'
+import { Box, KitProps, PivChild, useKitProps } from '@edsolater/pivkit'
 
 export type NavLayoutBoxProps = {
   layoutType?: 'top-content' | 'aside-content' | 'top-aside-content'

@@ -14,12 +14,13 @@
   "type": "module",
   "devDependencies": {
     "@solidjs/meta": "^0.29.3",
-    "@solidjs/router": "^0.11.2",
+    "@solidjs/router": "^0.11.3",
     "@solidjs/start": "^0.4.11",
     "@solidjs/testing-library": "^0.8.6",
     "@testing-library/jest-dom": "^6.4.1",
     "@testing-library/user-event": "^14.5.2",
     "@vitest/ui": "^1.2.2",
+    "goober": "^2.1.14",
     "jsdom": "^24.0.0",
     "solid-js": "^1.8.12",
     "typescript": "^5.3.3",
@@ -30,7 +31,7 @@
   },
   "dependencies": {
     "@edsolater/fnkit": "^0.1.66",
-    "@vercel/kv": "^1.0.1",
-    "goober": "^2.1.14"
+    "@edsolater/pivkit": "^0.0.4",
+    "@vercel/kv": "^1.0.1"
   }
 }

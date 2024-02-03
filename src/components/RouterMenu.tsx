@@ -2,7 +2,7 @@ import { useLocation } from '@solidjs/router'
 import { createEffect, createMemo } from 'solid-js'
 import { useGlobalConfigContext } from '../app'
 import { threeGridSlotBoxICSS } from '../icssBlocks/threeGridSlotBoxICSS'
-import { Box, Icon, KitProps, Loop, Piv, Text, icssRow, renderHTMLDOM, useKitProps } from '../packages/pivkit'
+import { Box, Icon, KitProps, Loop, Piv, Text, icssRow, renderHTMLDOM, useKitProps } from '@edsolater/pivkit'
 import { Link } from './Link'
 import { useContainerSize } from '../packages/pivkit/hooks/useContainerSize'
 

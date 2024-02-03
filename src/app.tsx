@@ -7,7 +7,7 @@ import './app.css'
 import { NavLayoutBox } from './components/NavLayoutBox'
 import { RouterMenu } from './components/RouterMenu'
 import { appConfig } from './configs/appConfig'
-import { createGlobalConfigContext } from './packages/pivkit/hooks/createGlobalConfigContext'
+import { createGlobalConfigContext } from '@edsolater/pivkit'
 
 export const { setStoredGlobalConfig, useGlobalConfigContext, storedGlobalConfig, GlobalConfigProvider } =
   createGlobalConfigContext(appConfig)

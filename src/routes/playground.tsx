@@ -33,7 +33,7 @@ import {
   useControllerByID,
   useHoverPlugin,
   useKitProps,
-} from '../packages/pivkit'
+} from '@edsolater/pivkit'
 import { Select } from '../packages/pivkit/components/Select'
 import { PropContext } from '../packages/pivkit/piv/PropContext'
 

@@ -5,7 +5,7 @@ import { LinkItem } from '../configs/links'
 import { queryLinks } from '../kv/actions'
 import { useDB } from '../kv/hook'
 import { useSearch } from '../packages/features/searchItems'
-import { Box, ICSS, Input, Loop, Piv, Section, Text, icssGrid, icssRow } from '../packages/pivkit'
+import { Box, ICSS, Input, Loop, Piv, Section, Text, icssGrid, icssRow } from '@edsolater/pivkit'
 import { Loading } from '../packages/pivkit/components/Loading'
 
 export default function Home() {

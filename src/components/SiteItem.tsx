@@ -1,6 +1,6 @@
 import { DeMayArray, flap, isObject, isString } from '@edsolater/fnkit'
 import { LinkItem, LinkItemScreenshot } from '../configs/links'
-import { Box, Button, Image, Loop, Piv, Text, icssCard, icssGrid, icssGridItem, icssRow } from '../packages/pivkit'
+import { Box, Button, Image, Loop, Piv, Text, icssCard, icssGrid, icssGridItem, icssRow } from '@edsolater/pivkit'
 import { Link } from './Link'
 
 export function SiteItem(props: { item: LinkItem; level?: number }) {
